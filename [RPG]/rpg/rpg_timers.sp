@@ -141,7 +141,7 @@ public Action Timer_ShowHUD(Handle timer, any client) {
 		}
 	}
 
-	playerTeam = 0;
+	static int playerTeam = 0;
 	playerTeam = GetClientTeam(client);
 	if (playerTeam == TEAM_SPECTATOR || (playerTeam == TEAM_SURVIVOR || !IsLegitimateClientAlive(client)) && !b_IsLoaded[client]) return Plugin_Continue;
 	if (displayBuffOrDebuff[client] != 1) displayBuffOrDebuff[client] = 1;
@@ -917,10 +917,10 @@ public Action Timer_CheckIfHooked(Handle timer) {
 		iSurvivalCounter = 0;
 		return Plugin_Stop;
 	}
-	CurRPG = -2;
-	LivingSerfs = 0;
+	static int CurRPG = -2;
+	static int LivingSerfs = 0;
 	LivingSerfs = LivingSurvivors();
-	RoundSeconds = 0;
+	static int RoundSeconds = 0;
 	RoundSeconds = RPGRoundTime(true);
 	if (IsSurvivalMode) {
 		iSurvivalCounter++;
@@ -1071,7 +1071,7 @@ public Action Timer_SettingsCheck(Handle timer) {
 		return Plugin_Stop;
 	}
 
-	RaidLevelCounter		= 0;
+	static int RaidLevelCounter		= 0;
 	bool bIsEnrage = false;
 	//RageCommonLimit		= 0;
 
@@ -1145,9 +1145,9 @@ bool IsSurvivorsHealthy() {
 
 public Action Timer_RespawnQueue(Handle timer) {
 
-	Counter										=	-1;
-	TimeRemaining								=	0;
-	RandomClient									=	-1;
+	static int Counter										=	-1;
+	static int TimeRemaining								=	0;
+	static int RandomClient									=	-1;
 	char text[64];
 
 	if (!b_IsActiveRound || b_IsFinaleActive) {
@@ -1279,11 +1279,11 @@ stock void SortThreatMeter() {
 
 public Action Timer_ThreatSystem(Handle timer) {
 
-	cThreatTarget			= -1;
-	cThreatOld				= -1;
-	cThreatLevel				= 0;
-	cThreatEnt				= -1;
-	count					= 0;
+	static int cThreatTarget			= -1;
+	static int cThreatOld				= -1;
+	static int cThreatLevel				= 0;
+	static int cThreatEnt				= -1;
+	static int count					= 0;
 	char temp[64];
 	float vPos[3];
 
@@ -1385,15 +1385,15 @@ public Action Timer_ThreatSystem(Handle timer) {
 }
 
 public Action Timer_DirectorPurchaseTimer(Handle timer) {
-	Counter										=	-1;
+	static int Counter										=	-1;
 	float DirectorHandicap						=	-1.0;
 	float DirectorDelay							=	0.0;
 	if (!b_IsActiveRound) {
 		Counter											=	-1;
 		return Plugin_Stop;
 	}
-	theClient									=	-1;
-	theTankStartTime								=	-1;
+	static int theClient									=	-1;
+	static int theTankStartTime								=	-1;
 	int iTankCount = GetInfectedCount(ZOMBIECLASS_TANK);
 	int iTankLimit = GetSpecialInfectedLimit(true);
 	int iInfectedCount = GetInfectedCount();

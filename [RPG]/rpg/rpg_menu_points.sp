@@ -153,7 +153,7 @@ stock void BuildPointsMenu(int client, char[] MenuName, char[] ConfigName = "non
 	menu.Display(client, 0);
 }
 
-public BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int slot) {
+public int BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 

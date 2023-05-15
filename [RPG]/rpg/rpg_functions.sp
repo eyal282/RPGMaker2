@@ -5240,16 +5240,16 @@ public Action Timer_EntityOnFire(Handle timer) {
 	if (!b_IsActiveRound) {
 		return Plugin_Stop;
 	}
-	Client = 0;
-	damage = 0;
-	Owner = 0;
+	static int Client = 0;
+	static int damage = 0;
+	static int Owner = 0;
 	float FlTime = 0.0;
 	float TickInt = 0.0;
 	float TickIntOriginal = 0.0;
-	t_Damage = 0;
+	static int t_Damage = 0;
 	//decl String:t_Delim[2][64];
 	char ModelName[64];
-	DamageShield = 0;
+	static int DamageShield = 0;
 	char TalentName[64];
 	bool IsClientAlive = false;
 	for (int i = 0; i < EntityOnFire.Length; i++) {
@@ -5553,8 +5553,8 @@ public Action Timer_CommonAffixes(Handle timer) {
 		ResetArray(CommonAffixes);
 		return Plugin_Stop;
 	}
-	ent = -1;
-	IsCommonAffixesEnabled = -2;
+	static int ent = -1;
+	static int IsCommonAffixesEnabled = -2;
 	if (IsCommonAffixesEnabled == -2) IsCommonAffixesEnabled = iCommonAffixes;
 	if (IsCommonAffixesEnabled == 2) {
 		for (int zombie = 0; zombie < CommonAffixes.Length; zombie++) {
@@ -6214,19 +6214,19 @@ public Action Timer_SpecialAmmoData(Handle timer, any client) {
 	}
 	float EntityPos[3];
 	char TalentInfo[4][512];
-	dataClient = 0;
+	static int dataClient = 0;
 	float f_TimeRemaining = 0.0;
-	WorldEnt = -1;
-	ent = -1;
-	drawtarget = -1;
+	static int WorldEnt = -1;
+	static int ent = -1;
+	static int drawtarget = -1;
 	char DataAmmoEffect[10];
 	float AmmoStrength = 0.0;
-	auraMenuPosition = 0;
+	static int auraMenuPosition = 0;
 	bool IsPlayerSameTeam;
-	dataAmmoType = 0;
-	bulletStrength = 0;
+	static int dataAmmoType = 0;
+	static int bulletStrength = 0;
 	float fVisualDelay = 0.0;
-	numOfStatusEffects = 0;
+	static int numOfStatusEffects = 0;
 	numOfStatusEffects = GetClientStatusEffect(client);
 	CheckActiveAbility(client, -1, _, _, true);	// draws effects for any active ability this client has.
 	for (int i = 0; i < SpecialAmmoData.Length; i++) {
@@ -6594,9 +6594,9 @@ public Action Timer_AmmoActiveTimer(Handle timer, any client) {
 	}
 	//SortThreatMeter();
 	char result[64];
-	currTalentStrength = 0;
+	static int currTalentStrength = 0;
 	float talentTimeRemaining = 0.0;
-	triggerRequirementsAreMet = 0;
+	static int triggerRequirementsAreMet = 0;
 	if (bJumpTime[client]) JumpTime[client] += fSpecialAmmoInterval;
 	if (fOnFireDebuff[client] > 0.0) {
 		fOnFireDebuff[client] -= fSpecialAmmoInterval;
@@ -6717,11 +6717,11 @@ public Action Timer_EffectOverTime(Handle timer, any client) {
 	//String:result[7][64];
 	float activeTime = 0.0;
 	float cooldownTime = 0.0;
-	damage = 0;
+	static int damage = 0;
 
 	char secondaryEffects[64];
 	char secondaryTrigger[64];
-	target = 0;
+	static int target = 0;
 	float talentStrength = 0.0;
 	char AoERange[10];
 	char AoERange2[10];
@@ -8264,7 +8264,7 @@ stock void OnWitchCreated(int entity, bool bIsDestroyed = false, int lastHitAtta
 	}
 }
 
-stock int FindEntityInString(char[] searchkey, char[] Delim = ":") {
+stock int FindEntityInString(char[] SearchKey, char[] Delim = ":") {
 
 	if (StrContains(SearchKey, Delim, false) == -1) return -1;
 	char tExploded[2][64];
@@ -8273,7 +8273,7 @@ stock int FindEntityInString(char[] searchkey, char[] Delim = ":") {
 	return StringToInt(tExploded[1]);
 }
 
-stock int GetArraySizeEx(char[] searchkey, char[] Delim = ":") {
+stock int GetArraySizeEx(char[] SearchKey, char[] Delim = ":") {
 
 	int count = 0;
 	for (int i = 0; i <= strlen(SearchKey); i++) {
@@ -8312,7 +8312,7 @@ stock int GetDelimiterCount(char[] TextCase, char[] Delimiter) {
 	return count;
 }
 
-stock int FindListPositionBySearchKey(char[] searchkey, Handle h_SearchList, int block = 0, bool bDebug = false) {
+stock int FindListPositionBySearchKey(char[] SearchKey, Handle h_SearchList, int block = 0, bool bDebug = false) {
 
 	/*
 
@@ -8326,7 +8326,7 @@ stock int FindListPositionBySearchKey(char[] searchkey, Handle h_SearchList, int
 	if (bDebug) {
 
 		LogMessage("=== FindListPositionBySearchKey ===");
-		LogMessage("Searchkey: %s", SearchKey);
+		LogMessage("SearchKey: %s", SearchKey);
 	}
 	for (int i = 0; i < size; i++) {
 
@@ -8352,18 +8352,18 @@ stock int FindListPositionBySearchKey(char[] searchkey, Handle h_SearchList, int
 
 			if (bDebug) {
 
-				LogMessage("Searchkey Found!");
+				LogMessage("SearchKey Found!");
 				LogMessage("===================================");
 			}
 
 			//Handle Section.Clear();
 			return i;
 		}
-		else if (bDebug) LogMessage("Wrong Searchkey (%s)", SearchId);
+		else if (bDebug) LogMessage("Wrong SearchKey (%s)", SearchId);
 	}
 	if (bDebug) {
 
-		LogMessage("Searchkey not found :(");
+		LogMessage("SearchKey not found :(");
 		LogMessage("===================================");
 	}
 	//Handle Section.Clear();
@@ -9087,12 +9087,14 @@ stock void GetStatusEffects(int client, int EffectType = 0, char[] theStringToSt
 	}
 }*/
 
+// Eyal282 here, IsPlayerFeeble doesn't exist.
+/*
 stock bool IsClientCleansing(int client) {
 
 	if (IsClientInRangeSpecialAmmo(client, "C") == -2.0 && !IsPlayerFeeble(client)) return true;
 	return false;
 }
-
+*/
 stock bool IsActiveAmmoCooldown(int client, int effect = '0', char[] activeTalentSearchKey = "none") {
 	char result[2][64];
 	char EffectT[4];
@@ -9247,7 +9249,7 @@ stock void DisplayHUD(int client, int statusType) {
 	}
 }
 
-stock void GetPlayerStaminaBar(int client, char[] ebar, int theSize) {
+stock void GetPlayerStaminaBar(int client, char[] eBar, int theSize) {
 
 	Format(eBar, theSize, "[----------]");
 	if (IsLegitimateClientAlive(client)) {

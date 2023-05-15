@@ -1235,7 +1235,7 @@ public Action Timer_LoadNewPlayer(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock LoadDirectorActions() {
+stock void LoadDirectorActions() {
 
 	if (hDatabase == INVALID_HANDLE) return;
 	char key[64];
@@ -1255,7 +1255,7 @@ stock LoadDirectorActions() {
 	hDatabase.Query(QueryResults_LoadDirector, tquery, -1);
 }
 
-public QueryResults_LoadDirector(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadDirector(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1315,7 +1315,7 @@ public QueryResults_LoadDirector(Handle owner, Handle hndl, const char[] error, 
 	}
 }
 
-stock FirstUserDirectorPriority() {
+stock void FirstUserDirectorPriority() {
 
 	int size						=	a_Points.Length;
 
@@ -1353,7 +1353,7 @@ stock FirstUserDirectorPriority() {
 	}
 }
 
-stock FindClientByIdNumber(searchId) {
+stock void FindClientByIdNumber(int searchId) {
 	char AuthId[64];
 	for (int i = 1; i <= MaxClients; i++) {
 		if (!IsLegitimateClient(i)) continue;
@@ -1363,7 +1363,7 @@ stock FindClientByIdNumber(searchId) {
 	return -1;
 }
 
-stock FindClientWithAuthString(char[] key, bool MustBeExact = false) {
+stock void FindClientWithAuthString(char[] key, bool MustBeExact = false) {
 
 	char AuthId[512];
 	char TheName[64];
@@ -1411,7 +1411,7 @@ stock bool HasCommandAccess(int client, char[] accessflags) {
 	return false;
 }
 
-public LoadInventory_Generate(Handle owner, Handle hndl, const char[] error, any client) {
+public void LoadInventory_Generate(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1427,7 +1427,7 @@ public LoadInventory_Generate(Handle owner, Handle hndl, const char[] error, any
 	}
 }
 
-public ReadProfiles_Generate(Handle owner, Handle hndl, const char[] error, any client) {
+public void ReadProfiles_Generate(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1450,7 +1450,7 @@ public ReadProfiles_Generate(Handle owner, Handle hndl, const char[] error, any 
 	}
 }
 
-public ReadProfiles_GenerateAll(Handle owner, Handle hndl, const char[] error, any client) {
+public void ReadProfiles_GenerateAll(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1473,7 +1473,7 @@ public ReadProfiles_GenerateAll(Handle owner, Handle hndl, const char[] error, a
 	}
 }
 
-public QueryResults_Load(Handle owner, Handle hndl, const char[] error, any client)
+public void QueryResults_Load(Handle owner, Handle hndl, const char[] error, any client)
 {
 	if ( hndl != INVALID_HANDLE )
 	{
@@ -1683,7 +1683,7 @@ public QueryResults_Load(Handle owner, Handle hndl, const char[] error, any clie
 	return false;
 }*/
 
-public QueryResults_LoadTalentTrees(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadTalentTrees(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1823,7 +1823,7 @@ public QueryResults_LoadTalentTrees(Handle owner, Handle hndl, const char[] erro
 	}
 }
 
-stock void LoadTalentTrees(client, char[] key, bool IsTalentTwo = false, char[] profilekey = "none") {
+stock void LoadTalentTrees(int client, char[] key, bool IsTalentTwo = false, char[] profilekey = "none") {
 
 	//client = FindClientWithAuthString(key, true);
 	if (!IsLegitimateClient(client)) return;
@@ -1904,7 +1904,7 @@ stock void LoadTalentTrees(client, char[] key, bool IsTalentTwo = false, char[] 
 }
 
 
-public QueryResults_LoadActionBar(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadActionBar(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1953,7 +1953,7 @@ public QueryResults_LoadActionBar(Handle owner, Handle hndl, const char[] error,
 	}
 }
 
-stock TotalPointsAssigned(int client) {
+stock int TotalPointsAssigned(int client) {
 
 	int count = 0;
 	int MaxTalents = MaximumPlayerUpgrades(client);
@@ -1977,7 +1977,7 @@ stock TotalPointsAssigned(int client) {
 	return 0;
 }
 
-stock LoadStoreData(client, char[] key) {
+stock void LoadStoreData(int client, char[] key) {
 
 	/*client = FindClientWithAuthString(key, true);
 	if (!IsLegitimateClient(client)) return;
@@ -2066,7 +2066,7 @@ stock LoadStoreData(client, char[] key) {
 	return false;
 }*/
 
-public OnClientDisconnect(client)
+public void OnClientDisconnect(int client)
 {
 	if (IsClientInGame(client)) {
 		if (IsFakeClient(client)) {
@@ -2133,7 +2133,7 @@ public OnClientDisconnect(client)
 	}
 }
 
-public ReadyUp_IsClientLoaded(int client) {
+public void ReadyUp_IsClientLoaded(int client) {
 
 	//ChangeHook(client, true);	// we re-hook new players to the server.
 	HealingContribution[client] = 0;
@@ -2146,7 +2146,7 @@ public ReadyUp_IsClientLoaded(int client) {
 	CheckDifficulty();
 }
 
-stock RUP_IsClientLoaded(int client) {
+stock void RUP_IsClientLoaded(int client) {
 
 	CreateTimer(1.0, Timer_InitializeClientLoad, client, TIMER_FLAG_NO_MAPCHANGE);
 }
@@ -2191,7 +2191,7 @@ public Action Timer_InitializeClientLoad(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock IsClientLoadedEx(int client) {
+stock void IsClientLoadedEx(int client) {
 
 	/*decl String:ClientName[64];
 	GetClientName(client, ClientName, sizeof(ClientName));*/
@@ -2207,7 +2207,7 @@ stock IsClientLoadedEx(int client) {
 	OnClientLoaded(client);
 }
 
-stock OnClientLoaded(client, bool IsHooked = false) {
+stock void OnClientLoaded(int client, bool IsHooked = false) {
 
 	//if (!IsClientConnected(client)) return;
 	if (b_IsLoaded[client]) {
@@ -2367,7 +2367,7 @@ public Action Timer_LoggedUsers(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock bool IsLogged(client, bool InsertID = false) {
+stock bool IsLogged(int client, bool InsertID = false) {
 
 	char SteamID[512];
 	char TheName[64];
@@ -2412,7 +2412,7 @@ public Action CMD_RespawnYumYum(int client, int args) {
 	}
 }
 
-stock FindARespawnTarget(client, sacrifice = -1) {
+stock void FindARespawnTarget(int client, int sacrifice = -1) {
 
 	if (!IsPlayerAlive(client)) {
 

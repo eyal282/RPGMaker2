@@ -673,8 +673,8 @@ stock bool GetActiveSpecialAmmoType(int client, int effect) {
 stock float IsClientInRangeSpecialAmmo(int client, char[] EffectT, bool GetStatusOnly=true, int AmmoPosition=-1, float baseeffectvalue=0.0, int realowner=0) {
 	float EntityPos[3];
 	char TalentInfo[4][512];
-	owner = 0;
-	pos = -1;
+	static int owner = 0;
+	static int pos = -1;
 	//decl String:newvalue[10];
 
 	char value[10];
@@ -707,7 +707,7 @@ stock float IsClientInRangeSpecialAmmo(int client, char[] EffectT, bool GetStatu
 	float EffectMultiplierValue = 0.0;
 
 	float t_Range	= 0.0;
-	baseeffectbonus = 0;
+	static int baseeffectbonus = 0;
 
 	if (SpecialAmmoData.Length < 1) return 0.0;
 	//new Float:fAmmoRangeTalentBonus = GetAbilityStrengthByTrigger(client, client, "aamRNG", FindZombieClass(client), 0, _, _, "d", 1, true);	// true at the end makes sure we don't actually fire off the ability or really check the "d" (resulteffects) here

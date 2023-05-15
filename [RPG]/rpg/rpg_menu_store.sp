@@ -166,7 +166,7 @@ stock bool GiveClientStoreItem(int client, int pos) {
 	}
 }
 
-stock ChallengeEverything(int client) {
+stock void ChallengeEverything(int client) {
 	TotalTalentPoints[client]							=	0;
 	UpgradesAvailable[client]							=	0;
 	FreeUpgrades[client]								=	MaximumPlayerUpgrades(client);
@@ -174,7 +174,7 @@ stock ChallengeEverything(int client) {
 	WipeTalentPoints(client);
 }
 
-public BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
+public void BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -241,7 +241,7 @@ public BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
 	}
 }
 
-stock RemoveStoreTime(int client) {
+stock void RemoveStoreTime(int client) {
 
 	char key[64];
 	char PlayerValue[64];

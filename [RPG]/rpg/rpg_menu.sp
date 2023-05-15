@@ -723,7 +723,8 @@ public int ReadProfilesMenuHandle(Handle menu, MenuAction action, int client, in
 		delete menu;
 	}
 }
-
+// Eyal282 here, LastOpenedMenu does not exist and throws errors.
+/*
 stock bool GetLastOpenedMenu(int client, bool SetIt = false) {
 
 	int size	= a_Menu_Main.Length;
@@ -748,7 +749,7 @@ stock bool GetLastOpenedMenu(int client, bool SetIt = false) {
 	}
 	return false;
 }
-
+*/
 stock void AddMenuStructure(int client, char[] MenuName) {
 
 	MenuStructure[client].Resize(MenuStructure[client].Length + 1);
