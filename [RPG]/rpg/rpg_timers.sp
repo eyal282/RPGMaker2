@@ -192,7 +192,7 @@ public Action Timer_ShowHUD(Handle timer, any client) {
 	return Plugin_Continue;
 }
 
-stock LedgedSurvivors() {
+stock int LedgedSurvivors() {
 
 	int count = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -220,7 +220,7 @@ stock bool NoHealthySurvivors(bool bMustNotBeABot = false) {
 	return true;
 }
 
-stock HumanSurvivors() {
+stock int HumanSurvivors() {
 
 	int count = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -293,7 +293,7 @@ public Action Timer_SlowPlayer(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock GetTimePlayed(client, char s[], size) {
+stock void GetTimePlayed(int client, char[] s, int size) {
 	int seconds = TimePlayed[client];
 	int minutes = 0;
 	int hours = 0;
@@ -435,7 +435,7 @@ stock bool isQuickscopeKill(int client) {
 	return false;
 }
 
-stock zoomCheckToggle(client, bool insert = false) {
+stock void zoomCheckToggle(int client, bool insert = false) {
 	int listClient = 0;
 	for (int i = 0; i < zoomCheckList.Length; i++) {
 		listClient = zoomCheckList.Get(i, 0);
@@ -479,7 +479,7 @@ stock float GetHoldingFireTime(int client) {
 	return 0.0;
 }
 
-stock holdingFireCheckToggle(client, bool insert = false) {
+stock void holdingFireCheckToggle(int client, bool insert = false) {
 	int listClient = 0;
 	for (int i = 0; i < holdingFireList.Length; i++) {
 		listClient = holdingFireList.Get(i, 0);
@@ -549,7 +549,7 @@ public Action Timer_Freezer(Handle timer, any client) {
 	return Plugin_Continue;
 }
 
-public ReadyUp_FwdChangeTeam(client, team) {
+public void ReadyUp_FwdChangeTeam(int client, int team) {
 
 	if (IsLegitimateClient(client)) {
 
@@ -570,7 +570,7 @@ public ReadyUp_FwdChangeTeam(client, team) {
 	}
 }
 
-stock ChangeHook(client, bool bHook = false) {
+stock void ChangeHook(int client, bool bHook = false) {
 
 	b_IsHooked[client] = bHook;
 	SDKUnhook(client, SDKHook_OnTakeDamage, OnTakeDamage);
@@ -654,7 +654,7 @@ public Action Timer_ResetPlayerHealth(Handle timer, any client) {
 }*/
 
 
-stock ResetCDImmunity(int client) {
+stock void ResetCDImmunity(int client) {
 
 	int size = 0;
 	/*for (new i = 1; i <= MaxClients; i++) {
@@ -1055,11 +1055,11 @@ public Action Timer_TankCooldown(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock GetSuperCommonLimit() {
+stock int GetSuperCommonLimit() {
 	return RoundToCeil((AllowedCommons + RaidCommonBoost()) * fSuperCommonLimit);
 }
 
-stock GetCommonQueueLimit() {
+stock int GetCommonQueueLimit() {
 	return RoundToCeil((AllowedCommons + RaidCommonBoost()) * fCommonQueueLimit);
 }
 
@@ -1206,7 +1206,7 @@ public Action Timer_AcidCooldown(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-bool DebuffOnCooldown(client, char debuffToSearchFor[], bool removeDebuffCooldown = false) {
+bool DebuffOnCooldown(int client, char[] debuffToSearchFor, bool removeDebuffCooldown = false) {
 	char result[64];
 	int size = ApplyDebuffCooldowns[client].Length;
 	for (int pos = 0; pos < size; pos++) {
@@ -1239,7 +1239,7 @@ public Action Timer_PlayTime(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock SortThreatMeter() {
+stock void SortThreatMeter() {
 
 	hThreatSort.Clear();
 	hThreatMeter.Clear();
@@ -1463,7 +1463,7 @@ public Action Timer_DirectorPurchaseTimer(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock GetAlwaysTanks(survivors) {
+stock int GetAlwaysTanks(int survivors) {
 
 	if (iTanksAlways > 0) return iTanksAlways;
 	if (iTanksAlways < 0) {
@@ -1472,7 +1472,7 @@ stock GetAlwaysTanks(survivors) {
 	return 0;
 }
 
-stock CheckDirectorActionPriority(pos, size) {
+stock void CheckDirectorActionPriority(int pos, int size) {
 
 	char text[64];
 	for (int i = 0; i < size; i++) {
@@ -1489,7 +1489,7 @@ stock CheckDirectorActionPriority(pos, size) {
 	}
 }
 
-stock bool DirectorPurchase_Valid(Handle Keys, Handle Values, pos) {
+stock bool DirectorPurchase_Valid(Handle Keys, Handle Values, int pos) {
 
 	float PointCost		=	0.0;
 	float PointCostMin	=	0.0;
@@ -1515,7 +1515,7 @@ stock bool bIsDirectorTankEligible() {
 	return false;
 }
 
-stock ActiveTanks() {
+stock int ActiveTanks() {
 	int iSurvivors = TotalHumanSurvivors();
 	//new iSurvivorBots = TotalSurvivors() - iSurvivors;
 	int count = GetAlwaysTanks(iSurvivors);
@@ -1526,11 +1526,11 @@ stock ActiveTanks() {
 	return count;
 }
 
-stock DirectorTankLimit() {
+stock int DirectorTankLimit() {
 	return GetSpecialInfectedLimit(true);
 }
 
-stock GetWitchCount() {
+stock int GetWitchCount() {
 
 	int count = 0;
 	int ent = -1;
@@ -1542,7 +1542,7 @@ stock GetWitchCount() {
 	return count;
 }
 
-stock DirectorPurchase(Handle Keys, Handle Values, pos) {
+stock void DirectorPurchase(Handle Keys, Handle Values, int pos) {
 
 	char Command[64];
 	char Parameter[64];
@@ -1652,7 +1652,7 @@ stock DirectorPurchase(Handle Keys, Handle Values, pos) {
 	return isArraySize;
 }*/
 
-stock SpawnCommons(Client, Count, char Command[], Parameter[], Model[], IsPlayerDrop, SuperCommon[] = "none") {
+stock void SpawnCommons(int Client, int Count, char[] Command, char[] Parameter, char[] Model, int IsPlayerDrop, char[] SuperCommon = "none") {
 
 	int TargetClient				=	-1;
 	int CommonQueueLimit = GetCommonQueueLimit();
@@ -1674,7 +1674,7 @@ stock SpawnCommons(Client, Count, char Command[], Parameter[], Model[], IsPlayer
 	}
 }
 
-stock FindLivingSurvivor() {
+stock int FindLivingSurvivor() {
 
 
 	/*new Client = -1;
@@ -1697,7 +1697,7 @@ stock FindLivingSurvivor() {
 	return -1;
 }
 
-stock LivingSurvivorCount(ignore = -1) {
+stock int LivingSurvivorCount(int ignore = -1) {
 
 	int Count = 0;
 	for (int i = 1; i <= MaxClients; i++) {

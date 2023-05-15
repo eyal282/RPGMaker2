@@ -770,7 +770,7 @@ stock int ChangeTankState(int client, char[] StateName, bool IsDelete = false, b
 	return -2;
 }
 
-stock void FindRandomSurvivorClient(client, bool bIsTeleportTo = false, bool bPrioritizeTanks = true) {
+stock void FindRandomSurvivorClient(int client, bool bIsTeleportTo = false, bool bPrioritizeTanks = true) {
 
 	if (!IsLegitimateClientAlive(client) || !b_IsActiveRound) return;
 
@@ -826,7 +826,7 @@ stock void FindRandomSurvivorClient(client, bool bIsTeleportTo = false, bool bPr
 	return false;
 }*/
 
-stock void CheckTankSubroutine(tank, survivor = 0, damage = 0, bool TankIsVictim = false) {
+stock void CheckTankSubroutine(int tank, int survivor = 0, int damage = 0, bool TankIsVictim = false) {
 
 	if (iRPGMode == -1) return;
 	if (!IsLegitimateClientAlive(tank) || FindZombieClass(tank) != ZOMBIECLASS_TANK) return;	
@@ -955,7 +955,7 @@ stock void CheckTankSubroutine(tank, survivor = 0, damage = 0, bool TankIsVictim
 	}
 }
 
-public Action Hook_SetTransmit(entity, client) {
+public Action Hook_SetTransmit(int entity, int client) {
 	
 	if(EntIndexToEntRef(entity) == eBackpack[client]) return Plugin_Handled;
 	return Plugin_Continue;
@@ -968,7 +968,7 @@ public Action Hook_SetTransmit(entity, client) {
  *	@return Plugin_Continue		if a melee weapon was not used.
  */
 
-public Action OnTakeDamage(victim, &attacker, &inflictor, float &damage_ignore, &damagetype) {
+public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage_ignore, int &damagetype) {
 	if (!b_IsActiveRound || b_IsSurvivalIntermission) {
 
 		damage_ignore = 0.0;
@@ -1251,7 +1251,7 @@ public Action OnTakeDamage(victim, &attacker, &inflictor, float &damage_ignore, 
 	return Plugin_Changed;
 }
 
-stock int IfCommonInfectedIsAttackerDoStuff(attacker, victim, damagetype, survivorCount) {
+stock int IfCommonInfectedIsAttackerDoStuff(int attacker, int victim, int damagetype, int survivorCount) {
 	float CommonDamageScaleLevel = fCommonDamageLevel;
 	int CommonsDamage = iCommonInfectedBaseDamage;
 	if (IsSpecialCommonInRange(attacker, 'b')) CommonsDamage += GetSpecialCommonDamage(CommonsDamage, attacker, 'b', victim);
@@ -1320,7 +1320,7 @@ stock int IfCommonInfectedIsAttackerDoStuff(attacker, victim, damagetype, surviv
 	return CommonsDamage;
 }
 
-stock int IfInfectedIsAttackerDoStuff(attacker, victim) {
+stock int IfInfectedIsAttackerDoStuff(int attacker, int victim) {
 	CombatTime[victim] = GetEngineTime() + fOutOfCombatTime;
 	if (b_IsJumping[victim]) ModifyGravity(victim);
 	int myzombieclass = FindZombieClass(attacker);
@@ -1396,7 +1396,7 @@ stock int IfInfectedIsAttackerDoStuff(attacker, victim) {
 	return totalIncomingDamage;
 }
 
-stock int IfSurvivorIsAttackerDoStuff(attacker, victim, baseWeaponDamage, damagetype, victimType) {
+stock int IfSurvivorIsAttackerDoStuff(int attacker, int victim, int baseWeaponDamage, int damagetype, int victimType) {
 	if (victimType <= 4) {
 		if (LastAttackedUser[attacker] == victim) ConsecutiveHits[attacker]++;
 		else {
@@ -1431,7 +1431,7 @@ stock int IfSurvivorIsAttackerDoStuff(attacker, victim, baseWeaponDamage, damage
 	return 0;
 }
 
-stock int TryToDamagePlayerInfected(attacker, victim, baseWeaponDamage, damagetype) {
+stock int TryToDamagePlayerInfected(int attacker, int victim, int baseWeaponDamage, int damagetype) {
 	//if (!IsLegitimateClient(victim) || GetClientTeam(victim) != TEAM_INFECTED) return 0;
 	//Checks if a Common Defender or a Defender Tank is in range if the 2nd arg isn't left blank
 	if (IsSpecialCommonInRange(victim, 't') || DrawSpecialInfectedAffixes(victim, victim) == 1) {
@@ -1460,7 +1460,7 @@ stock int TryToDamagePlayerInfected(attacker, victim, baseWeaponDamage, damagety
 	return 1;
 }
 
-stock int TryToDamageNonPlayerInfected(attacker, victim, baseWeaponDamage, damagetype) {
+stock int TryToDamageNonPlayerInfected(int attacker, int victim, int baseWeaponDamage, int damagetype) {
 	//if (!IsWitch(victim) && !IsCommonInfected(victim)) return 0;
 	//Checks if a Common Defender or a Defender Tank is in range if the 2nd arg isn't left blank
 	if (IsSpecialCommonInRange(victim, 't') || DrawSpecialInfectedAffixes(victim, victim) == 1) {
@@ -1537,7 +1537,7 @@ stock void SpawnAnyInfected(int client) {
 	}
 }
 
-stock int GetInfectedCount(zombieclass = 0) {
+stock int GetInfectedCount(int zombieclass = 0) {
 
 	int count = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -1547,7 +1547,7 @@ stock int GetInfectedCount(zombieclass = 0) {
 	return count;
 }
 
-stock void CreateMyHealthPool(client, bool IMeanDeleteItInstead = false) {
+stock void CreateMyHealthPool(int client, bool IMeanDeleteItInstead = false) {
 
 	int whatami = 3;
 	if (IsSpecialCommon(client)) whatami = 1;
@@ -1598,7 +1598,7 @@ stock int EnsnaredInfected() {
 	return count;
 }
 
-stock bool IsEnsnarer(client, class = 0) {
+stock bool IsEnsnarer(int client, int class = 0) {
 
 	int zombieclass = class;
 	if (class == 0) zombieclass = FindZombieClass(client);
@@ -1614,7 +1614,7 @@ stock bool IsEnsnarer(client, class = 0) {
 	return false;
 }*/
 
-stock int AddSpecialInfectedDamage(client, target, TotalDamage, bool IsTankingInstead = false, damagevariant = -1) {
+stock int AddSpecialInfectedDamage(int client, int target, int TotalDamage, bool IsTankingInstead = false, int damagevariant = -1) {
 
 	int isEntityPos = FindListPositionByEntity(target, InfectedHealth[client]);
 	//new f 0;
@@ -1725,7 +1725,7 @@ stock int AddSpecialInfectedDamage(client, target, TotalDamage, bool IsTankingIn
 	return 0;
 }
 
-stock void ThreatCalculator(client, iThreatAmount) {
+stock void ThreatCalculator(int client, int iThreatAmount) {
 
 	if (IsLegitimateClientAlive(client) && GetClientTeam(client) == TEAM_SURVIVOR) {
 
@@ -1742,7 +1742,7 @@ stock void ThreatCalculator(client, iThreatAmount) {
 	}
 }
 
-stock int AddSpecialCommonDamage(client, entity, playerDamage, bool IsStatusDamage = false, damagevariant = -1) {
+stock int AddSpecialCommonDamage(int client, int entity, int playerDamage, bool IsStatusDamage = false, int damagevariant = -1) {
 
 	//if (!IsSpecialCommon(entity)) return 1;
 	int pos		= FindListPositionByEntity(entity, CommonList);
@@ -1796,7 +1796,7 @@ stock int AddSpecialCommonDamage(client, entity, playerDamage, bool IsStatusDama
 	return 1;
 }
 
-stock void AwardExperience(client, type = 0, AMOUNT = 0, bool TheRoundHasEnded=false) {
+stock void AwardExperience(int client, int type = 0, int AMOUNT = 0, bool TheRoundHasEnded=false) {
 
 	char pct[4];
 	Format(pct, sizeof(pct), "%");
@@ -1901,7 +1901,7 @@ stock int GetPassiveStrength(int client, char[] SearchKey, char[] TalentName, in
 	return 0;
 }
 
-stock float GetPassiveInfo(client, target, Handle Keys, Handle Values, char[] TalentName, bool bIsCreateCooldown = false) {
+stock float GetPassiveInfo(int client, int target, Handle Keys, Handle Values, char[] TalentName, bool bIsCreateCooldown = false) {
 	float f_EachPoint	= GetTalentInfo(client, Values, 1, _, TalentName, target);
 	float f_Cooldown	= GetTalentInfo(client, Values, 3, _, TalentName, target);
 	float f_Strength			=	f_EachPoint;
@@ -1909,7 +1909,7 @@ stock float GetPassiveInfo(client, target, Handle Keys, Handle Values, char[] Ta
 	return f_Strength;
 }
 
-stock int GetDatabasePosition(client, char[] TalentName) {
+stock int GetDatabasePosition(int client, char[] TalentName) {
 
 	int size				=	0;
 	if (client != -1) size	=	a_Database_PlayerTalents[client].Length;
@@ -2016,7 +2016,7 @@ stock void GetGoverningAttribute(int client, char[] TalentName, char[] governing
 	}
 }
 
-stock void GetTranslationOfTalentName(int client, char[] nameOfTalent, char[] translationText, theSize, bool bGetTalentNameInstead = false, bool bJustKiddingActionBarName = false, bool returnResult = false) {
+stock void GetTranslationOfTalentName(int client, char[] nameOfTalent, char[] translationText, int theSize, bool bGetTalentNameInstead = false, bool bJustKiddingActionBarName = false, bool returnResult = false) {
 	char talentName[64];
 	int size = a_Menu_Talents.Length;
 
@@ -2482,7 +2482,7 @@ stock float GetAbilityStrengthByTrigger(int activator, int target = 0, char[] Ab
 	return t_Strength;
 }
 
-stock bool EnemiesWithinExplosionRange(client, float TheRange, TheStrength) {
+stock bool EnemiesWithinExplosionRange(int client, float TheRange, int TheStrength) {
 
 	if (!IsLegitimateClientAlive(client)) return false;
 	float MyRange[3];
@@ -2578,7 +2578,7 @@ stock int GetPIV(int client, float Distance, bool IsSameTeam = true) {
 	return count;
 }
 
-stock float GetPlayerDistance(client, target) {
+stock float GetPlayerDistance(int client, int target) {
 
 	float ClientDistance[3];
 	if (IsLegitimateClient(client)) GetClientAbsOrigin(client, ClientDistance);
@@ -2652,7 +2652,7 @@ stock int GetCategoryStrength(int client, char[] sTalentCategory, bool bGetMaxim
 	return count;
 }
 
-stock int GetLayerUpgradeStrength(client, layer = 1, bool bIsCheckEligibility = false, bool bResetLayer = false, bool countAllOptionsOnLayer = false, bool getAllLayerNodes = false, bool ignoreAttributes = false) {
+stock int GetLayerUpgradeStrength(int client, int layer = 1, bool bIsCheckEligibility = false, bool bResetLayer = false, bool countAllOptionsOnLayer = false, bool getAllLayerNodes = false, bool ignoreAttributes = false) {
 	int size = a_Menu_Talents.Length;
 	int count = 0;
 	char TalentName[64];
@@ -2690,7 +2690,7 @@ stock int GetLayerUpgradeStrength(client, layer = 1, bool bIsCheckEligibility = 
 	return count;
 }
 
-stock void GetTalentKeyValue(client, char[] TalentName, pos, storage[], storageLocSize) {
+stock void GetTalentKeyValue(int client, char[] TalentName, int pos, char[] storage, int storageLocSize) {
 	int size = a_Menu_Talents.Length;
 	char result[64];
 	for (int i = 0; i < size; i++) {
@@ -2728,7 +2728,7 @@ stock int GetTalentStrengthByKeyValue(int client, int pos, char[] searchValue, b
 	return total;
 }
 
-stock int GetTalentStrength(client, char[] TalentName, target = 0, pos = -1, bool containsTalentName = false) {
+stock int GetTalentStrength(int client, char[] TalentName, int target = 0, int pos = -1, bool containsTalentName = false) {
 	if (!IsLegitimateClient(client)) return 0;
 	if (GetClientTeam(client) == TEAM_INFECTED && IsFakeClient(client)) {
 		int counter = 1;
@@ -2770,7 +2770,7 @@ stock int GetTalentStrength(client, char[] TalentName, target = 0, pos = -1, boo
 	These include strength, active time, cooldown time, passive time, etc.
 	If you don't want a node connected to an attribute, omit "attribute?" from the node.
 */
-stock float GetAttributeMultiplier(client, char[] TalentName) {
+stock float GetAttributeMultiplier(int client, char[] TalentName) {
 	int size = a_Database_PlayerTalents[client].Length;
 	int iStrength = 0;
 	char text[64];
@@ -2903,7 +2903,7 @@ stock int GetKeyValueInt(Handle Keys, Handle Values, char[] SearchKey, char[] De
 	return StringToInt(DefaultValue);
 }
 
-stock void GetMenuOfTalent(client, char[] TalentName, TheText[], TheSize) {
+stock void GetMenuOfTalent(int client, char[] TalentName, char[] TheText, int TheSize) {
 
 	char s_TalentName[64];
 
@@ -2952,7 +2952,7 @@ stock int FindChanceRollAbility(int client, char[] s_TalentName = "none") {
 	return -1;
 }
 
-stock int GetWeaponSlot(entity) {
+stock int GetWeaponSlot(int entity) {
 
 	if (IsValidEntity(entity)) {
 
@@ -2981,7 +2981,7 @@ stock void SurvivorPowerSlide(int client) {
 	TeleportEntity(client, NULL_VECTOR, NULL_VECTOR, vel);
 }
 
-stock void BeanBag(client, float force) {
+stock void BeanBag(int client, float force) {
 
 	if (IsLegitimateClientAlive(client)) {
 
@@ -3018,7 +3018,7 @@ stock void BeanBag(client, float force) {
 	}
 }
 
-stock void CreateExplosion(client, damage = 0, attacker = 0, bool IsAOE = false, float fRange = 96.0) {
+stock void CreateExplosion(int client, int damage = 0, int attacker = 0, bool IsAOE = false, float fRange = 96.0) {
 
 	int entity 				= CreateEntityByName("env_explosion");
 	float loc[3], tloc[3];
@@ -3138,7 +3138,7 @@ stock void ScreenShake(int client) {
 	}
 }
 
-stock void ZeroGravity(client, victim, float g_TalentStrength, g_TalentTime) {
+stock void ZeroGravity(int client, int victim, float g_TalentStrength, int g_TalentTime) {
 
 	if (IsLegitimateClientAlive(client) && IsLegitimateClientAlive(victim)) {
 
@@ -3228,7 +3228,7 @@ stock void ZeroGravity(client, victim, float g_TalentStrength, g_TalentTime) {
 	}
 }*/
 
-stock void SlowPlayer(client, float g_TalentStrength, g_TalentTime) {
+stock void SlowPlayer(int client, float g_TalentStrength, int g_TalentTime) {
 
 	if (IsLegitimateClientAlive(client) && ISSLOW[client] == INVALID_HANDLE) {
 
@@ -3599,7 +3599,7 @@ stock void CreateLine(int client, int target, char[] DrawColour, char[] DrawPos,
 	}
 }
 
-stock void CreateRing(client, float RingAreaSize, char[] DrawColour, char[] DrawPos, bool IsPulsing = true, float lifetime = 1.0, int targetClient = 0) {
+stock void CreateRing(int client, float RingAreaSize, char[] DrawColour, char[] DrawPos, bool IsPulsing = true, float lifetime = 1.0, int targetClient = 0) {
 
 	float ClientPos[3];
 	if (IsLegitimateClient(client)) GetClientAbsOrigin(client, ClientPos);
@@ -3658,7 +3658,7 @@ stock void CreateRing(client, float RingAreaSize, char[] DrawColour, char[] Draw
 	}
 }*/
 
-stock void CreateBeacons(client, float Distance) {
+stock void CreateBeacons(int client, float Distance) {
 
 	float Pos[3];
 	float Pos2[3];
@@ -3678,7 +3678,7 @@ stock void CreateBeacons(client, float Distance) {
 	}
 }
 
-stock void FrozenPlayer(client, float effectTime = 3.0, amount = 100) {
+stock void FrozenPlayer(int client, float effectTime = 3.0, int amount = 100) {
 	if (IsLegitimateClient(client)) {
 		if (amount < 0) amount = 0;
 		if (amount > 0) {
@@ -3716,7 +3716,7 @@ stock void FrozenPlayer(client, float effectTime = 3.0, amount = 100) {
 	}
 }
 
-stock void EnrageBlind(client, amount=0) {
+stock void EnrageBlind(int client, int amount=0) {
 
 	if (IsLegitimateClient(client) && !IsFakeClient(client)) {
 
@@ -3753,7 +3753,7 @@ stock void EnrageBlind(client, amount=0) {
 	}
 }
 
-stock void BlindPlayer(client, float effectTime = 3.0, amount = 0) {
+stock void BlindPlayer(int client, float effectTime = 3.0, int amount = 0) {
 
 	if (IsLegitimateClient(client) && !IsFakeClient(client)) {
 
@@ -3800,7 +3800,7 @@ stock void BlindPlayer(client, float effectTime = 3.0, amount = 0) {
 	}
 }
 
-stock void CreateFireEx(client)
+stock void CreateFireEx(int client)
 {
 	if (IsLegitimateClient(client)) {
 
@@ -3814,7 +3814,7 @@ stock void CreateFireEx(client)
 
 char MODEL_GASCAN[] = "models/props_junk/gascan001a.mdl";
 
-stock CreateFire(const float BombOrigin[3])
+stock void CreateFire(const float BombOrigin[3])
 {
 	int entity = CreateEntityByName("prop_physics");
 	DispatchKeyValue(entity, "physdamagescale", "0.0");
@@ -3829,7 +3829,7 @@ stock CreateFire(const float BombOrigin[3])
 	AcceptEntityInput(entity, "Break");
 }
 
-stock bool EnemyCombatantsWithinRange(client, float f_Distance) {
+stock bool EnemyCombatantsWithinRange(int client, float f_Distance) {
 
 	float d_Client[3];
 	float e_Client[3]
@@ -3878,7 +3878,7 @@ stock void ModifyGravity(int client, float g_Gravity = 0.9, float g_Time = 0.0, 
 	}
 }
 
-stock bool OnPlayerRevived(client, targetclient) {
+stock bool OnPlayerRevived(int client, int targetclient) {
 
 	if (SetTempHealth(client, targetclient, GetMaximumHealth(targetclient) * fHealthSurvivorRevive, true)) return true;
 	return false;
@@ -3918,7 +3918,7 @@ stock int SetMaximumHealth(int client) {
 	return DefaultHealth[client];
 }
 
-stock int FindZombieClass(client, bool SIOnly = false)
+stock int FindZombieClass(int client, bool SIOnly = false)
 {
 	if (!SIOnly) {
 
@@ -3931,7 +3931,7 @@ stock int FindZombieClass(client, bool SIOnly = false)
 	return -1;
 }
 
-stock void SetInfectedHealth(client, value) {
+stock void SetInfectedHealth(int client, int value) {
 
 	SetEntProp(client, Prop_Data, "m_iHealth", value);
 }
@@ -3946,7 +3946,7 @@ stock void SetBaseHealth(int client) {
 	SetEntProp(client, Prop_Send, "m_iMaxHealth", DefaultHealth[client]);
 }
 
-stock void GiveMaximumHealth(client, healthOverride = 0) {
+stock void GiveMaximumHealth(int client, int healthOverride = 0) {
 
 	if (IsLegitimateClientAlive(client) && !b_IsLoading[client]) {
 		if (healthOverride == 0) healthOverride = GetMaximumHealth(client);
@@ -3961,7 +3961,7 @@ stock void GiveMaximumHealth(client, healthOverride = 0) {
 	}
 }
 
-stock int GetMaximumHealth(client)
+stock int GetMaximumHealth(int client)
 {
 	if (IsLegitimateClient(client)) {
 
@@ -4012,7 +4012,7 @@ stock void CloakingDevice(int client) {
 	}
 }
 
-stock AbsorbDamage(client, float s_Strength, damage) {
+stock void AbsorbDamage(int client, float s_Strength, int damage) {
 
 	if (IsLegitimateClientAlive(client)) {
 
@@ -4026,7 +4026,7 @@ stock AbsorbDamage(client, float s_Strength, damage) {
 	}
 }
 
-stock void DamagePlayer(client, victim, float s_Strength) {
+stock void DamagePlayer(int client, int victim, float s_Strength) {
 
 	if (IsLegitimateClientAlive(client) && IsLegitimateClientAlive(victim)) {
 
@@ -4052,7 +4052,7 @@ stock void WipeDamageAward(int client) {
 	}
 }
 
-stock void ReflectDamage(client, target, AttackDamage) {
+stock void ReflectDamage(int client, int target, int AttackDamage) {
 	int enemytype = -1;
 	int enemyteam = -1;
 	if (IsSpecialCommon(target)) enemytype = 1;
@@ -4081,7 +4081,7 @@ stock void ReflectDamage(client, target, AttackDamage) {
 	}
 }
 
-stock CheckTeammateDamagesEx(client, target, TotalDamage, bool bSpellDeath = false) {
+stock void CheckTeammateDamagesEx(int client, int target, int TotalDamage, bool bSpellDeath = false) {
 	if (CheckTeammateDamages(target, client) >= 1.0 || CheckTeammateDamages(target, client, true) >= 1.0) {
 		if (IsLegitimateClientAlive(target)) {
 			GetAbilityStrengthByTrigger(client, target, "e", _, TotalDamage);
@@ -4120,13 +4120,13 @@ stock CheckTeammateDamagesEx(client, target, TotalDamage, bool bSpellDeath = fal
 	}
 }*/
 
-stock void SendPanelToClientAndClose(Handle panel, client, MenuHandler:handler, time) {
+stock void SendPanelToClientAndClose(Handle panel, int client, MenuHandler handler, int time) {
 
 	panel.Send(client, handler, time);
 	delete panel;
 }
 
-stock void CreateAcid(client, victim, float radius = 128.0) {
+stock void CreateAcid(int client, int victim, float radius = 128.0) {
 	if (IsCommonInfected(client) || IsLegitimateClient(client)) {
 		if (IsLegitimateClientAlive(victim)) {
 			float pos[3];
@@ -4146,7 +4146,7 @@ stock void CreateAcid(client, victim, float radius = 128.0) {
 	}
 }
 
-stock void ForceClientJump(activator, float g_TalentStrength, victim = 0) {
+stock void ForceClientJump(int activator, float g_TalentStrength, int victim = 0) {
 
 	if (IsLegitimateClient(activator)) {
 
@@ -4401,7 +4401,7 @@ stock void ActivateAbilityEx(int activator, int target, float d_Damage, char[] E
 	}
 }
 
-stock int GiveAmmoBack(client, rawToReturn = 1, float percentageToReturn = 0.0, activator = 0) {
+stock int GiveAmmoBack(int client, int rawToReturn = 1, float percentageToReturn = 0.0, int activator = 0) {
 	if (activator == 0) activator = client;
 	int reserveCap = GetWeaponResult(client, 2);
 	int reserveRemaining = GetWeaponResult(client, 3);
@@ -4469,7 +4469,7 @@ public Action Timer_RemoveBileStatus(Handle timer, any client) {
 	RemoveEntity(iScriptLogic);
 }*/
 
-stock void StaggerPlayer(target, activator) {
+stock void StaggerPlayer(int target, int activator) {
 	float pos[3];
 	GetEntPropVector(target, Prop_Send, "m_vecOrigin", pos);
 
@@ -4561,7 +4561,7 @@ stock ReturnClipOnReload(client, activator = -1) {
 	return 1;
 }*/
 
-stock void RestoreHealBullet(client, bulletsRestored = 1) {
+stock void RestoreHealBullet(int client, int bulletsRestored = 1) {
 
 	if (!IsMeleeAttacker(client)) {
 
@@ -4574,7 +4574,7 @@ stock void RestoreHealBullet(client, bulletsRestored = 1) {
 	}
 }
 
-stock void ModifyPlayerAmmo(target, float g_TalentStrength) {
+stock void ModifyPlayerAmmo(int target, float g_TalentStrength) {
 
 	int PlayerWeapon = GetPlayerWeaponSlot(target, 0);
 	if (!IsValidEntity(PlayerWeapon)) return;
@@ -4671,7 +4671,7 @@ stock void ConfirmExperienceAction(int client, bool TheRoundHasEnded = false, bo
 	}
 }
 
-stock void ConfirmExperienceActionTalents(client, bool WipeXP = false, bool TheRoundHasEnded = false) {
+stock void ConfirmExperienceActionTalents(int client, bool WipeXP = false, bool TheRoundHasEnded = false) {
 
 	if (!IsLegitimateClient(client)) return;
 
@@ -4752,7 +4752,7 @@ stock void ConfirmExperienceActionTalents(client, bool WipeXP = false, bool TheR
 	//if (!TheRoundHasEnded && (!WipeXP || LivingSurvivorCount(client) > 0)) SaveClassData(client);
 }
 
-stock void AddTalentExperience(client, char[] TalentName, ExperienceAmount, posover = -1) {
+stock void AddTalentExperience(int client, char[] TalentName, int ExperienceAmount, int posover = -1) {
 
 	if (b_IsLoading[client]) return;
 
@@ -4774,7 +4774,7 @@ stock void AddTalentExperience(client, char[] TalentName, ExperienceAmount, poso
 	//else a_Database_PlayerTalents_Experience[client].Set(pos, 0);
 }
 
-stock int CheckExperienceRequirementTalents(client, char[] TalentName, iLevel = 0, posover = -1) {
+stock int CheckExperienceRequirementTalents(int client, char[] TalentName, int iLevel = 0, int posover = -1) {
 
 	if (!IsLegitimateClient(client)) return 0;
 	int pos = posover;
@@ -4807,7 +4807,7 @@ stock int CheckExperienceRequirementTalents(client, char[] TalentName, iLevel = 
 	return types:
 	0 - level	1 - experience	2 - experience requirement
 */
-stock int GetProficiencyData(client, proficiencyType = 0, iExperienceEarned = 0, iReturnType = 0, bGetLevel = false) {
+stock int GetProficiencyData(int client, int proficiencyType = 0, int iExperienceEarned = 0, int iReturnType = 0, bool bGetLevel = false) {
 	int proficiencyExperience = pistolXP[client];
 	if (proficiencyType == 1) proficiencyExperience = meleeXP[client];
 	else if (proficiencyType == 2) proficiencyExperience = uziXP[client];
@@ -4864,7 +4864,7 @@ stock int GetProficiencyData(client, proficiencyType = 0, iExperienceEarned = 0,
 	return curLevel;
 }
 
-stock int CheckExperienceRequirement(client, bool bot = false, iLevel = 0) {
+stock int CheckExperienceRequirement(int client, bool bot = false, int iLevel = 0) {
 
 	int experienceRequirement = 0;
 	if (IsLegitimateClient(client)) {
@@ -4942,7 +4942,7 @@ stock int SuperCommonsInPlay(char[] Name) {
 
 	This function is called when a common infected is spawned, and attempts to roll for affixes.
 */
-stock int CreateCommonAffix(entity) {
+stock int CreateCommonAffix(int entity) {
 	int size = a_CommonAffixes.Length;
 	if (CommonAffixes.Length >= GetSuperCommonLimit()) return 0;	// there's a maximum limit on the # of super commons.
 	float RollChance = 0.0;
@@ -5100,7 +5100,7 @@ stock void CreateAndAttachFlame(int client, int damage = 0, float lifetime = 10.
 	}
 }*/
 
-stock int RemoveClientStatusEffect(client, char[] EffectName = "all") {
+stock int RemoveClientStatusEffect(int client, char[] EffectName = "all") {
 	char text[64];
 	if (!IsLegitimateClient(client)) return 0;
 	for (int i = 0; i < EntityOnFire.Length; i++) {
@@ -5116,7 +5116,7 @@ stock int RemoveClientStatusEffect(client, char[] EffectName = "all") {
 	return 0;
 }
 
-stock int GetClientStatusEffect(client, char[] EffectName = "burn") {
+stock int GetClientStatusEffect(int client, char[] EffectName = "burn") {
 	int Count = 0;
 	char TalentName[64];
 	if (!IsLegitimateClient(client) || IsFakeClient(client)) return 0;
@@ -5158,7 +5158,7 @@ stock void ClearRelevantData() {
 	//Handle WitchList.Clear();
 }
 
-stock void WipeDebuffs(bool IsEndOfCampaign = false, client = -1, bool IsDisconnect = false) {
+stock void WipeDebuffs(bool IsEndOfCampaign = false, int client = -1, bool IsDisconnect = false) {
 
 	if (client == -1) {
 
@@ -5313,7 +5313,7 @@ public Action Timer_EntityOnFire(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock void CreateCombustion(client, float g_Strength, f_Time)
+stock void CreateCombustion(int client, float g_Strength, float f_Time)
 {
 	int entity				= CreateEntityByName("env_fire");
 	float loc[3];
@@ -5342,7 +5342,7 @@ stock void CreateCombustion(client, float g_Strength, f_Time)
 
 
 // FIX THIS FIRST
-stock int GetSpecialCommonDamage(damage, client, Effect, victim) {
+stock int GetSpecialCommonDamage(int damage, int client, int Effect, int victim) {
 
 	/*
 
@@ -5381,7 +5381,7 @@ stock int GetSpecialCommonDamage(damage, client, Effect, victim) {
 	return RoundToCeil(damage * f_Strength);
 }
 
-stock void GetEntitiesInRange(client, victim, EntityType) {
+stock void GetEntitiesInRange(int client, int victim, int EntityType) {
 	float ClientPos[3];
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", ClientPos);
 
@@ -5417,7 +5417,7 @@ stock void GetEntitiesInRange(client, victim, EntityType) {
 	return count;
 }
 
-stock bool IsSpecialCommonInRangeEx(client, char[] vEntity="none", bool IsAuraEffect = true) {	// false for death effect
+stock bool IsSpecialCommonInRangeEx(int client, char[] vEntity="none", bool IsAuraEffect = true) {	// false for death effect
 
 	float ClientPos[3];
 	float fEntPos[3];
@@ -5446,7 +5446,7 @@ stock bool IsSpecialCommonInRangeEx(client, char[] vEntity="none", bool IsAuraEf
 	return false;
 }
 
-stock bool IsSpecialCommonInRange(client, Effect = -1, vEntity = -1, bool IsAuraEffect = true, infectedTarget = 0) {	// false for death effect
+stock bool IsSpecialCommonInRange(int client, int Effect = -1, int vEntity = -1, bool IsAuraEffect = true, int infectedTarget = 0) {	// false for death effect
 
 	float ClientPos[3];
 	float fEntPos[3];
@@ -5575,7 +5575,7 @@ public Action Timer_CommonAffixes(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock int GetCommonVisuals(char[] TheString, TheSize, entity, key = 0, pos = 0) {
+stock int GetCommonVisuals(char[] TheString, int TheSize, int entity, int key = 0, int pos = 0) {
 	char AffixName[2][64];
 	int ent = -1;
 	int size = CommonAffixes.Length;
@@ -5605,7 +5605,7 @@ stock int GetCommonVisuals(char[] TheString, TheSize, entity, key = 0, pos = 0) 
 	return -1;
 }
 
-stock int GetCommonValueAtPos(char[] TheString, TheSize, entity, valPos, pos = 0, bool incrementNonZeroPos = true) {
+stock int GetCommonValueAtPos(char[] TheString, int TheSize, int entity, int valPos, int pos = 0, bool incrementNonZeroPos = true) {
 	char AffixName[2][64];
 	int ent = -1;
 	if (pos > 0 && incrementNonZeroPos) pos++;
@@ -5641,7 +5641,7 @@ stock int GetCommonValueAtPos(char[] TheString, TheSize, entity, valPos, pos = 0
 	return -1;
 }
 
-stock int GetCommonValueIntAtPos(entity, pos) {
+stock int GetCommonValueIntAtPos(int entity, int pos) {
 	char AffixName[2][64];
 	int ent = -1;
 
@@ -5674,7 +5674,7 @@ stock int GetCommonValueIntAtPos(entity, pos) {
 	return -1;
 }
 
-stock float GetCommonValueFloatAtPos(entity, pos, char[] Section_Name = "none") {	// can override the section
+stock float GetCommonValueFloatAtPos(int entity, int pos, char[] Section_Name = "none") {	// can override the section
 	char AffixName[2][64];
 	int ent = -1;
 
@@ -5706,7 +5706,7 @@ stock float GetCommonValueFloatAtPos(entity, pos, char[] Section_Name = "none") 
 	return -1.0;
 }
 
-stock int GetCommonValue(char[] TheString, TheSize, entity, Key[], pos = 0, bool incrementNonZeroPos = true) {
+stock int GetCommonValue(char[] TheString, int TheSize, int entity, char[] Key, int pos = 0, bool incrementNonZeroPos = true) {
 	char AffixName[2][64];
 	int ent = -1;
 	if (pos > 0 && incrementNonZeroPos) pos++;
@@ -5741,7 +5741,7 @@ stock int GetCommonValue(char[] TheString, TheSize, entity, Key[], pos = 0, bool
 	return -1;
 }
 
-stock int GetCommonValueInt(entity, char[] Key) {
+stock int GetCommonValueInt(int entity, char[] Key) {
 	char AffixName[2][64];
 	int ent = -1;
 
@@ -5774,7 +5774,7 @@ stock int GetCommonValueInt(entity, char[] Key) {
 	return -1;
 }
 
-stock float GetCommonValueFloat(entity, char[] Key, char[] Section_Name = "none") {	// can override the section
+stock float GetCommonValueFloat(int entity, char[] Key, char[] Section_Name = "none") {	// can override the section
 	char AffixName[2][64];
 	int ent = -1;
 
@@ -5806,7 +5806,7 @@ stock float GetCommonValueFloat(entity, char[] Key, char[] Section_Name = "none"
 	return -1.0;
 }
 
-stock bool IsInRange(float EntitLoc[3], TargetLo[3], AllowsMaxRange, ModeSize = 1.0) {
+stock bool IsInRange(float EntitLoc[3], float TargetLo[3], int AllowsMaxRange, float ModeSize = 1.0) {
 
 	//new Float:ModelSize = 48.0 * ModeSize;
 	
@@ -5814,7 +5814,7 @@ stock bool IsInRange(float EntitLoc[3], TargetLo[3], AllowsMaxRange, ModeSize = 
 	return false;
 }
 
-stock int DrawSpecialInfectedAffixes(client, target = -1, float fRange = 256.0) {
+stock int DrawSpecialInfectedAffixes(int client, int target = -1, float fRange = 256.0) {
 	if (target != -1) {
 		float clientPos[3];
 		float targetPos[3];
@@ -5842,7 +5842,7 @@ stock int DrawSpecialInfectedAffixes(client, target = -1, float fRange = 256.0) 
 	return 1;
 }
 
-stock void DrawCommonAffixes(entity, char[] sForceAuraEffect = "none") {
+stock void DrawCommonAffixes(int entity, char[] sForceAuraEffect = "none") {
 	char AfxEffect[64];
 	char AfxDrawColour[64];
 	float AfxRange = -1.0;
@@ -5980,7 +5980,7 @@ stock void DrawCommonAffixes(entity, char[] sForceAuraEffect = "none") {
 	}*/
 }
 
-stock LivingEntitiesInRangeByType(client, float effectRange, targetTeam = 0) {
+stock int LivingEntitiesInRangeByType(int client, float effectRange, int targetTeam = 0) {
 	int count = 0;
 	int target = 0;
 	float ClientPos[3];
@@ -6021,7 +6021,7 @@ stock LivingEntitiesInRangeByType(client, float effectRange, targetTeam = 0) {
 	return count;
 }
 
-stock int LivingEntitiesInRange(entity, float SourceLoc[3], EffectRange, targetType = 0) {
+stock int LivingEntitiesInRange(int entity, float SourceLoc[3], int EffectRange, int targetType = 0) {
 
 	int count = 0;
 	float Pos[3];
@@ -6052,7 +6052,7 @@ stock int LivingEntitiesInRange(entity, float SourceLoc[3], EffectRange, targetT
 	return count;
 }
 
-stock bool IsAbilityCooldown(client, char[] TalentName) {
+stock bool IsAbilityCooldown(int client, char[] TalentName) {
 
 	int a_Size				=	0;
 	a_Size					=	a_Database_PlayerTalents[client].Length;
@@ -6069,12 +6069,12 @@ stock bool IsAbilityCooldown(client, char[] TalentName) {
 	return false;
 }
 
-stock void GetTalentNameAtMenuPosition(client, pos, char[] TheString, stringSize) {
+stock void GetTalentNameAtMenuPosition(int client, int pos, char[] TheString, int stringSize) {
 	TalentAtMenuPositionSection[client] = a_Menu_Talents.Get(pos, 2);
 	TalentAtMenuPositionSection[client].GetString(0, TheString, stringSize);
 }
 
-stock int GetMenuPosition(client, char[] TalentName) {
+stock int GetMenuPosition(int client, char[] TalentName) {
 	int size						=	a_Menu_Talents.Length;
 	char Name[PLATFORM_MAX_PATH];
 	for (int i = 0; i < size; i++) {
@@ -6086,7 +6086,7 @@ stock int GetMenuPosition(client, char[] TalentName) {
 }
 
 
-stock int GetTalentPosition(client, char[] TalentName) {
+stock int GetTalentPosition(int client, char[] TalentName) {
 	int pos = -1;
 	int a_Size				=	0;
 	a_Size					=	a_Database_PlayerTalents[client].Length;
@@ -6143,7 +6143,7 @@ stock void RemoveImmunities(int client) {
 	}
 }*/
 
-stock int GetAimTargetPosition(client, float TargetPos[3]) {
+stock int GetAimTargetPosition(int client, float TargetPos[3]) {
 	float ClientEyeAngles[3];
 	float ClientEyePosition[3];
 	GetClientEyeAngles(client, ClientEyeAngles);
@@ -6166,7 +6166,7 @@ stock int GetAimTargetPosition(client, float TargetPos[3]) {
 }
 
 // GetTargetOnly is set to true only when casting single-target spells, which require an actual target.
-stock void GetClientAimTargetEx(client, char[] TheText, TheSize, bool GetTargetOnly = false) {
+stock void GetClientAimTargetEx(int client, char[] TheText, int TheSize, bool GetTargetOnly = false) {
 
 	float ClientEyeAngles[3];
 	float ClientEyePosition[3];
@@ -6194,13 +6194,13 @@ stock void GetClientAimTargetEx(client, char[] TheText, TheSize, bool GetTargetO
 	delete trace;
 }
 
-public bool TraceRayIgnoreSelf(entity, mask, any client) {
+public bool TraceRayIgnoreSelf(int entity, int mask, any client) {
 	
 	if (entity < 1 || entity == client) return false;
 	return true;
 }
 
-stock GetAbilityDataPosition(client, pos) {
+stock int GetAbilityDataPosition(int client, int pos) {
 	for (int i = 0; i < PlayActiveAbilities[client].Length; i++) {
 		if (PlayActiveAbilities[client].Get(i, 0) == pos) return i;
 	}
@@ -6650,7 +6650,7 @@ stock bool BotsOnSurvivorTeam() {
 	return false;
 }
 
-stock bool SetActiveAbilityConditionsMet(client, char[] TalentName, bool GetIfConditionIsAlreadyMet = false) {
+stock bool SetActiveAbilityConditionsMet(int client, char[] TalentName, bool GetIfConditionIsAlreadyMet = false) {
 
 	int size = PlayActiveAbilities[client].Length;
 	int areConditionsMet = 0;
@@ -6671,14 +6671,14 @@ stock bool SetActiveAbilityConditionsMet(client, char[] TalentName, bool GetIfCo
 	return false;
 }
 
-stock bool IsSpellAnAura(client, char[] TalentName) {
+stock bool IsSpellAnAura(int client, char[] TalentName) {
 	int pos = GetTalentPosition(client, TalentName);
 	IsSpellAnAuraKeys[client]	= a_Menu_Talents.Get(pos, 0);
 	IsSpellAnAuraValues[client] = a_Menu_Talents.Get(pos, 1);
 	return (GetKeyValueIntAtPos(IsSpellAnAuraValues[client], IS_AURA_INSTEAD) == 1) ? true : false;
 }
 
-stock bool IsTriggerCooldownEffect(client, target, char[] TalentName, bool isActivePeriodEndInstead = false) {
+stock bool IsTriggerCooldownEffect(int client, int target, char[] TalentName, bool isActivePeriodEndInstead = false) {
 	int pos = GetTalentPosition(client, TalentName);
 	if (pos == -1) return false;// log an error? can this statement EVEN HAPPEN?
 	if (GetTalentStrength(client, TalentName) < 1) return false;
@@ -6695,7 +6695,7 @@ stock bool IsTriggerCooldownEffect(client, target, char[] TalentName, bool isAct
 	return true;
 }
 
-stock float GetEffectOverTimeStrength(client, char[] searchEffect) {
+stock float GetEffectOverTimeStrength(int client, char[] searchEffect) {
 	float talentStrength = 0.0;
 	char result[64];
 	for (int pos = 0; pos < PlayerEffectOverTimeEffects[client].Length; pos++) {
@@ -6792,7 +6792,7 @@ public Action Timer_EffectOverTime(Handle timer, any client) {
 	return Plugin_Continue;
 }
 
-stock bool AllowEffectOverTimeToContinue(client, Handle Values, char[] TalentName, damage, char[] effects = "-1", target = 0, float fTalentStrength = 0.0) {
+stock bool AllowEffectOverTimeToContinue(int client, Handle Values, char[] TalentName, int damage, char[] effects = "-1", int target = 0, float fTalentStrength = 0.0) {
 	if (GetKeyValueIntAtPos(Values, TALENT_IS_EFFECT_OVER_TIME) != 1) return true;
 	float effectGetActiveTime		= CheckEffectOverTimeCooldown(client, TalentName, EFFECTOVERTIME_GETACTIVETIME);
 	bool isEffectCoolingDownStill	= (effectGetActiveTime == 0.0 && CheckEffectOverTimeCooldown(client, TalentName, EFFECTOVERTIME_GETCOOLDOWN) != -1.0) ? true : false;
@@ -6806,7 +6806,7 @@ stock bool AllowEffectOverTimeToContinue(client, Handle Values, char[] TalentNam
 	return false;
 }
 
-stock void FormatEffectOverTimeBuffs(client, char[] eBar, eBarSize, pos = -1) {
+stock void FormatEffectOverTimeBuffs(int client, char[] eBar, int eBarSize, int pos = -1) {
 	int size = a_Menu_Talents.Length;
 	char TalentName[64];
 	char text[64];
@@ -6841,7 +6841,7 @@ stock void FormatEffectOverTimeBuffs(client, char[] eBar, eBarSize, pos = -1) {
 	if (pos == -1 && count > 0) Format(eBar, eBarSize, "%s%s", eBar, text);
 }
 																		// 0 to insert, 1 to get the active time, 2 to get the cooldown
-stock float CheckEffectOverTimeCooldown(client, char[] TalentName, cooldownSwitch = 0, damage = 0, char[] effects = "-1", target = 0, fTalentStrength = 0.0) {
+stock float CheckEffectOverTimeCooldown(int client, char[] TalentName, int cooldownSwitch = 0, int damage = 0, char[] effects = "-1", int target = 0, float fTalentStrength = 0.0) {
 	if (!IsLegitimateClient(client)) return -1.0;
 	// return the active time remaining for the talent.
 	if (cooldownSwitch == EFFECTOVERTIME_GETACTIVETIME) return EffectOverTimeActiveStatus(client, TalentName);
@@ -6854,7 +6854,7 @@ stock float CheckEffectOverTimeCooldown(client, char[] TalentName, cooldownSwitc
 	return EffectOverTimeActiveStatus(client, TalentName, true, _, damage, effects, target, fTalentStrength);
 }
 
-stock float EffectOverTimeActiveStatus(client, char[] TalentName, bool activateTalent = false, bool checkIfCooldownIsActive = false, damage = 0, char[] effects = "-1", target = 0, fTalentStrength = 0.0) {
+stock float EffectOverTimeActiveStatus(int client, char[] TalentName, bool activateTalent = false, bool checkIfCooldownIsActive = false, int damage = 0, char[] effects = "-1", int target = 0, float fTalentStrength = 0.0) {
 	//decl String:result[7][64];
 	char text[64];
 	int size = PlayerEffectOverTime[client].Length;
@@ -6903,7 +6903,7 @@ stock float EffectOverTimeActiveStatus(client, char[] TalentName, bool activateT
 	return 0.0;	// if the talent isn't on cooldown, isn't active, and we aren't activating it (ie. we are checking its status.)
 }
 
-stock int CheckActiveAmmoCooldown(client, char[] TalentName, bool bIsCreateCooldown=false) {
+stock int CheckActiveAmmoCooldown(int client, char[] TalentName, bool bIsCreateCooldown=false) {
 
 	/*
 
@@ -6916,7 +6916,7 @@ stock int CheckActiveAmmoCooldown(client, char[] TalentName, bool bIsCreateCoold
 	return 0;
 }
 
-stock bool IsAmmoActive(client, char[] TalentName, float f_Delay=0.0, bool IsActiveAbility = false) {
+stock bool IsAmmoActive(int client, char[] TalentName, float f_Delay=0.0, bool IsActiveAbility = false) {
 	char result[2][64];
 	int pos = -1;
 	int size = -1;
@@ -6955,7 +6955,7 @@ stock bool IsAmmoActive(client, char[] TalentName, float f_Delay=0.0, bool IsAct
 	return false;
 }
 
-stock float GetAmmoCooldownTime(client, char[] TalentName, bool IsActiveTimeInstead = false) {
+stock float GetAmmoCooldownTime(int client, char[] TalentName, bool IsActiveTimeInstead = false) {
 
 	//Push to an array.
 	char result[3][64];
@@ -6977,7 +6977,7 @@ stock float GetAmmoCooldownTime(client, char[] TalentName, bool IsActiveTimeInst
 	return -1.0;
 }
 
-stock float GetAbilityValue(client, char[] TalentName, valuePos) {
+stock float GetAbilityValue(int client, char[] TalentName, int valuePos) {
 
 	char TheTalent[64];
 
@@ -6993,13 +6993,13 @@ stock float GetAbilityValue(client, char[] TalentName, valuePos) {
 	return -1.0;
 }
 
-stock bool IsAbilityInstant(client, char[] TalentName) {
+stock bool IsAbilityInstant(int client, char[] TalentName) {
 
 	if (GetAbilityValue(client, TalentName, ABILITY_ACTIVE_TIME) > 0.0) return false;
 	return true;
 }
 
-stock bool CallAbilityCooldownAbilityTrigger(client, char[] TalentName, bool activePeriodNotCooldownPeriodEnds = false) {
+stock bool CallAbilityCooldownAbilityTrigger(int client, char[] TalentName, bool activePeriodNotCooldownPeriodEnds = false) {
 	char text[64];
 	int size = a_Menu_Talents.Length;
 	for (int i = 0; i < size; i++) {
@@ -7019,7 +7019,7 @@ stock bool CallAbilityCooldownAbilityTrigger(client, char[] TalentName, bool act
 	return false;
 }
 
-stock int GetIfTriggerRequirementsMetAlways(client, char[] TalentName) {
+stock int GetIfTriggerRequirementsMetAlways(int client, char[] TalentName) {
 	char text[64];
 	int size = a_Menu_Talents.Length;
 	for (int i = 0; i < size; i++) {
@@ -7036,7 +7036,7 @@ stock int GetIfTriggerRequirementsMetAlways(client, char[] TalentName) {
 	return 1;
 }
 
-bool AbilityIsInactiveAndOnCooldown(client, char[] TalentName, float fCooldownRemaining) {
+bool AbilityIsInactiveAndOnCooldown(int client, char[] TalentName, float fCooldownRemaining) {
 	if (fCooldownRemaining == -1.0) return false;
 
 	float AmmoCooldownTime = GetAbilityValue(client, TalentName, ABILITY_ACTIVE_TIME);
@@ -7049,7 +7049,7 @@ bool AbilityIsInactiveAndOnCooldown(client, char[] TalentName, float fCooldownRe
 }
 
 // by default this function does not handle instants, so we use an override to force it.
-stock float GetAbilityMultiplier(client, char[] abilityT, override = 0, char[] TalentName_t = "none") { // we need the option to force certain results in the menus (1) active (2) passive
+stock float GetAbilityMultiplier(int client, char[] abilityT, int override = 0, char[] TalentName_t = "none") { // we need the option to force certain results in the menus (1) active (2) passive
 	//new Handle Keys		= GetAbilityKeys[client];
 	Handle Values	= GetAbilityValues[client];
 	Handle Section	= GetAbilitySection[client];
@@ -7190,7 +7190,7 @@ stock float GetAbilityMultiplier(client, char[] abilityT, override = 0, char[] T
 	return totalStrength;
 }
 
-stock bool IsAbilityEquipped(client, char[] TalentName) {
+stock bool IsAbilityEquipped(int client, char[] TalentName) {
 
 	char text[64];
 
@@ -7205,7 +7205,7 @@ stock bool IsAbilityEquipped(client, char[] TalentName) {
 	return false;
 }
 
-stock bool IsAbilityActive(client, char[] TalentName, float timeToAdd = 0.0, char[] checkEffect = "none") {
+stock bool IsAbilityActive(int client, char[] TalentName, float timeToAdd = 0.0, char[] checkEffect = "none") {
 	if (StrEqual(checkEffect, "L")) return false;
 
 	float fCooldownRemaining = GetAmmoCooldownTime(client, TalentName, true);
@@ -7232,7 +7232,7 @@ stock bool IsAbilityActive(client, char[] TalentName, float timeToAdd = 0.0, cha
 	4	Interval Time
 	5	Effect Strength
 */
-stock float GetSpecialAmmoStrength(client, char[] TalentName, resulttype=0, bool bGetNextUpgrade=false, TalentStrengthOverride = 0) {
+stock float GetSpecialAmmoStrength(int client, char[] TalentName, int resulttype=0, bool bGetNextUpgrade=false, int TalentStrengthOverride = 0) {
 
 	int pos							=	GetMenuPosition(client, TalentName);
 	if (pos == -1) return -1.0;		// no ammo is selected.
@@ -7429,7 +7429,7 @@ public Action Timer_RemoveCooldown(Handle timer, Handle packi) {
 	return Plugin_Stop;
 }
 
-stock void CreateCooldown(client, pos, float f_Cooldown, char[] StackType = "none", StackCount = 0, target = 0) {
+stock void CreateCooldown(int client, int pos, float f_Cooldown, char[] StackType = "none", int StackCount = 0, int target = 0) {
 	if (IsLegitimateClient(client)) {
 		if (target == 0) target = client;
 		if (PlayerAbilitiesCooldown[client].Length < pos) PlayerAbilitiesCooldown[client].Resize(pos + 1);
@@ -7457,7 +7457,7 @@ stock void CreateCooldown(client, pos, float f_Cooldown, char[] StackType = "non
 	}
 }
 
-stock bool HasAbilityPoints(client, char[] TalentName) {
+stock bool HasAbilityPoints(int client, char[] TalentName) {
 
 	if (IsLegitimateClientAlive(client)) {
 
@@ -7500,7 +7500,7 @@ stock bool HasAbilityPoints(client, char[] TalentName) {
 	PrintToChatAll("%t", "Sky Points Award", green, amount, orange, thetext, white, green, Name, white);
 }*/
 
-stock GetUpgradeExperienceCost(client, bool b_IsLevelUp = false) {
+stock int GetUpgradeExperienceCost(int client, bool b_IsLevelUp = false) {
 
 	int experienceCost = 0;
 	if (IsLegitimateClient(client)) {
@@ -7515,7 +7515,7 @@ stock GetUpgradeExperienceCost(client, bool b_IsLevelUp = false) {
 	return experienceCost;
 }
 
-stock PrintToSurvivors(RPGMode, char[] SurvivorName, InfectedName[], SurvExp, float SurvPoints) {
+stock void PrintToSurvivors(int RPGMode, char[] SurvivorName, char[] InfectedName, int SurvExp, float SurvPoints) {
 
 	for (int i = 1; i <= MaxClients; i++) {
 
@@ -7527,7 +7527,7 @@ stock PrintToSurvivors(RPGMode, char[] SurvivorName, InfectedName[], SurvExp, fl
 	}
 }
 
-stock void PrintToInfected(RPGMode, char[] SurvivorName, InfectedName[], InfTotalExp, float InfTotalPoints) {
+stock void PrintToInfected(int RPGMode, char[] SurvivorName, char[] InfectedName, int InfTotalExp, float InfTotalPoints) {
 
 	for (int i = 1; i <= MaxClients; i++) {
 
@@ -7596,7 +7596,7 @@ stock int TotalSurvivors() {
 	return count;
 }
 
-stock void ChangeInfectedClass(client, zombieclass = 0, bool dontChangeClass = false) {
+stock void ChangeInfectedClass(int client, int zombieclass = 0, bool dontChangeClass = false) {
 	bool clientIsFake = IsLegitimateClient(client) && IsFakeClient(client);
 
 	if (clientIsFake || IsLegitimateClient(client)) {
@@ -7633,7 +7633,7 @@ stock void ChangeInfectedClass(client, zombieclass = 0, bool dontChangeClass = f
 	}
 }
 
-stock void SetSpecialInfectedHealth(attacker, zombieclass = 0) {
+stock void SetSpecialInfectedHealth(int attacker, int zombieclass = 0) {
 	int t_InfectedHealth = 0;
 	int myzombieclass = (zombieclass == 0) ? FindZombieClass(attacker) : zombieclass;
 
@@ -7650,7 +7650,7 @@ stock void SetSpecialInfectedHealth(attacker, zombieclass = 0) {
 	if (DefaultHealth[attacker] < OriginalHealth[attacker]) DefaultHealth[attacker] = OriginalHealth[attacker];
 }
 
-stock int TotalHumanSurvivors(ignore = -1) {
+stock int TotalHumanSurvivors(int ignore = -1) {
 	int count = 0;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (ignore != -1 && i == ignore) continue;
@@ -7712,7 +7712,7 @@ stock bool StringExistsArray(char[] Name, Handle array) {
 	return false;
 }
 
-stock void AddCommasToString(value, char[] theString, theSize) 
+stock void AddCommasToString(int value, char[] theString, int theSize) 
 {
 	char buffer[64];
 	char separator[1];
@@ -7731,7 +7731,7 @@ stock void AddCommasToString(value, char[] theString, theSize)
 	Format(theString, theSize, "%d%s", value, buffer);
 }
 
-stock void HandicapDifference(client, target) {
+stock void HandicapDifference(int client, int target) {
 
 	if (IsLegitimateClientAlive(client) && IsLegitimateClientAlive(target)) {
 
@@ -7755,7 +7755,7 @@ stock void HandicapDifference(client, target) {
 	return 0;
 }
 
-stock void ReceiveCommonDamage(client, entity, playerDamageTaken) {
+stock void ReceiveCommonDamage(int client, int entity, int playerDamageTaken) {
 
 	/*new pos = -1;
 	if (IsSpecialCommon(entity)) pos = FindListPositionByEntity(entity, CommonList);
@@ -7775,7 +7775,7 @@ stock void ReceiveCommonDamage(client, entity, playerDamageTaken) {
 	}
 }
 
-stock void ReceiveWitchDamage(client, entity, playerDamageTaken) {
+stock void ReceiveWitchDamage(int client, int entity, int playerDamageTaken) {
 
 	if (!IsWitch(entity)) {
 
@@ -7810,7 +7810,7 @@ stock void ReceiveWitchDamage(client, entity, playerDamageTaken) {
 	}
 }
 
-stock void EntityStatusEffectDamage(client, damage) {
+stock void EntityStatusEffectDamage(int client, int damage) {
 
 	/*
 
@@ -7831,7 +7831,7 @@ stock void EntityStatusEffectDamage(client, damage) {
 	}
 }
 
-stock int GetDifficultyRating(client, bool JustBaseRating = false) {
+stock int GetDifficultyRating(int client, bool JustBaseRating = false) {
 
 	if (iTankRush == 1) RatingHandicap[client] = RatingPerLevel;
 	int iRatingPerLevel = RatingPerLevel;
@@ -7842,7 +7842,7 @@ stock int GetDifficultyRating(client, bool JustBaseRating = false) {
 	return iRatingPerLevel;
 }
 
-stock int AddCommonInfectedDamage(client, entity, playerDamage, bool IsStatusDamage = false, damagevariant = -1) {
+stock int AddCommonInfectedDamage(int client, int entity, int playerDamage, bool IsStatusDamage = false, int damagevariant = -1) {
 
 	/*if (!IsCommonInfected(entity)) {
 
@@ -7889,7 +7889,7 @@ stock int AddCommonInfectedDamage(client, entity, playerDamage, bool IsStatusDam
 	return 1;
 }
 
-stock int AddWitchDamage(client, entity, playerDamageToWitch, bool IsStatusDamage = false, damagevariant = -1) {
+stock int AddWitchDamage(int client, int entity, int playerDamageToWitch, bool IsStatusDamage = false, int damagevariant = -1) {
 
 	if (!IsWitch(entity)) {
 
@@ -7964,7 +7964,7 @@ stock int AddWitchDamage(client, entity, playerDamageToWitch, bool IsStatusDamag
 	return 1;
 }
 
-stock int CheckIfEntityShouldDie(victim, attacker, damage = 0, bool IsStatusDamage = false) {
+stock int CheckIfEntityShouldDie(int victim, int attacker, int damage = 0, bool IsStatusDamage = false) {
 
 	if (CheckTeammateDamages(victim, attacker) >= 1.0 ||
 		CheckTeammateDamages(victim, attacker, true) >= 1.0) {
@@ -8015,7 +8015,7 @@ stock int CheckIfEntityShouldDie(victim, attacker, damage = 0, bool IsStatusDama
 
 	This function removes a dying (or dead) common infected from all client cooldown arrays.
 */
-stock void RemoveCommonAffixes(entity) {
+stock void RemoveCommonAffixes(int entity) {
 
 	int size = CommonAffixes.Length;
 	int ent = -1;
@@ -8072,7 +8072,7 @@ stock GetExplosionDamage(target, damage, survivor) {
 	return 0;
 }*/
 
-stock void ClearSpecialCommon(entity, bool IsCommonEntity = true, playerDamage = 0, lastAttacker = -1) {
+stock void ClearSpecialCommon(int entity, bool IsCommonEntity = true, int playerDamage = 0, int lastAttacker = -1) {
 
 	if (CommonList == INVALID_HANDLE) return;
 
@@ -8159,7 +8159,7 @@ stock void ClearSpecialCommon(entity, bool IsCommonEntity = true, playerDamage =
 	}
 }
 
-stock int GetTeamRatingAverage(teamToGatherRatingOf = 2) {	// 2 == survivors
+stock int GetTeamRatingAverage(int teamToGatherRatingOf = 2) {	// 2 == survivors
 	int rating = 0;
 	int count = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -8171,13 +8171,13 @@ stock int GetTeamRatingAverage(teamToGatherRatingOf = 2) {	// 2 == survivors
 	return rating;
 }
 
-stock bool IsCommonInfectedDead(entity) {
+stock bool IsCommonInfectedDead(int entity) {
 
 	if (FindListPositionByEntity(entity, CommonInfected) < 0) return true;
 	return false;
 }
 
-stock void OnCommonCreated(entity, bool bIsDestroyed = false, bool isSpecial = false) {
+stock void OnCommonCreated(int entity, bool bIsDestroyed = false, bool isSpecial = false) {
 
 	//decl String:EntityId[64];
 	//Format(EntityId, sizeof(EntityId), "%d", entity);
@@ -8187,7 +8187,7 @@ stock void OnCommonCreated(entity, bool bIsDestroyed = false, bool isSpecial = f
 	else if (isSpecial || IsSpecialCommon(entity)) ClearSpecialCommon(entity);
 }
 
-stock void OnCommonInfectedCreated(entity, bool bIsDestroyed = false, finalkillclient=0, bool IsIgnite = false) {
+stock void OnCommonInfectedCreated(int entity, bool bIsDestroyed = false, int finalkillclient=0, bool IsIgnite = false) {
 	if (CommonInfected == INVALID_HANDLE) return;
 	if (!b_IsActiveRound) return;
 	int pos = FindListPositionByEntity(entity, CommonInfected);
@@ -8222,7 +8222,7 @@ stock void OnCommonInfectedCreated(entity, bool bIsDestroyed = false, finalkillc
 	from both the list of active witches as well as reward players who
 	hurt them and then reset that said damage as well.
 */
-stock void OnWitchCreated(entity, bool bIsDestroyed = false, lastHitAttacker = 0) {
+stock void OnWitchCreated(int entity, bool bIsDestroyed = false, int lastHitAttacker = 0) {
 
 	if (WitchList == INVALID_HANDLE) return;
 
@@ -8300,7 +8300,7 @@ stock int FindDelim(char[] EntityName, char[] Delim = ":") {
 	return -1;
 }
 
-stock int GetDelimiterCount(char[] TextCase, Delimiter[]) {
+stock int GetDelimiterCount(char[] TextCase, char[] Delimiter) {
 
 	int count = 0;
 	char Delim[2];
@@ -8312,7 +8312,7 @@ stock int GetDelimiterCount(char[] TextCase, Delimiter[]) {
 	return count;
 }
 
-stock int FindListPositionBySearchKey(char[] searchkey, Handle h_SearchList, block = 0, bool bDebug = false) {
+stock int FindListPositionBySearchKey(char[] searchkey, Handle h_SearchList, int block = 0, bool bDebug = false) {
 
 	/*
 
@@ -8455,7 +8455,7 @@ stock bool IsSurvivorInAGroup(int client) {
 	return true;
 }
 
-stock bool IsPlayerRushing(client, float fDistance = 2048.0) {
+stock bool IsPlayerRushing(int client, float fDistance = 2048.0) {
 
 	int TotalClients = LivingHumanSurvivors();
 	int MyGroupSize = GroupSize(client);
@@ -8465,7 +8465,7 @@ stock bool IsPlayerRushing(client, float fDistance = 2048.0) {
 	return true;
 }
 
-stock float SurvivorRushingMultiplier(client, bool IsForTankTeleport = false) {
+stock float SurvivorRushingMultiplier(int client, bool IsForTankTeleport = false) {
 
 	int SurvivorsCount	= LivingHumanSurvivors();
 	if (SurvivorsCount <= iSurvivorGroupMinimum) return 1.0;	// no penalty if less players than group minimum exist.
@@ -8489,7 +8489,7 @@ stock bool AnyGroups() {
 	return false;
 }
 
-stock int GroupSize(client = 0) {
+stock int GroupSize(int client = 0) {
 
 	if (client > 0) return NearbySurvivors(client, 1536.0, true);
 	int largestGroup = 0;
@@ -8503,7 +8503,7 @@ stock int GroupSize(client = 0) {
 	return count;
 }
 
-stock int NearbySurvivors(client, float range = 512.0, bool Survivors = false, bool IsRushing = false) {
+stock int NearbySurvivors(int client, float range = 512.0, bool Survivors = false, bool IsRushing = false) {
 
 	float pos[3];
 	if (IsLegitimateClientAlive(client)) GetClientAbsOrigin(client, pos);
@@ -8533,7 +8533,7 @@ stock int NearbySurvivors(client, float range = 512.0, bool Survivors = false, b
 	return count;
 }
 
-stock int NumSurvivorsInRange(client, float range = 512.0) {
+stock int NumSurvivorsInRange(int client, float range = 512.0) {
 
 	float pos[3];
 	if (IsLegitimateClientAlive(client)) GetClientAbsOrigin(client, pos);
@@ -8548,7 +8548,7 @@ stock int NumSurvivorsInRange(client, float range = 512.0) {
 	return count;
 }
 
-stock bool SurvivorsInRange(client, float range = 512.0, bool NoSurvivorBots = false) {
+stock bool SurvivorsInRange(int client, float range = 512.0, bool NoSurvivorBots = false) {
 
 	float pos[3];
 	if (IsLegitimateClientAlive(client)) GetClientAbsOrigin(client, pos);
@@ -8565,7 +8565,7 @@ stock bool SurvivorsInRange(client, float range = 512.0, bool NoSurvivorBots = f
 	return false;
 }
 
-stock bool AnyTanksNearby(client, float range = 0.0) {
+stock bool AnyTanksNearby(int client, float range = 0.0) {
 
 	if (range == 0.0) range = TanksNearbyRange;
 
@@ -8583,7 +8583,7 @@ stock bool AnyTanksNearby(client, float range = 0.0) {
 	return false;
 }
 
-stock bool IsVectorsCrossed(client, float torigin[3], aorigin[3], f_Distance) {
+stock bool IsVectorsCrossed(int client, float torigin[3], float aorigin[3], int f_Distance) {
 
 	float porigin[3];
 	float vorigin[3];
@@ -8592,7 +8592,7 @@ stock bool IsVectorsCrossed(client, float torigin[3], aorigin[3], f_Distance) {
 	return false;
 }
 
-public void OnEntityDestroyed(entity) {
+public void OnEntityDestroyed(int entity) {
 
 	if (IsCommonInfected(entity)) OnCommonInfectedCreated(entity, true);
 }
@@ -8648,13 +8648,13 @@ public Action Timer_DestroyRock(Handle timer, any ent) {
 	return Plugin_Stop;
 }
 
-public void OnEntityCreated(entity, const char[] classname) {
+public void OnEntityCreated(int entity, const char[] classname) {
 
 	//if (!b_IsActiveRound) return;
 	OnEntityCreatedEx(entity, classname);
 }
 
-stock void OnEntityCreatedEx(entity, const char[] classname, bool creationOverride = false) {
+stock void OnEntityCreatedEx(int entity, const char[] classname, bool creationOverride = false) {
 	if (iTankRush > 0 && StrEqual(classname, "tank_rock", false)) {
 		CreateTimer(1.4, Timer_DestroyRock, entity, TIMER_FLAG_NO_MAPCHANGE);
 		return;
@@ -8679,7 +8679,7 @@ stock void OnEntityCreatedEx(entity, const char[] classname, bool creationOverri
 	}
 }
 
-bool IsWitch(entity) {
+bool IsWitch(int entity) {
 
 	if (entity <= 0 || !IsValidEntity(entity)) return false;
 
@@ -8688,7 +8688,7 @@ bool IsWitch(entity) {
 	return strcmp(className, "witch") == 0;
 }
 
-bool IsCommonInfected(entity) {
+bool IsCommonInfected(int entity) {
 
 	if (entity <= 0 || !IsValidEntity(entity)) return false;
 
@@ -8697,7 +8697,7 @@ bool IsCommonInfected(entity) {
 	return strcmp(className, "infected") == 0;
 }
 
-stock void ExperienceBarBroadcast(client, char[] sStatusEffects) {
+stock void ExperienceBarBroadcast(int client, char[] sStatusEffects) {
 
 	char eBar[64];
 	char currExperience[64];
@@ -8726,7 +8726,7 @@ stock void ExperienceBarBroadcast(client, char[] sStatusEffects) {
 	}
 }
 
-stock int CheckTankingDamage(infected, client) {
+stock int CheckTankingDamage(int infected, int client) {
 
 	int pos = -1;
 	int cDamage = 0;
@@ -8766,7 +8766,7 @@ stock void WipeDamageContribution(int client) {
 	}
 }
 
-stock float CheckTeammateDamages(infected, client = -1, bool bIsMyDamageOnly = false) {
+stock float CheckTeammateDamages(int infected, int client = -1, bool bIsMyDamageOnly = false) {
 
 	/*
 
@@ -8831,7 +8831,7 @@ stock float CheckTeammateDamages(infected, client = -1, bool bIsMyDamageOnly = f
 	return isDamageValue;
 }
 
-stock void DisplayInfectedHealthBars(survivor, infected) {
+stock void DisplayInfectedHealthBars(int survivor, int infected) {
 
 	if (iRPGMode == -1 || IsCommonInfected(infected)) return;
 
@@ -8850,7 +8850,7 @@ stock void DisplayInfectedHealthBars(survivor, infected) {
 	PrintCenterText(survivor, text);
 }
 
-stock void GetStatusEffects(client, EffectType = 0, char[] theStringToStoreItIn, theSizeOfTheString) {
+stock void GetStatusEffects(int client, int EffectType = 0, char[] theStringToStoreItIn, int theSizeOfTheString) {
 
 	int Count = 0;
 	int iNumStatusEffects = 0;
@@ -9093,7 +9093,7 @@ stock bool IsClientCleansing(int client) {
 	return false;
 }
 
-stock bool IsActiveAmmoCooldown(client, effect = '0', char[] activeTalentSearchKey = "none") {
+stock bool IsActiveAmmoCooldown(int client, int effect = '0', char[] activeTalentSearchKey = "none") {
 	char result[2][64];
 	char EffectT[4];
 	Format(EffectT, sizeof(EffectT), "%c", effect);
@@ -9119,7 +9119,7 @@ stock bool IsActiveAmmoCooldown(client, effect = '0', char[] activeTalentSearchK
 	return false;
 }
 
-stock void GetSpecialAmmoEffect(char[] TheValue, TheSize, int client, char[] TalentName) {
+stock void GetSpecialAmmoEffect(char[] TheValue, int TheSize, int client, char[] TalentName) {
 
 	int pos			= GetMenuPosition(client, TalentName);
 	if (pos >= 0) {
@@ -9159,12 +9159,12 @@ stock int GetPlayerStamina(int client) {
 	return StaminaMax;
 }
 
-stock void DisplayInfectedHUD(client, statusType) {
+stock void DisplayInfectedHUD(int client, int statusType) {
 	GetStatusEffects(client, statusType, clientStatusEffectDisplay[client], sizeof(clientStatusEffectDisplay[]));
 	ExperienceBarBroadcast(client, clientStatusEffectDisplay[client]);
 }
 
-stock void DisplayHUD(client, statusType) {
+stock void DisplayHUD(int client, int statusType) {
 
 	if (iRPGMode >= 1) {
 		GetStatusEffects(client, statusType, clientStatusEffectDisplay[client], sizeof(clientStatusEffectDisplay[]));
@@ -9247,7 +9247,7 @@ stock void DisplayHUD(client, statusType) {
 	}
 }
 
-stock void GetPlayerStaminaBar(client, char[] ebar, int theSize) {
+stock void GetPlayerStaminaBar(int client, char[] ebar, int theSize) {
 
 	Format(eBar, theSize, "[----------]");
 	if (IsLegitimateClientAlive(client)) {
@@ -9270,7 +9270,7 @@ stock void GetPlayerStaminaBar(client, char[] ebar, int theSize) {
 	}
 }
 
-stock float GetTankingContribution(survivor, infected) {
+stock float GetTankingContribution(int survivor, int infected) {
 
 	int TotalHealth = 0;
 	int DamageTaken = 0;
@@ -9303,7 +9303,7 @@ stock float GetTankingContribution(survivor, infected) {
 	return ((DamageTaken * 1.0) / (TotalHealth * 1.0));
 }
 
-stock int GetTargetHealth(client, target, bool MyHealth = false) {
+stock int GetTargetHealth(int client, int target, bool MyHealth = false) {
 
 	int TotalHealth = 0;
 	int DamageDealt = 0;
@@ -9340,7 +9340,7 @@ stock int GetTargetHealth(client, target, bool MyHealth = false) {
 	return TotalHealth;
 }
 
-stock int GetRatingReward(survivor, infected) {
+stock int GetRatingReward(int survivor, int infected) {
 
 	int RatingRewardDamage = 0;
 	int RatingRewardTanking = 0;
@@ -9398,13 +9398,13 @@ stock int GetHumanInfectedHealth(int client) {
 	return RoundToCeil(GetMaximumHealth(client) * isHealthRemaining);
 }
 
-stock float GetClientHealthPercentageSurvivor(client, bool GetHealthRemaining = false) {
+stock float GetClientHealthPercentageSurvivor(int client, bool GetHealthRemaining = false) {
 	float fHealthRemaining = (GetClientHealth(client) * 1.0) / (GetMaximumHealth(client) * 1.0);
 	if (GetHealthRemaining) return fHealthRemaining;
 	return 1.0 - fHealthRemaining;
 }
 
-stock float GetClientHealthPercentage(client, target, bool GetHealthRemaining = false) {
+stock float GetClientHealthPercentage(int client, int target, bool GetHealthRemaining = false) {
 	int pos = -1;
 	if (IsLegitimateClient(target)) {
 		if (GetClientTeam(target) == TEAM_INFECTED) pos = FindListPositionByEntity(target, InfectedHealth[client]);
@@ -9419,7 +9419,7 @@ stock float GetClientHealthPercentage(client, target, bool GetHealthRemaining = 
 	return fHealthRemaining;
 }
 
-stock void GetInfectedHealthBar(survivor, infected, bool bTrueHealth = false, char[] eBar, theSize) {
+stock void GetInfectedHealthBar(int survivor, int infected, bool bTrueHealth = false, char[] eBar, int theSize) {
 
 	Format(eBar, theSize, "[----------------------------------------]");
 
@@ -9469,7 +9469,7 @@ stock void GetInfectedHealthBar(survivor, infected, bool bTrueHealth = false, ch
 	}
 }
 
-stock void ExperienceBar(client, char[] sTheString, iTheSize, iBarType = 0, bool bReturnValue = false) {// 0 XP, 1 Infected armor (humans only), 2 Infected Health from talents, etc. (humans only)
+stock void ExperienceBar(int client, char[] sTheString, int iTheSize, int iBarType = 0, bool bReturnValue = false) {// 0 XP, 1 Infected armor (humans only), 2 Infected Health from talents, etc. (humans only)
 
 	//decl String:eBar[256];
 	float ePct = 0.0;
@@ -9502,7 +9502,7 @@ stock void ExperienceBar(client, char[] sTheString, iTheSize, iBarType = 0, bool
 	//return eBar;
 }
 
-stock void MenuExperienceBar(client, currXP = -1, nextXP = -1, char[] eBar, theSize) {
+stock void MenuExperienceBar(int client, int currXP = -1, int nextXP = -1, char[] eBar, int theSize) {
 
 	float ePct = 0.0;
 	if (currXP == -1) currXP = ExperienceLevel[client];
@@ -9643,7 +9643,7 @@ public bool ChatTrigger(int client, int args, bool teamOnly) {
 	return false;
 }
 
-stock int GetTargetClient(client, char[] TargetName) {
+stock int GetTargetClient(int client, char[] TargetName) {
 	char Name[64];
 	for (int i = 1; i <= MaxClients; i++) {
 		if (IsLegitimateClient(i) && i != client && GetClientTeam(i) == GetClientTeam(client)) {
@@ -9654,7 +9654,7 @@ stock int GetTargetClient(client, char[] TargetName) {
 	return -1;
 }
 
-stock void TeamworkRewardNotification(client, target, float PointCost, char[] ItemName) {
+stock void TeamworkRewardNotification(int client, int target, float PointCost, char[] ItemName) {
 
 	// Client is the user who purchased the item.
 	// Target is the user who received it the item.
@@ -9752,7 +9752,7 @@ stock bool QuickCommandAccess(int client, int args, bool b_IsTeamOnly) {
 	return QuickCommandAccessEx(client, Command, b_IsTeamOnly);
 }
 
-stock bool QuickCommandAccessEx(client, char[] sCommand, bool b_IsTeamOnly = false, bool bGiveProfileItem = false, bool bIsItemExists = false) {
+stock bool QuickCommandAccessEx(int client, char[] sCommand, bool b_IsTeamOnly = false, bool bGiveProfileItem = false, bool bIsItemExists = false) {
 
 	int TargetClient = -1;
 	char SplitCommand[2][64];
@@ -10133,13 +10133,13 @@ stock void LoadHealthMaximum(int client) {
 	GetAbilityStrengthByTrigger(client, _, "a", _, 0);	// activator, target, trigger ability, effects, zombieclass, damage
 }
 
-stock void  SetSpeedMultiplierBase(attacker, float amount = 1.0) {
+stock void SetSpeedMultiplierBase(int attacker, float amount = 1.0) {
 
 	if (GetClientTeam(attacker) == TEAM_SURVIVOR) SetEntPropFloat(attacker, Prop_Send, "m_flLaggedMovementValue", fBaseMovementSpeed);
 	else SetEntPropFloat(attacker, Prop_Send, "m_flLaggedMovementValue", amount);
 }
 
-stock void PlayerSpawnAbilityTrigger(attacker) {
+stock void PlayerSpawnAbilityTrigger(int attacker) {
 
 	if (IsLegitimateClientAlive(attacker)) {
 
@@ -10615,12 +10615,12 @@ public Action Timer_RemoveDamageImmunity(Handle timer, any client) {
 	#define HITGROUP_RIGHTLEG    7
 	#define HITGROUP_GEAR        10            // alerts NPC, but doesn't do damage or bleed (1/100th damage)
 	*/
-stock GetHitgroupType(hitgroup) {
+stock int GetHitgroupType(int hitgroup) {
 	if (hitgroup >= 4 && hitgroup <= 7) return 2;	// limb
 	if (hitgroup == 1) return 1;					// headshot
 	return 0;										// not a limb
 }
-stock bool CheckIfLimbDamage(attacker, victim, Handle event, damage) {
+stock bool CheckIfLimbDamage(int attacker, int victim, Handle event, float damage) {
 	if (IsLegitimateClientAlive(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR) {
 		if (!b_IsHooked[attacker]) ChangeHook(attacker, true);
 		int hitgroup = event.GetInt("hitgroup");
@@ -10638,7 +10638,7 @@ stock bool CheckIfLimbDamage(attacker, victim, Handle event, damage) {
 										bool:bDontActuallyActivate = false, typeOfValuesToRetrieve = 1, hitgroup = -1)
 */
 
-stock bool CheckIfHeadshot(attacker, victim, Handle event, damage) {
+stock bool CheckIfHeadshot(int attacker, int victim, Handle event, float damage) {
 	if (IsLegitimateClientAlive(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR) {
 		if (!b_IsHooked[attacker]) ChangeHook(attacker, true);
 		int hitgroup = event.GetInt("hitgroup");
@@ -10698,7 +10698,7 @@ stock bool EquipBackpack(int client) {
 	return true;
 }
 
-stock bool GetClientStance(client, float fChaseTime = 20.0) {
+stock bool GetClientStance(int client, float fChaseTime = 20.0) {
 
 	//if (stance == ClientActiveStance[client]) return true;
 	/*if (bChangeStance) {
@@ -10789,7 +10789,7 @@ stock bool IsAllSurvivorsDead() {
 	return true;
 }
 
-stock GiveAdrenaline(client, bool Remove=false) {
+stock void GiveAdrenaline(int client, bool Remove=false) {
 
 	if (Remove) SetEntProp(client, Prop_Send, "m_bAdrenalineActive", 0);
 	else if (!HasAdrenaline(client)) SetEntProp(client, Prop_Send, "m_bAdrenalineActive", 1);
@@ -10816,12 +10816,12 @@ stock bool FallingFromLedge(int client) {
 	return GetEntProp(client, Prop_Send, "m_isFallingFromLedge");
 }
 
-stock SetAdrenalineState(client, float time=10.0) {
+stock void SetAdrenalineState(int client, float time=10.0) {
 
 	if (!HasAdrenaline(client)) SDKCall(g_hEffectAdrenaline, client, time);
 }
 
-stock GetClientTotalHealth(int client) {
+stock int GetClientTotalHealth(int client) {
 
 	int SolidHealth			= GetClientHealth(client);
 	float TempHealth	= GetEntPropFloat(client, Prop_Send, "m_healthBuffer");
@@ -10831,7 +10831,7 @@ stock GetClientTotalHealth(int client) {
 	else return RoundToCeil(TempHealth);
 }
  
-stock SetClientTotalHealth(client, damage, bool IsSetHealthInstead = false, bool bIgnoreMultiplier = false) {
+stock void SetClientTotalHealth(int client, int damage, bool IsSetHealthInstead = false, bool bIgnoreMultiplier = false) {
 	if (ImmuneToAllDamage[client]) return;
 	float fHealthBuffer = 0.0;
 
@@ -10886,7 +10886,7 @@ stock SetClientTotalHealth(client, damage, bool IsSetHealthInstead = false, bool
 	}
 }
 
-stock RestoreClientTotalHealth(client, damage) {
+stock void RestoreClientTotalHealth(int client, int damage) {
 
 	int SolidHealth			= GetClientHealth(client);
 	float TempHealth	= 0.0;
@@ -10899,7 +10899,7 @@ stock RestoreClientTotalHealth(client, damage) {
 	else SetEntityHealth(client, SolidHealth + damage);
 }
 
-stock bool SetTempHealth(client, targetclient, float TemporaryHealth=30.0, bool IsRevive=false, bool IsInNeedOfPickup=false) {
+stock bool SetTempHealth(int client, int targetclient, float TemporaryHealth=30.0, bool IsRevive=false, bool IsInNeedOfPickup=false) {
 
 	if (!IsLegitimateClientAlive(targetclient)) return false;
 	if (IsRevive) {
@@ -10933,7 +10933,7 @@ stock bool SetTempHealth(client, targetclient, float TemporaryHealth=30.0, bool 
 	SetClientTempHealth(client, GetMaximumHealth(client) - 1);
 }*/
 
-stock ModifyHealth(client, float TalentStrength, TalentTime, isRawValue = 0) {
+stock void ModifyHealth(int client, float TalentStrength, int TalentTime, int isRawValue = 0) {
 
 	if (!IsLegitimateClientAlive(client)) return;
 	SetMaximumHealth(client);
@@ -10957,7 +10957,7 @@ stock ModifyHealth(client, float TalentStrength, TalentTime, isRawValue = 0) {
 	}*/
 }
 
-stock ReviveDownedSurvivor(int client) {
+stock void ReviveDownedSurvivor(int client) {
 
 	//if (IsLedged(client)) HealPlayer(client, client, 1.0, 'h');
 	//else
@@ -10977,7 +10977,7 @@ if (RoundToFloor(PlayerHealth_Temp + HealAmount) >= GetMaximumHealth(client) && 
 	}
 	*/
 
-stock GetIncapCount(int client) {
+stock int GetIncapCount(int client) {
 
 	return GetEntProp(client, Prop_Send, "m_currentReviveCount");
 }
@@ -10989,7 +10989,7 @@ stock bool IsBeingRevived(int client) {
 	return false;
 }
 
-stock ReleasePlayer(int client) {
+stock int ReleasePlayer(int client) {
 	int attacker = L4D2_GetInfectedAttacker(client);
 	if (attacker > 0) {
 		CalculateInfectedDamageAward(attacker, client);
@@ -11049,7 +11049,7 @@ stock ReleasePlayer(int client) {
 	return -1;
 }
 
-stock HealPlayer(client, activator, float f_TalentStrength, ability, bool IsStrength = false) {	// must heal for abilities that instant-heal
+stock int HealPlayer(int client, int activator, float f_TalentStrength, int ability, bool IsStrength = false) {	// must heal for abilities that instant-heal
 
 	if (!IsLegitimateClientAlive(client)) return 0;
 	int MyMaximumHealth = GetMaximumHealth(client);
@@ -11171,7 +11171,7 @@ stock HealPlayer(client, activator, float f_TalentStrength, ability, bool IsStre
 	return HealAmount;		// to prevent cartel being awarded for overheal.
 }
 
-stock EnableHardcoreMode(client, bool Disable=false) {
+stock void EnableHardcoreMode(int client, bool Disable=false) {
 
 	if (!Disable) {
 	
