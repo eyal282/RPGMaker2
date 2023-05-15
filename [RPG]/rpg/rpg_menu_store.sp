@@ -1,6 +1,6 @@
-/* put the line below after all of the includes!
+
 #pragma newdecls required
-*/
+
 
 void BuildStoreMenu(int client) {
 
@@ -174,7 +174,7 @@ stock ChallengeEverything(int client) {
 	WipeTalentPoints(client);
 }
 
-public BuildStoreHandle(Handle menu, MenuAction action, client, slot) {
+public BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 

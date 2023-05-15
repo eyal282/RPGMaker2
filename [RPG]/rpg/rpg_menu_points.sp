@@ -1,6 +1,5 @@
-/* put the line below after all of the includes!
+
 #pragma newdecls required
-*/
 
 stock void BuildPointsMenu(int client, char[] MenuName, char[] ConfigName = "none") {
 
@@ -154,7 +153,7 @@ stock void BuildPointsMenu(int client, char[] MenuName, char[] ConfigName = "non
 	menu.Display(client, 0);
 }
 
-public BuildPointsMenuHandle(Handle menu, MenuAction action, client, slot) {
+public BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 

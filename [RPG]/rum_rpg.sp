@@ -272,7 +272,7 @@ public Plugin myinfo = {
 #define ACTIVATOR_TARGET_MUST_EVEN_GROUND	157
 #define TARGET_MUST_BE_IN_THE_AIR			158
 #define ABILITY_EVENT_TYPE					159
-// because this value changes when we increase the static list of key positions
+// because this value changes when we increase the list of key positions
 // we should create a reference for the IsAbilityFound method, so that it doesn't waste time checking keys that we know aren't equal.
 #define TALENT_FIRST_RANDOM_KEY_POSITION	160
 // for super commons.
@@ -818,7 +818,7 @@ Handle SurvivorsIgnored[MAXPLAYERS + 1];
 bool HasSeenCombat[MAXPLAYERS + 1];
 int MyBirthday[MAXPLAYERS + 1];
 //======================================
-//Main config static variables.
+//Main config variables.
 //======================================
 float fSuperCommonLimit;
 float fBurnPercentage;
@@ -4565,5 +4565,3 @@ stock bool IsSpecialCommon(int entity) {
 #include "rpg/rpg_functions.sp"
 #include "rpg/rpg_events.sp"
 #include "rpg/rpg_database.sp"
-
-#pragma newdecls required

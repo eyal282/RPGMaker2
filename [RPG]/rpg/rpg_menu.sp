@@ -1,6 +1,5 @@
-/* put the line below after all of the includes!
+
 #pragma newdecls required
-*/
 
 stock void BuildMenuTitle(int client, Handle menu, int bot = 0, int type = 0, bool bIsPanel = false, bool ShowLayerEligibility = false) {	// 0 is legacy type that appeared on all menus. 0 - Main Menu | 1 - Upgrades | 2 - Points
 
@@ -73,7 +72,7 @@ stock void BuildMenuTitle(int client, Handle menu, int bot = 0, int type = 0, bo
 	else menu.DrawText(text);
 }
 
-stock bool CheckKillPositions(client, bool b_AddPosition) {
+stock bool CheckKillPositions(int client, bool b_AddPosition) {
 
 	// If the finale is active, we don't do anything here, and always return false.
 	//if (!b_IsFinaleActive) return false;
@@ -274,7 +273,7 @@ stock void LoadProfileEx_Confirm(int client, char[] key) {
 	return LoadTarget[client];
 }*/
 
-public QueryResults_LoadEx(Handle howner, Handle hndl, const char[] error, any client)
+public void QueryResults_LoadEx(Handle howner, Handle hndl, const char[] error, any client)
 {
 	if ( hndl != INVALID_HANDLE )
 	{
@@ -325,7 +324,7 @@ public QueryResults_LoadEx(Handle howner, Handle hndl, const char[] error, any c
 	}
 }
 
-public QueryResults_LoadTalentTreesEx(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadTalentTreesEx(Handle owner, Handle hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -490,7 +489,7 @@ stock void LoadProfile_Confirm(int client, char[] ProfileName) {
 	LoadProfileEx(client, ProfileName);
 }
 
-stock LoadProfileEx_Request(client, target) {
+stock void LoadProfileEx_Request(int client, int target) {
 
 	LoadProfileRequestName[target] = client;
 
@@ -510,7 +509,7 @@ stock LoadProfileEx_Request(client, target) {
 	menu.Display(target, 0);
 }
 
-public LoadProfileRequestHandle(Handle menu, MenuAction action, client, slot) {
+public int LoadProfileRequestHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -552,7 +551,7 @@ public LoadProfileRequestHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock GetTeamComposition(int client) {
+stock void GetTeamComposition(int client) {
 
 	Handle menu = new Menu(TeamCompositionMenuHandle);
 	RPGMenuPosition[client].Clear();
@@ -575,7 +574,7 @@ stock GetTeamComposition(int client) {
 	menu.Display(client, 0);
 }
 
-public TeamCompositionMenuHandle(Handle menu, MenuAction action, client, slot) {
+public int TeamCompositionMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -595,7 +594,7 @@ public TeamCompositionMenuHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock LoadProfileTargetSurvivorBot(int client) {
+stock void LoadProfileTargetSurvivorBot(int client) {
 
 	Handle menu = new Menu(TargetSurvivorBotMenuHandle);
 	RPGMenuPosition[client].Clear();
@@ -622,7 +621,7 @@ stock LoadProfileTargetSurvivorBot(int client) {
 	menu.Display(client, 0);
 }
 
-public TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, client, slot) {
+public void TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -662,7 +661,7 @@ public TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, client, slot)
 	}
 }
 
-stock ReadProfilesEx(int client) {	// To view/load another users profile, we need to know who to target.
+stock void ReadProfilesEx(int client) {	// To view/load another users profile, we need to know who to target.
 
 
 	//	ReadProfiles_Generate has been called and the PlayerProfiles[client] handle has been generated.
@@ -696,7 +695,7 @@ stock ReadProfilesEx(int client) {	// To view/load another users profile, we nee
 	menu.Display(client, 0);
 }
 
-public ReadProfilesMenuHandle(Handle menu, MenuAction action, client, slot) {
+public int ReadProfilesMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -725,7 +724,7 @@ public ReadProfilesMenuHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock bool GetLastOpenedMenu(client, bool SetIt = false) {
+stock bool GetLastOpenedMenu(int client, bool SetIt = false) {
 
 	int size	= a_Menu_Main.Length;
 	char menuname[64];
@@ -774,14 +773,14 @@ stock void VerifyAllActionBars(int client) {
 	}
 }
 
-stock ShowActionBar(int client) {
+stock void ShowActionBar(int client) {
 
 	Handle menu = new Menu(ActionBarHandle);
 
 	char text[128], talentname[64];
 	Format(text, sizeof(text), "Stamina: %d/%d", SurvivorStamina[client], GetPlayerStamina(client));
-	static baseWeaponDamage = 0;
-	static char baseWeaponDamageText[64];
+	int baseWeaponDamage = 0;
+	char baseWeaponDamageText[64];
 	if (iShowDamageOnActionBar == 1) {
 		baseWeaponDamage = DataScreenWeaponDamage(client);
 		if (baseWeaponDamage > 0) {
@@ -885,7 +884,7 @@ stock bool AbilityDoesDamage(int client, char[] TalentName) {
 	return false;
 }
 
-stock bool VerifyActionBar(int client, char[] TalentName, pos) {
+stock bool VerifyActionBar(int client, char[] TalentName, int pos) {
 	//if (defaultTalentStrength == -1) defaultTalentStrength = GetTalentStrength(client, TalentName);
 	if (StrEqual(TalentName, "none", false)) return false;
 	if (!IsTalentExists(TalentName) || GetTalentStrength(client, TalentName) < 1) {
@@ -1109,7 +1108,7 @@ stock float CheckActiveAbility(int client, int thevalue, int eventtype = 0, bool
 	return (MyMultiplier * thevalue);
 }
 
-public ActionBarHandle(Handle menu, MenuAction action, client, slot) {
+public int ActionBarHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -1661,7 +1660,7 @@ stock void LoadInventory(int client) {
 	hDatabase.Query(LoadInventory_Generate, tquery, client);
 }
 
-stock LoadProficiencyData(int client) {
+stock void LoadProficiencyData(int client) {
 	Handle menu = new Menu(LoadProficiencyMenuHandle);
 	RPGMenuPosition[client].Clear();
 
@@ -1698,7 +1697,7 @@ stock LoadProficiencyData(int client) {
 	menu.Display(client, 0);
 }
 
-public LoadProficiencyMenuHandle(Handle menu, MenuAction action, client, slot) {
+public void LoadProficiencyMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) { }
 	else if (action == MenuAction_Cancel) {
@@ -1707,7 +1706,7 @@ public LoadProficiencyMenuHandle(Handle menu, MenuAction action, client, slot) {
 	if (action == MenuAction_End) delete menu;
 }
 
-stock LoadInventoryEx(int client) {
+stock void LoadInventoryEx(int client) {
 
 	Handle menu = new Menu(LoadInventoryMenuHandle);
 	RPGMenuPosition[client].Clear();
@@ -1741,7 +1740,7 @@ stock LoadInventoryEx(int client) {
 	menu.Display(client, 0);
 }
 
-public LoadInventoryMenuHandle(Handle menu, MenuAction action, client, slot) {
+public int LoadInventoryMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -1805,7 +1804,7 @@ public Handle DisplayTheLeaderboards(int client) {
 	return menu;
 }
 
-public DisplayTheLeaderboards_Init (Handle topmenu, MenuAction action, client, param2)
+public int DisplayTheLeaderboards_Init (Handle topmenu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -1884,7 +1883,7 @@ public Handle SpawnLoadoutEditor(int client) {
 	menu.Display(client, 0);
 }
 
-public SpawnLoadoutEditorHandle(Handle menu, MenuAction action, client, slot) {
+public int SpawnLoadoutEditorHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -1910,7 +1909,7 @@ public SpawnLoadoutEditorHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock GetTotalThreat() {
+stock int GetTotalThreat() {
 
 	int iThreatAmount = 0;
 	for (int i = 1; i <= MaxClients; i++) {
@@ -2029,7 +2028,7 @@ public Handle ShowThreatMenu(int client) {
 	return menu;
 }
 
-public ShowThreatMenu_Init(Handle topmenu, MenuAction action, int client, int param2)
+public int ShowThreatMenu_Init(Handle topmenu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -2064,7 +2063,7 @@ public ShowThreatMenu_Init(Handle topmenu, MenuAction action, int client, int pa
 	}*/
 }
 
-public CharacterSheetMenuHandle(Handle menu, MenuAction action, client, slot) {
+public int CharacterSheetMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 		if (slot == 0) {
@@ -2389,7 +2388,7 @@ public Handle ProfileEditorMenu(int client) {
 	menu.Display(client, 0);
 }
 
-stock CheckRequestStatus(client, bool CancelRequest = false) {
+stock int CheckRequestStatus(int client, bool CancelRequest = false) {
 
 	char TargetName[64];
 
@@ -2410,7 +2409,7 @@ stock CheckRequestStatus(client, bool CancelRequest = false) {
 	return -1;
 }
 
-stock DeleteProfile(client, bool DisplayToClient = true) {
+stock void DeleteProfile(int client, bool DisplayToClient = true) {
 
 	if (strlen(LoadoutName[client]) < 4) return;
 
@@ -2441,7 +2440,7 @@ stock bool DeleteAllProfiles(int client) {
 	return true;
 }
 
-public ProfileEditorMenuHandle(Handle menu, MenuAction action, client, slot) {
+public int ProfileEditorMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -2493,7 +2492,7 @@ public ProfileEditorMenuHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock SaveProfile(client, SaveType = 0) {	// 1 insert a new save, 2 overwrite an existing save.
+stock void SaveProfile(int client, int SaveType = 0) {	// 1 insert a new save, 2 overwrite an existing save.
 
 	if (strlen(LoadoutName[client]) < 8) {
 
@@ -2821,7 +2820,7 @@ stock bool TalentListingFound(int client, Handle Keys, Handle Values, char[] Men
 	return true;
 }
 
-public BuildSubMenuHandle(Handle menu, MenuAction action, client, slot)
+public int BuildSubMenuHandle(Handle menu, MenuAction action, int client, int slot)
 {
 	if (action == MenuAction_Select)
 	{
@@ -3504,7 +3503,7 @@ public Handle TalentInfoScreen_Special (int client) {
 	return menu;
 }
 
-public TalentInfoScreen_Init (Handle topmenu, MenuAction action, client, param2)
+public int TalentInfoScreen_Init (Handle topmenu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -3610,7 +3609,7 @@ public TalentInfoScreen_Init (Handle topmenu, MenuAction action, client, param2)
 	}*/
 }
 
-public TalentInfoScreen_Special_Init (Handle topmenu, MenuAction action, client, param2)
+public int TalentInfoScreen_Special_Init (Handle topmenu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -3654,7 +3653,7 @@ bool SwapActions(int client, char[] TalentName, int slot) {
 	return false;
 }
 
-stock TryToTellPeopleYouUpgraded(int client) {
+stock void TryToTellPeopleYouUpgraded(int client) {
 
 	if (FreeUpgrades[client] == 0 && GetConfigValueInt("display when players upgrade to team?") == 1) {
 
@@ -3715,7 +3714,7 @@ stock void AddTalentPoints(int client, char[] Name, int TalentPoints) {
 	}
 }
 
-stock void UnlockTalent(client, char[] Name, bool bIsEndOfMapRoll = false, bool bIsLegacy = false) {
+stock void UnlockTalent(int client, char[] Name, bool bIsEndOfMapRoll = false, bool bIsLegacy = false) {
 
 	char text[64];
 	char PlayerName[64];
@@ -3781,7 +3780,7 @@ stock bool IsTalentLocked(int client, char[] Name) {
 	return true;
 }
 
-stock WipeTalentPoints(int client) {
+stock void WipeTalentPoints(int client) {
 
 	if (!IsLegitimateClient(client) || IsFakeClient(client)) return;
 

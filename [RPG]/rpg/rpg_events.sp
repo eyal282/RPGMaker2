@@ -1,6 +1,5 @@
-/* put the line below after all of the includes!
+
 #pragma newdecls required
-*/
 
 // Every single event in the events.cfg is called by this function, and then sent off to a specific function.
 // This way a separate template isn't required for events that have different event names.
@@ -51,7 +50,7 @@ public Action Event_Occurred(Handle event, char[] event_name, bool dontBroadcast
 	//else return Plugin_Continue;
 }
 
-public SubmitEventHooks(value) {
+public void SubmitEventHooks(int value) {
 
 	int size = a_Events.Length;
 	char text[64];
@@ -74,7 +73,7 @@ public SubmitEventHooks(value) {
 	}
 }
 
-stock FindPlayerWeapon(client, char weapon[], size) {
+stock void FindPlayerWeapon(int client, char[] weapon, int size) {
 	if (IsLegitimateClient(client) && GetClientTeam(client) == TEAM_INFECTED) {
 		GetClientWeapon(client, weapon, size);
 	}
@@ -86,7 +85,7 @@ stock FindPlayerWeapon(client, char weapon[], size) {
 	}
 }
 
-public Call_Event(Handle event, char event_name[], bool dontBroadcast, pos) {
+public void Call_Event(Handle event, char[] event_name, bool dontBroadcast, int pos) {
 	//CallKeys							= a_Events.Get(pos, 0);
 	CallValues							= a_Events.Get(pos, 1);
 	char ThePerp[64];
@@ -531,7 +530,7 @@ public Call_Event(Handle event, char event_name[], bool dontBroadcast, pos) {
 	return 0;
 }
 
-stock bool AddOTEffect(client, target, char clientSteamID[], float fStrength, OTtype = 0) {
+stock bool AddOTEffect(int client, int target, char[] clientSteamID, float fStrength, int OTtype = 0) {
 	float fClientStrength = 0.0;
 	float fTargetStrength = 0.0;
 	float fIntervalTime = 0.0;
@@ -562,13 +561,13 @@ stock bool AddOTEffect(client, target, char clientSteamID[], float fStrength, OT
 	GetAbilityStrengthByTrigger(client, client, "damagebonus", _, 0, _, _, "d", 1, true);
 }
 
-stock StoreItemName(client, pos, char s[], size) {
+stock void StoreItemName(int client, int pos, char[] s, int size) {
 
 	StoreItemNameSection[client]					= a_Store.Get(pos, 2);
 	StoreItemNameSection[client].GetString(0, s, size);
 }
 
-stock bool IsStoreItem(client, char EName[], bool b_IsAwarding = true) {
+stock bool IsStoreItem(int client, char[] EName, bool b_IsAwarding = true) {
 
 	char Name[64];
 	int size				= a_Store.Length;
@@ -630,7 +629,7 @@ stock bool PlayerCastSpell(int client) {
 	return Plugin_Handled;
 }
 
-stock CreateGravityAmmo(client, float Force, Range, bool UseTheForceLuke=false) {
+stock int CreateGravityAmmo(int client, float Force, float Range, bool UseTheForceLuke=false) {
 
 	int entity		= CreateEntityByName("point_push");
 	if (!IsValidEntity(entity)) return -1;
@@ -653,7 +652,7 @@ stock CreateGravityAmmo(client, float Force, Range, bool UseTheForceLuke=false) 
 	return entity;
 }
 
-stock bool GetActiveSpecialAmmoType(client, effect) {
+stock bool GetActiveSpecialAmmoType(int client, int effect) {
 
 	char EffectT[4];
 	Format(EffectT, sizeof(EffectT), "%c", effect);
@@ -671,23 +670,23 @@ stock bool GetActiveSpecialAmmoType(client, effect) {
 	If ammoposition is >= 0 AND GetStatus is enabled, it will return only for the ammo in question.
 */
 
-stock float IsClientInRangeSpecialAmmo(client, char EffectT[], bool GetStatusOnly=true, AmmoPosition=-1, baseeffectvalue=0.0, realowner=0) {
-	static float EntityPos[3];
-	static char TalentInfo[4][512];
-	static owner = 0;
-	static pos = -1;
+stock float IsClientInRangeSpecialAmmo(int client, char[] EffectT, bool GetStatusOnly=true, int AmmoPosition=-1, float baseeffectvalue=0.0, int realowner=0) {
+	float EntityPos[3];
+	char TalentInfo[4][512];
+	owner = 0;
+	pos = -1;
 	//decl String:newvalue[10];
 
-	static char value[10];
+	char value[10];
 	//new Float:f_Strength = 0.0;
 	//decl String:t_effect[4];
 
-	static float EffectStrength = 0.0;
-	static float EffectStrengthBonus = 0.0;
-	static bool IsInfected = false;
-	static bool IsSameteam = false;
+	float EffectStrength = 0.0;
+	float EffectStrengthBonus = 0.0;
+	bool IsInfected = false;
+	bool IsSameteam = false;
 
-	static float ClientPos[3];
+	float ClientPos[3];
 	bool clientIsLegitimate = IsLegitimateClient(client);
 	//decl String:EffectT[4];
 	if (!clientIsLegitimate || !IsPlayerAlive(client)) return EffectStrength;
@@ -704,11 +703,11 @@ stock float IsClientInRangeSpecialAmmo(client, char EffectT[], bool GetStatusOnl
 							StrEqual(EffectT, "a", true)) ? 2 : 0;
 	int otherExperienceAwardType = (StrEqual(EffectT, "F", true) || StrEqual(EffectT, "W", true) || StrEqual(EffectT, "x", true)) ? 1 :	(StrEqual(EffectT, "F", true) || StrEqual(EffectT, "x", true)) ? 2 : 0;
 
-	static float EffectStrengthValue = 0.0;
-	static float EffectMultiplierValue = 0.0;
+	float EffectStrengthValue = 0.0;
+	float EffectMultiplierValue = 0.0;
 
-	static float t_Range	= 0.0;
-	static baseeffectbonus = 0;
+	float t_Range	= 0.0;
+	baseeffectbonus = 0;
 
 	if (SpecialAmmoData.Length < 1) return 0.0;
 	//new Float:fAmmoRangeTalentBonus = GetAbilityStrengthByTrigger(client, client, "aamRNG", FindZombieClass(client), 0, _, _, "d", 1, true);	// true at the end makes sure we don't actually fire off the ability or really check the "d" (resulteffects) here
@@ -807,7 +806,7 @@ public Action Timer_AmmoTriggerCooldown(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock AdvertiseAction(client, char TalentName[], bool isSpell = false) {
+stock void AdvertiseAction(int client, char[] TalentName, bool isSpell = false) {
 
 	char TalentName_Temp[64];
 	char Name[64];
@@ -830,7 +829,7 @@ stock AdvertiseAction(client, char TalentName[], bool isSpell = false) {
 	}
 }
 
-stock float GetSpellCooldown(client, char TalentName[]) {
+stock float GetSpellCooldown(int client, char[] TalentName) {
 
 	float SpellCooldown = GetAbilityValue(client, TalentName, ABILITY_COOLDOWN);
 	if (SpellCooldown == -1.0) return 0.0;
@@ -848,7 +847,7 @@ stock float GetSpellCooldown(client, char TalentName[]) {
 	return SpellCooldown;
 }
 
-stock bool UseAbility(client, target = -1, char TalentName[], Handle Keys, Handle Values, float TargetPos[3]) {
+stock bool UseAbility(int client, int target = -1, char[] TalentName, Handle Keys, Handle Values, float TargetPos[3]) {
 
 	if (!b_IsActiveRound || GetAmmoCooldownTime(client, TalentName, true) != -1.0 || IsAbilityActive(client, TalentName)) return false;
 	if (IsLegitimateClientAlive(target)) GetClientAbsOrigin(target, TargetPos);
@@ -1029,12 +1028,12 @@ public Action Timer_GiveSecondPistol(Handle timer, any client) {
 /* returns the # of unlocks a player will receive for the next prestige
    Put this here because we're going to use this to verify # of player upgrades.
 */
-stock GetPrestigeLevelNodeUnlocks(level) {
+stock int GetPrestigeLevelNodeUnlocks(int level) {
 	if (iSkyLevelNodeUnlocks > 0) return iSkyLevelNodeUnlocks;
 	return level;
 }
 
-stock bool CastSpell(client, target = -1, char TalentName[], float TargetPos[3], visualDelayTime = 1.0) {
+stock bool CastSpell(int client, int target = -1, char[] TalentName, float TargetPos[3], float visualDelayTime = 1.0) {
 
 	if (!b_IsActiveRound || !IsLegitimateClientAlive(client) || L4D2_GetInfectedAttacker(client) != -1 || GetAmmoCooldownTime(client, TalentName) != -1.0) return false;
 	if (IsSpellAnAura(client, TalentName)) {
@@ -1114,7 +1113,7 @@ stock bool CastSpell(client, target = -1, char TalentName[], float TargetPos[3],
 	return true;
 }
 
-stock DoBurn(attacker, victim, baseWeaponDamage) {
+stock void DoBurn(int attacker, int victim, float baseWeaponDamage) {
 	//if (iTankRush == 1 && FindZombieClass(victim) == ZOMBIECLASS_TANK) return;
 	bool IsLegitimateClientVictim = IsLegitimateClientAlive(victim);
 	if (IsLegitimateClientVictim) {
@@ -1140,7 +1139,7 @@ stock DoBurn(attacker, victim, baseWeaponDamage) {
  	}
 }
 
-stock BeanBagAmmo(client, float force, TalentClient) {
+stock void BeanBagAmmo(int client, float force, int TalentClient) {
 	if (!IsCommonInfected(client) && !IsLegitimateClientAlive(client)) return;
 	if (!IsLegitimateClientAlive(TalentClient)) return;
 	float Velocity[3];
@@ -1175,7 +1174,7 @@ stock BeanBagAmmo(client, float force, TalentClient) {
 */
 
 // no one sees my special ammo because it should be drawing it based on MY size not theirs but it's drawing it based on theirs and if they have zero points in the talent then they can't see it.
-stock DrawSpecialAmmoTarget(TargetClient, bool IsDebugMode=false, bool IsValidTarget=false, CurrentPosEx=-1, float PosX=0.0, PosY=0.0, PosZ=0.0, f_ActiveTime=0.0, owner=0, char TalentName[]="none", Target = -1) {		// If we aren't actually drawing..? Stoned idea lost in thought but expanded somewhat not on the original path
+stock int DrawSpecialAmmoTarget(int TargetClient, bool IsDebugMode=false, bool IsValidTarget=false, int CurrentPosEx=-1, float PosX=0.0, float PosY=0.0, float PosZ=0.0, float f_ActiveTime=0.0, int owner=0, char[] TalentName="none", int Target = -1) {		// If we aren't actually drawing..? Stoned idea lost in thought but expanded somewhat not on the original path
 	int client = TargetClient;
 	if (owner != 0) client = owner;
 	if (iRPGMode <= 0) return -1;
@@ -1239,14 +1238,14 @@ stock DrawSpecialAmmoTarget(TargetClient, bool IsDebugMode=false, bool IsValidTa
 	We need to get the talent name of the active special ammo.
 	This way when an ammo activate triggers it only goes through if that ammo is the type the player currently has selected.
 */
-stock bool GetActiveSpecialAmmo(client, char TalentName[]) {
+stock bool GetActiveSpecialAmmo(int client, char[] TalentName) {
 
 	if (!StrEqual(TalentName, ActiveSpecialAmmo[client], false)) return false;
 	// So if the talent is the one equipped...
 	return true;
 }
 
-stock CreateProgressBar(client, float TheTime, bool NahDestroyItInstead=false, bool NoAdrenaline=false) {
+stock void CreateProgressBar(int client, float TheTime, bool NahDestroyItInstead=false, bool NoAdrenaline=false) {
 
 	if (TheTime >= 1.0) {
 
@@ -1266,7 +1265,7 @@ stock CreateProgressBar(client, float TheTime, bool NahDestroyItInstead=false, b
 	}
 }
 
-stock AdjustProgressBar(client, float TheTime) { SetEntPropFloat(client, Prop_Send, "m_flProgressBarDuration", TheTime); }
+stock void AdjustProgressBar(int client, float TheTime) { SetEntPropFloat(client, Prop_Send, "m_flProgressBarDuration", TheTime); }
 
 stock bool ActiveProgressBar(int client) {
 
@@ -1280,7 +1279,7 @@ public Action Timer_ImmunityExpiration(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock Defibrillator(client, target = 0, bool IgnoreDistance = false) {
+stock void Defibrillator(int client, int target = 0, bool IgnoreDistance = false) {
 
 	if (target > 0 && IsLegitimateClientAlive(target)) return;
 
@@ -1352,7 +1351,9 @@ stock Defibrillator(client, target = 0, bool IgnoreDistance = false) {
 	return Plugin_Continue;
 }*/
 
-stock InventoryItem(client, char EntityName[] = "none", bool bIsPickup = false, entity = -1) {
+// Eyal282 here, loc is unknown and throws errors.
+/*
+stock void InventoryItem(int client, char[] EntityName = "none", bool bIsPickup = false, int entity = -1) {
 
 	char ItemName[64];
 
@@ -1375,10 +1376,11 @@ stock InventoryItem(client, char EntityName[] = "none", bool bIsPickup = false, 
 		TeleportEntity(entity, loc, NULL_VECTOR, NULL_VECTOR);
 	}
 }
+*/
 stock bool IsCommonStaggered(int client) {
 	//decl String:clientId[2][64];
 	//decl String:text[64];
-	//static Float:timeRemaining = 0.0;
+	//Float:timeRemaining = 0.0;
 	for (int i = 0; i < StaggeredTargets.Length; i++) {
 		//StaggeredTargets.GetString(i, text, sizeof(text));
 		//ExplodeString(text, ":", clientId, 2, 64);
@@ -1395,7 +1397,7 @@ public Action Timer_StaggerTimer(Handle timer) {
 		StaggeredTargets.Clear();
 		return Plugin_Stop;
 	}
-	static float timeRemaining = 0.0;
+	float timeRemaining = 0.0;
 	for (int i = 0; i < StaggeredTargets.Length; i++) {
 		//StaggeredTargets.GetString(i, text, sizeof(text));
 		//ExplodeString(text, ":", clientId, 2, 64);
@@ -1411,7 +1413,7 @@ public Action Timer_StaggerTimer(Handle timer) {
 	return Plugin_Continue;
 }
 
-stock EntityWasStaggered(victim, attacker = 0) {
+stock void EntityWasStaggered(int victim, int attacker = 0) {
 	if (attacker != 0 && IsLegitimateClient(attacker) && (!IsLegitimateClient(victim) || GetClientTeam(victim) != GetClientTeam(attacker))) GetAbilityStrengthByTrigger(attacker, victim, "didStagger");
 	if (victim != 0 && IsLegitimateClient(victim) && (!IsLegitimateClient(attacker) || GetClientTeam(attacker) != GetClientTeam(victim))) GetAbilityStrengthByTrigger(victim, attacker, "wasStagger");
 }
@@ -1421,7 +1423,7 @@ public Action Timer_ResetStaggerCooldownOnTriggers(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-public Action OnPlayerRunCmd(client, &buttons) {
+public Action OnPlayerRunCmd(int client, int &buttons) {
 	int clientFlags = -1;
 	int clientTeam = -1;
 	bool IsClientIncapacitated = false;
@@ -1820,7 +1822,7 @@ public Action OnPlayerRunCmd(client, &buttons) {
 	return Plugin_Continue;
 }
 
-stock ToggleJetpack(client, DisableJetpack = false) {
+stock void ToggleJetpack(int client, bool DisableJetpack = false) {
 
 	float ClientPos[3];
 	GetClientAbsOrigin(client, ClientPos);
@@ -1848,7 +1850,7 @@ stock bool IsEveryoneBoosterTime() {
 	return true;
 }
 
-stock CreateDamageStatusEffect(client, type = 0, target = 0, damage = 0, owner = 0, float RangeOverride = 0.0) {
+stock void CreateDamageStatusEffect(int client, int type = 0, int target = 0, int damage = 0, int owner = 0, float RangeOverride = 0.0) {
 	if (!IsSpecialCommon(client)) return;
 	float AfxRange = GetCommonValueFloatAtPos(client, SUPER_COMMON_RANGE_PLAYER_LEVEL);
 	float AfxStrengthLevel = GetCommonValueFloatAtPos(client, SUPER_COMMON_LEVEL_STRENGTH);
@@ -1893,7 +1895,7 @@ stock CreateDamageStatusEffect(client, type = 0, target = 0, damage = 0, owner =
 			t_OnFireRange += OnFireBase;
 			if (t_OnFireRange > OnFireMax) t_OnFireRange = OnFireMax;
 			if (IsSpecialCommonInRange(client, 'b')) t_Strength = GetSpecialCommonDamage(t_Strength, client, 'b', i);
-			if (type == 0) CreateAndAttachFlame(i, t_Strength, t_OnFireRange, OnFireInterval, _, "burn");		// Static time for now.
+			if (type == 0) CreateAndAttachFlame(i, t_Strength, t_OnFireRange, OnFireInterval, _, "burn");		// time for now.
 			else if (type == 4) {
 				CreateAndAttachFlame(i, t_Strength, t_OnFireRange, OnFireInterval, _, "acid");
 				break;	// to prevent buffer overflow only allow it on one client.
@@ -1919,7 +1921,7 @@ stock CreateDamageStatusEffect(client, type = 0, target = 0, damage = 0, owner =
 	//ClearSpecialCommon(client);
 }
 
-stock FindEntityInArrayBinarySearch(Handle hArray, target) {
+stock int FindEntityInArrayBinarySearch(Handle hArray, int target) {
 	int left = 0, right = hArray.Length;
 	int middle;
 	int ent;
@@ -1933,6 +1935,8 @@ stock FindEntityInArrayBinarySearch(Handle hArray, target) {
 	return -1;
 }
 
+// Eyal282 here, rightEnt is unknown and throws errors.
+/*
 // inserting entity into an arraylist in ascending order so it's compatible with binary search
 stock InsertIntoArrayAscending(Handle hArray, entity) {
 	int size = hArray.Length;
@@ -1972,8 +1976,8 @@ stock InsertIntoArrayAscending(Handle hArray, entity) {
 	}
 	return -1;	// should be unreachable.
 }
-
-stock int FindListPositionByEntity(entity, Handle h_SearchList, block = 0) {
+*/
+stock int FindListPositionByEntity(int entity, Handle h_SearchList, int block = 0) {
 
 	int size = h_SearchList.Length;
 	if (size < 1) return -1;
@@ -1984,7 +1988,7 @@ stock int FindListPositionByEntity(entity, Handle h_SearchList, block = 0) {
 	return -1;	// returns false
 }
 
-stock FindCommonInfectedTargetInArray(Handle hArray, target) {
+stock int FindCommonInfectedTargetInArray(Handle hArray, int target) {
 	int size = hArray.Length;
 	for (int i = 0; i < size; i++) {
 		if (i >= size - 1 - i) break;
@@ -1994,7 +1998,7 @@ stock FindCommonInfectedTargetInArray(Handle hArray, target) {
 	return -1;
 }
 
-stock ExplosiveAmmo(client, damage, TalentClient) {
+stock void ExplosiveAmmo(int client, float damage, int TalentClient) {
 	if (IsWitch(client)) AddWitchDamage(TalentClient, client, damage);
 	else if (IsSpecialCommon(client)) AddSpecialCommonDamage(TalentClient, client, damage);
 	else if (IsLegitimateClientAlive(client)) {
@@ -2003,12 +2007,12 @@ stock ExplosiveAmmo(client, damage, TalentClient) {
 	}
 }
 
-stock HealingAmmo(client, healing, TalentClient, bool IsCritical=false) {
+stock void HealingAmmo(int client, int healing, int TalentClient, bool IsCritical=false) {
 	if (!IsLegitimateClientAlive(client) || !IsLegitimateClientAlive(TalentClient)) return;
 	HealPlayer(client, TalentClient, healing * 1.0, 'h', true);
 }
 
-stock LeechAmmo(client, damage, TalentClient) {
+stock void LeechAmmo(int client, int damage, int TalentClient) {
 	if (IsWitch(client)) AddWitchDamage(TalentClient, client, damage);
 	else if (IsSpecialCommon(client)) AddSpecialCommonDamage(TalentClient, client, damage);
 	else if (IsLegitimateClientAlive(client)) {
@@ -2021,7 +2025,7 @@ stock LeechAmmo(client, damage, TalentClient) {
 	}
 }
 
-stock float CreateBomberExplosion(client, target, char Effects[], basedamage = 0) {
+stock float CreateBomberExplosion(int client, int target, char[] Effects, int basedamage = 0) {
 
 	//if (IsLegitimateClient(target) && !IsPlayerAlive(target)) return;
 	if (!IsLegitimateClientAlive(target)) return;
@@ -2190,11 +2194,11 @@ stock float CreateBomberExplosion(client, target, char Effects[], basedamage = 0
 	}*/
 }
 
-stock CheckMinimumRate(int client) {
+stock void CheckMinimumRate(int client) {
 	if (Rating[client] < 0) Rating[client] = 0;
 }
 
-stock CalculateInfectedDamageAward(client, killerblow = 0, entityPos = -1) {
+stock void CalculateInfectedDamageAward(int client, int killerblow = 0, int entityPos = -1) {
 	bool IsLegitimateClientClient = IsLegitimateClient(client);
 	int clientTeam = -1;
 	if (IsLegitimateClientClient) clientTeam = GetClientTeam(client);
@@ -2385,7 +2389,7 @@ stock CalculateInfectedDamageAward(client, killerblow = 0, entityPos = -1) {
 	}
 }
 
-stock ReceiveInfectedDamageAward(client, infected, e_reward, float p_reward, t_reward, h_reward , bu_reward, he_reward, bool TheRoundHasEnded = false) {
+stock void ReceiveInfectedDamageAward(int client, int infected, int e_reward, float p_reward, int t_reward, int h_reward, int bu_reward, int he_reward, bool TheRoundHasEnded = false) {
 	int RPGMode									= iRPGMode;
 	if (RPGMode < 0) return;
 	//new RPGBroadcast							= StringToInt(GetConfigValue("award broadcast?"));
@@ -2528,7 +2532,7 @@ stock ReceiveInfectedDamageAward(client, infected, e_reward, float p_reward, t_r
 // This way, even if the level is different, everyone starts with the same footing.
 // Optional RPG System. Maybe call it "buy rpg mode?"
 
-stock bool SameTeam_OnTakeDamage(healer, target, iHealerAmount, bool IsDamageTalent = false, damagetype = -1) {
+stock bool SameTeam_OnTakeDamage(int healer, int target, int iHealerAmount, bool IsDamageTalent = false,int  damagetype = -1) {
 	if (!AllowShotgunToTriggerNodes(healer)) return false;
 	if (HealImmunity[target] || bIsInCheckpoint[target]) return true;
 	bool TheBool = IsMeleeAttacker(healer);

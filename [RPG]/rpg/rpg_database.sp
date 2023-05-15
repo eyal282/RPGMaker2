@@ -1,6 +1,4 @@
-/* put the line below after all of the includes!
 #pragma newdecls required
-*/
 
 void MySQL_Init()
 {
@@ -45,7 +43,7 @@ void MySQL_Init()
 
 stock void SetSurvivorsAliveHostname() {
 
-	static char Newhost[64];
+	char Newhost[64];
 	Format(Newhost, sizeof(Newhost), "%s", sHostname);
 	if (b_IsActiveRound) Format(Newhost, sizeof(Newhost), "%s - %d alive", sHostname, LivingSurvivors());
 	else Format(Newhost, sizeof(Newhost), "%s - Intermission", sHostname);
@@ -1397,7 +1395,7 @@ stock bool IsReserve(int client) {
 	return false;
 }
 
-stock bool HasCommandAccess(client, char accessflags[]) {
+stock bool HasCommandAccess(int client, char[] accessflags) {
 
 	char flagpos[2];
 
@@ -1960,7 +1958,7 @@ stock TotalPointsAssigned(int client) {
 	int count = 0;
 	int MaxTalents = MaximumPlayerUpgrades(client);
 	int currentValue = 0;
-	//decl String:TalentName[64];
+	//decl char[] TalentName[64];
 
 	int size = a_Database_PlayerTalents[client].Length;
 	for (int i = 0; i < size; i++) {

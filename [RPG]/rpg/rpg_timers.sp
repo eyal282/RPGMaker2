@@ -1,6 +1,5 @@
-/* put the line below after all of the includes!
+
 #pragma newdecls required
-*/
 
 public Action Timer_ZeroGravity(Handle timer, any client) {
 
@@ -92,7 +91,7 @@ public Action Timer_GiveLaserBeam(Handle timer, any client) {
 /*public Action:Timer_DisplayHUD(Handle:timer) {
 
 	if (!b_IsActiveRound) return Plugin_Stop;
-	static iRotation = 0;
+	iRotation = 0;
 	for (new i = 1; i <= MaxClients; i++) {
 
 		if (IsLegitimateClientAlive(i) && !IsFakeClient(i)) {
@@ -128,9 +127,9 @@ public Action Timer_ShowHUD(Handle timer, any client) {
 	if (PlayerLevel[client] > iMaxLevel) SetTotalExperienceByLevel(client, iMaxLevel, true);
 	TimePlayed[client]++;
 	//if (TotalHumanSurvivors() < 1) RoundTime++;	// we don't count time towards enrage if there are no human survivors.
-	static char pct[10];
+	char pct[10];
 	Format(pct, sizeof(pct), "%");
-	static ThisRoundTime = 0;
+	int ThisRoundTime = 0;
 	ThisRoundTime = RPGRoundTime();
 	int mymaxhealth = -1;
 	float healregenamount = 0.0;
@@ -142,7 +141,7 @@ public Action Timer_ShowHUD(Handle timer, any client) {
 		}
 	}
 
-	static playerTeam = 0;
+	playerTeam = 0;
 	playerTeam = GetClientTeam(client);
 	if (playerTeam == TEAM_SPECTATOR || (playerTeam == TEAM_SURVIVOR || !IsLegitimateClientAlive(client)) && !b_IsLoaded[client]) return Plugin_Continue;
 	if (displayBuffOrDebuff[client] != 1) displayBuffOrDebuff[client] = 1;
@@ -715,7 +714,7 @@ stock ResetCDImmunity(int client) {
 
 	packttt.Reset();
 	new client				=	packttt.ReadCell();
-	decl String:TalentName[64];
+	decl char[] TalentName[64];
 	packttt.ReadString(TalentName, sizeof(TalentName));
 	new Float:f_Cooldown	= packttt.ReadFloat();
 
@@ -918,10 +917,10 @@ public Action Timer_CheckIfHooked(Handle timer) {
 		iSurvivalCounter = 0;
 		return Plugin_Stop;
 	}
-	static CurRPG = -2;
-	static LivingSerfs = 0;
+	CurRPG = -2;
+	LivingSerfs = 0;
 	LivingSerfs = LivingSurvivors();
-	static RoundSeconds = 0;
+	RoundSeconds = 0;
 	RoundSeconds = RPGRoundTime(true);
 	if (IsSurvivalMode) {
 		iSurvivalCounter++;
@@ -952,7 +951,7 @@ public Action Timer_CheckIfHooked(Handle timer) {
 		CallRoundIsOver();
 		return Plugin_Stop;
 	}
-	static char text[64];
+	char text[64];
 	int secondsUntilEnrage = GetSecondsUntilEnrage();
 	if (!IsSurvivalMode && iEnrageTime > 0 && RoundSeconds > 0 && RPGRoundTime() < iEnrageTime && (secondsUntilEnrage <= 300 && (secondsUntilEnrage % 60 == 0 || secondsUntilEnrage == 30 || secondsUntilEnrage <= 3) || (RoundSeconds % iEnrageAdvertisement) == 0)) {
 		TimeUntilEnrage(text, sizeof(text));
@@ -1018,7 +1017,7 @@ public Action Timer_Doom(Handle timer) {
 
 public Action Timer_TankCooldown(Handle timer) {
 
-	static float Counter								=	0.0;
+	float Counter								=	0.0;
 
 	if (!b_IsActiveRound) {
 
@@ -1072,9 +1071,9 @@ public Action Timer_SettingsCheck(Handle timer) {
 		return Plugin_Stop;
 	}
 
-	static RaidLevelCounter		= 0;
-	static bool bIsEnrage = false;
-	//static RageCommonLimit		= 0;
+	RaidLevelCounter		= 0;
+	bool bIsEnrage = false;
+	//RageCommonLimit		= 0;
 
 	if (!bIsSettingsCheck) return Plugin_Continue;
 	bIsSettingsCheck = false;
@@ -1128,7 +1127,7 @@ bool IsSurvivorsHealthy() {
 
 /*public Action:Timer_IsSpecialCommonInRange(Handle:timer) {
 	if (!b_IsActiveRound) return Plugin_Stop;
-	static commonInfected = 0;
+	commonInfected = 0;
 
 	for (new i = 1; i <= MaxClients; i++) {
 		if (!IsLegitimateClientAlive(i)) continue;
@@ -1146,10 +1145,10 @@ bool IsSurvivorsHealthy() {
 
 public Action Timer_RespawnQueue(Handle timer) {
 
-	static Counter										=	-1;
-	static TimeRemaining								=	0;
-	static RandomClient									=	-1;
-	static char text[64];
+	Counter										=	-1;
+	TimeRemaining								=	0;
+	RandomClient									=	-1;
+	char text[64];
 
 	if (!b_IsActiveRound || b_IsFinaleActive) {
 
@@ -1166,7 +1165,7 @@ public Action Timer_RespawnQueue(Handle timer) {
 		return Plugin_Continue;
 	}
 
-	static bool bIsHealth = false;
+	bool bIsHealth = false;
 	bIsHealth = IsSurvivorsHealthy();
 
 	if (!IsSurvivalMode && bIsHealth) Counter++;
@@ -1280,13 +1279,13 @@ stock SortThreatMeter() {
 
 public Action Timer_ThreatSystem(Handle timer) {
 
-	static cThreatTarget			= -1;
-	static cThreatOld				= -1;
-	static cThreatLevel				= 0;
-	static cThreatEnt				= -1;
-	static count					= 0;
-	static char temp[64];
-	static float vPos[3];
+	cThreatTarget			= -1;
+	cThreatOld				= -1;
+	cThreatLevel				= 0;
+	cThreatEnt				= -1;
+	count					= 0;
+	char temp[64];
+	float vPos[3];
 
 	if (!b_IsActiveRound) {
 		iSurvivalCounter = -1;
@@ -1386,15 +1385,15 @@ public Action Timer_ThreatSystem(Handle timer) {
 }
 
 public Action Timer_DirectorPurchaseTimer(Handle timer) {
-	static Counter										=	-1;
-	static float DirectorHandicap						=	-1.0;
-	static float DirectorDelay							=	0.0;
+	Counter										=	-1;
+	float DirectorHandicap						=	-1.0;
+	float DirectorDelay							=	0.0;
 	if (!b_IsActiveRound) {
 		Counter											=	-1;
 		return Plugin_Stop;
 	}
-	static theClient									=	-1;
-	static theTankStartTime								=	-1;
+	theClient									=	-1;
+	theTankStartTime								=	-1;
 	int iTankCount = GetInfectedCount(ZOMBIECLASS_TANK);
 	int iTankLimit = GetSpecialInfectedLimit(true);
 	int iInfectedCount = GetInfectedCount();
