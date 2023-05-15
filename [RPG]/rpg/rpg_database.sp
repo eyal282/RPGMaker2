@@ -982,7 +982,7 @@ stock void SaveInfectedData(int client) {
 	//return;
 }
 
-stock bool veAndClear(int client, bool b_IsTrueDisconnect = false, bool IsNewPlayer = false) {
+stock bool SaveAndClear(int client, bool b_IsTrueDisconnect = false, bool IsNewPlayer = false) {
 
 	if (!IsLegitimateClient(client)) return;
 	bool IsLoadingData = b_IsLoading[client];

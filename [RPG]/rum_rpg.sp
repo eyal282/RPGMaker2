@@ -2178,6 +2178,7 @@ stock void ResetCoveredInBile(int client) {
 }
 
 stock void FindTargetClient(int client, char[] arg) {
+	bool tn_is_ml;
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count;
 	int targetclient;
@@ -2812,9 +2813,9 @@ public void ReadyUp_LoadFromConfigEx(Handle key, Handle value, Handle section, c
 	char s_key[512];
 	char s_value[512];
 	char s_section[512];
-	TalentKeys		=					new ArrayList(32);
-	TalentValues		=					new ArrayList(32);
-	TalentSection	=					new ArrayList(32);
+	Handle TalentKeys		=					new ArrayList(32);
+	Handle TalentValues		=					new ArrayList(32);
+	Handle TalentSection	=					new ArrayList(32);
 	int lastPosition = 0;
 	int counter = 0;
 	if (keyCount > 0) {

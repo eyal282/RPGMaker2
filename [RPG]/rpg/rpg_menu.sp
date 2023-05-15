@@ -136,7 +136,7 @@ stock bool CheckKillPositions(client, bool b_AddPosition) {
 	return false;
 }
 
-stock bool HasTalentUpgrades(client, char TalentName[]) {
+stock bool HasTalentUpgrades(int client, char[] TalentName) {
 
 	if (IsLegitimateClient(client)) {
 
@@ -189,7 +189,7 @@ public Action CMD_LoadProfileEx(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock LoadProfileEx(client, char key[]) {
+stock void LoadProfileEx(int client, char[] key) {
 	if (IsSurvivorBot(LoadTarget[client]) || IsSurvivorBot(client) || LoadTarget[client] == -1 || IsLegitimateClient(LoadTarget[client]) && GetClientTeam(LoadTarget[client]) == TEAM_SURVIVOR) {
 		int targetClient = LoadTarget[client];
 		if (LoadTarget[client] == -1 || !IsLegitimateClient(LoadTarget[client])) targetClient = client;
@@ -200,7 +200,7 @@ stock LoadProfileEx(client, char key[]) {
 	}
 }
 
-stock LoadProfileEx_Confirm(client, char key[]) {
+stock void LoadProfileEx_Confirm(int client, char[] key) {
 	if (!IsLegitimateClient(client)) return;
 
 	char tquery[512];
@@ -482,7 +482,7 @@ public QueryResults_LoadTalentTreesEx(Handle owner, Handle hndl, const char[] er
 	}
 }
 
-stock LoadProfile_Confirm(client, char ProfileName[]) {
+stock void LoadProfile_Confirm(int client, char[] ProfileName) {
 
 	//new Handle:menu = new Menu(LoadProfile_ConfirmHandle);
 	//decl String:text[64];
@@ -750,13 +750,13 @@ stock bool GetLastOpenedMenu(client, bool SetIt = false) {
 	return false;
 }
 
-stock AddMenuStructure(client, char MenuName[]) {
+stock void AddMenuStructure(int client, char[] MenuName) {
 
 	MenuStructure[client].Resize(MenuStructure[client].Length + 1);
 	MenuStructure[client].SetString(MenuStructure[client].Length - 1, MenuName);
 }
 
-stock VerifyAllActionBars(int client) {
+stock void VerifyAllActionBars(int client) {
 
 	if (!IsLegitimateClient(client)) return;
 	int ActionSlots = iActionBarSlots;
@@ -875,7 +875,7 @@ stock ShowActionBar(int client) {
 	menu.Display(client, 0);
 }
 
-stock bool AbilityDoesDamage(client, char TalentName[]) {
+stock bool AbilityDoesDamage(int client, char[] TalentName) {
 
 	char theQuery[64];
 	//Format(theQuery, sizeof(theQuery), "does damage?");
@@ -885,7 +885,7 @@ stock bool AbilityDoesDamage(client, char TalentName[]) {
 	return false;
 }
 
-stock bool VerifyActionBar(client, char TalentName[], pos) {
+stock bool VerifyActionBar(int client, char[] TalentName, pos) {
 	//if (defaultTalentStrength == -1) defaultTalentStrength = GetTalentStrength(client, TalentName);
 	if (StrEqual(TalentName, "none", false)) return false;
 	if (!IsTalentExists(TalentName) || GetTalentStrength(client, TalentName) < 1) {
@@ -897,7 +897,7 @@ stock bool VerifyActionBar(client, char TalentName[], pos) {
 	return true;
 }
 
-stock bool IsAbilityTalent(client, char TalentName[], SearchKey[] = "none", TheSize = 0, pos = -1) {	// Can override the search query, and then said string will be replaced and sent back
+stock bool IsAbilityTalent(int client, char[] TalentName, char[] SearchKey = "none", int TheSize = 0, int pos = -1) {	// Can override the search query, and then said string will be replaced and sent back
 
 	char text[64];
 
@@ -924,7 +924,7 @@ stock bool IsAbilityTalent(client, char TalentName[], SearchKey[] = "none", TheS
 	return false;
 }
 // Delay can be set to a default value because it is only used for overloading.
-stock DrawAbilityEffect(client, char sDrawEffect[], float fDrawHeight, fDrawDelay = 0.0, fDrawSize, sTalentName[], iEffectType = 0) {
+stock void DrawAbilityEffect(int client, char[] sDrawEffect, float fDrawHeight, int fDrawDelay = 0.0, int fDrawSize, char[] sTalentName, int iEffectType = 0) {
 
 	// no longer needed because we check for it before we get here.if (StrEqual(sDrawEffect, "-1")) return;							//size					color		pos		   pulse?  lifetime
 	//CreateRingEx(client, fDrawSize, sDrawEffect, fDrawHeight, false, 0.2);
@@ -956,7 +956,7 @@ public Action Timer_DrawInstantEffect(Handle timer, Handle drawpack) {
 	return Plugin_Stop;
 }
 
-stock bool IsActionAbilityCooldown(client, char TalentName[], bool IsActiveInstead = false) {
+stock bool IsActionAbilityCooldown(int client, char[] TalentName, bool IsActiveInstead = false) {
 
 	float AmmoCooldownTime = GetAmmoCooldownTime(client, TalentName, true);
 	float fAmmoCooldownTime = AmmoCooldownTime;
@@ -981,7 +981,7 @@ stock bool IsActionAbilityCooldown(client, char TalentName[], bool IsActiveInste
 	return false;
 }
 
-stock float CheckActiveAbility(client, thevalue, eventtype = 0, bool IsPassive = false, bool IsDrawEffect = false, bool IsInstantDraw = false) {
+stock float CheckActiveAbility(int client, int thevalue, int eventtype = 0, bool IsPassive = false, bool IsDrawEffect = false, bool IsInstantDraw = false) {
 
 	// we try to match up the eventtype with any ACTIVE talents on the action bar.
 	// it is REALLY super simple, we have functions for everything. everythingggggg
@@ -1127,7 +1127,7 @@ public ActionBarHandle(Handle menu, MenuAction action, client, slot) {
 	}
 }
 
-stock BuildMenu(client, char TheMenuName[] = "none") {
+stock void BuildMenu(int client, char[] TheMenuName = "none") {
 
 	if (b_IsLoading[client]) {
 
@@ -1581,7 +1581,7 @@ public int BuildMenuHandle(Handle menu, MenuAction action, int client, int slot)
 	}
 }
 
-stock GetNodesInExistence() {
+stock int GetNodesInExistence() {
 	if (nodesInExistence > 0) return nodesInExistence;
 	int size			=	a_Menu_Talents.Length;
 	nodesInExistence	=	0;
@@ -1602,7 +1602,7 @@ stock GetNodesInExistence() {
 	return nodesInExistence;
 }
 
-stock PlayerTalentLevel(int client) {
+stock int PlayerTalentLevel(int client) {
 
 	int PTL = RoundToFloor((((PlayerUpgradesTotal[client] * 1.0) + FreeUpgrades[client]) / PlayerLevel[client]) * PlayerLevel[client]);
 	if (PTL < 0) PTL = 0;
@@ -1620,7 +1620,7 @@ stock float PlayerBuffLevel(int client) {
 	return PBL;
 }
 
-stock MaximumPlayerUpgrades(client, bool getNodeCountInstead = false) {
+stock int MaximumPlayerUpgrades(int client, bool getNodeCountInstead = false) {
 
 	if (!getNodeCountInstead) {
 		if (SkyLevel[client] < 1) return PlayerLevel[client];
@@ -1633,7 +1633,7 @@ stock MaximumPlayerUpgrades(client, bool getNodeCountInstead = false) {
 	return nodesInExistence;
 }
 
-stock VerifyMaxPlayerUpgrades(int client) {
+stock void VerifyMaxPlayerUpgrades(int client) {
 
 	if (PlayerUpgradesTotal[client] + FreeUpgrades[client] > MaximumPlayerUpgrades(client)) {
 		//PrintToChat(client, "resetting talents: %d of %d (%d)", PlayerUpgradesTotal[client], FreeUpgrades[client], MaximumPlayerUpgrades(client));
@@ -1644,12 +1644,12 @@ stock VerifyMaxPlayerUpgrades(int client) {
 	}
 }
 
-stock UpgradesUsed(client, char text[], size) {
+stock void UpgradesUsed(int client, char[] text, int size) {
 	Format(text, size, "%T", "Upgrades Used", client);
 	Format(text, size, "(%s: %d / %d)", text, PlayerUpgradesTotal[client], MaximumPlayerUpgrades(client));
 }
 
-stock LoadInventory(int client) {
+stock void LoadInventory(int client) {
 
 	if (hDatabase == INVALID_HANDLE) return;
 	char key[64];
@@ -2029,7 +2029,7 @@ public Handle ShowThreatMenu(int client) {
 	return menu;
 }
 
-public ShowThreatMenu_Init (Handle topmenu, MenuAction action, client, param2)
+public ShowThreatMenu_Init(Handle topmenu, MenuAction action, int client, int param2)
 {
 	if (action == MenuAction_Select)
 	{
@@ -2233,7 +2233,7 @@ public Handle CharacterSheetMenu(int client) {
 	menu.Display(client, 0);
 }
 
-stock bool IsWeaponPermittedFound(client, char WeaponsPermitted[], PlayerWeapon[]) {
+stock bool IsWeaponPermittedFound(int client, char[] WeaponsPermitted, char[] PlayerWeapon) {
 	bool IsFound = false;
 	if (StrContains(WeaponsPermitted, "{ALLSMG}", true) != -1 && StrContains(PlayerWeapon, "smg", false) != -1 ||
 		StrContains(WeaponsPermitted, "{ALLSHOTGUN}", true) != -1 && StrContains(PlayerWeapon, "shotgun", false) != -1 ||
@@ -2261,7 +2261,7 @@ stock bool IsWeaponPermittedFound(client, char WeaponsPermitted[], PlayerWeapon[
 	return IsFound;
 }
 
-stock GetCharacterSheetData(client, char stringRef[], theSize, request, zombieclass = 0, bool isRecalled = false) {
+stock int GetCharacterSheetData(int client, char[] stringRef, int theSize, int request, int zombieclass = 0, bool isRecalled = false) {
 	//new Float:fResult;
 	int iResult = (iBotLevelType == 1) ? SurvivorLevels() : GetDifficultyRating(client);
 	float fMultiplier;
@@ -2524,7 +2524,7 @@ stock SaveProfile(client, SaveType = 0) {	// 1 insert a new save, 2 overwrite an
 	}
 }
 
-stock SaveProfileEx(client, char key[], SaveType) {
+stock void SaveProfileEx(int client, char[] key, int SaveType) {
 
 	char tquery[512];
 	char text[512];
@@ -2595,7 +2595,7 @@ stock SaveProfileEx(client, char key[], SaveType) {
 	LogMessage("Saving Profile %N where steamid: %s", client, key);
 }
 
-stock ReadProfiles(client, char target[] = "none") {
+stock void ReadProfiles(int client, char[] target = "none") {
 
 	if (bIsTalentTwo[client]) {
 
@@ -2631,7 +2631,7 @@ stock ReadProfiles(client, char target[] = "none") {
 	else hDatabase.Query(ReadProfiles_GenerateAll, tquery, owner);
 }
 
-stock BuildSubMenu(client, char MenuName[], ConfigName[], ReturnMenu[] = "none") {
+stock void BuildSubMenu(int client, char[] MenuName, char[] ConfigName, char[] ReturnMenu = "none") {
 	bIsClassAbilities[client] = false;
 	// Each talent has a defined "menu name" ("part of menu named?") and will list under that menu. Genius, right?
 	Handle menu					=	new Menu(BuildSubMenuHandle);
@@ -2781,7 +2781,7 @@ stock BuildSubMenu(client, char MenuName[], ConfigName[], ReturnMenu[] = "none")
 	menu.Display(client, 0);
 }
 
-stock bool TalentListingFound(client, Handle Keys, Handle Values, char MenuName[], bool IsAllowItems = false) {
+stock bool TalentListingFound(int client, Handle Keys, Handle Values, char[] MenuName, bool IsAllowItems = false) {
 
 	int size = Keys.Length;
 
@@ -2931,7 +2931,7 @@ public BuildSubMenuHandle(Handle menu, MenuAction action, client, slot)
 	}
 }
 // need to code in abilities as showing if bIsEquipSpells and requiring an upgrade point to enable.
-stock ShowTalentInfoScreen(client, char TalentName[], Handle Keys, Handle Values, bool bIsEquipSpells = false) {
+stock void ShowTalentInfoScreen(int client, char[] TalentName, Handle Keys, Handle Values, bool bIsEquipSpells = false) {
 
 	PurchaseKeys[client] = Keys;
 	PurchaseValues[client] = Values;
@@ -2947,7 +2947,7 @@ stock ShowTalentInfoScreen(client, char TalentName[], Handle Keys, Handle Values
 	//else if (IsSpecialAmmo == 1 || IsAbilityType == 1) SendPanelToClientAndClose(TalentInfoScreen_Special(client), client, TalentInfoScreen_Special_Init, MENU_TIME_FOREVER);
 }
 
-stock float GetTalentInfo(client, Handle Values, infotype = 0, bool bIsNext = false, char pTalentNameOverride[] = "none", target = 0, iStrengthOverride = 0) {
+stock float GetTalentInfo(int client, Handle Values, int infotype = 0, bool bIsNext = false, char[] pTalentNameOverride = "none", int target = 0, int iStrengthOverride = 0) {
 	float f_Strength	= 0.0;
 	char TalentNameOverride[64];
 	if (iStrengthOverride > 0) f_Strength = iStrengthOverride * 1.0;
@@ -3283,7 +3283,7 @@ public Handle TalentInfoScreen(int client) {
 	return menu;
 }
 
-stock GetAbilityText(client, char TheString[], TheSize, Handle Keys, Handle Values, pos = ABILITY_ACTIVE_EFFECT) {
+stock void GetAbilityText(int client, char[] TheString, int TheSize, Handle Keys, Handle Values, int pos = ABILITY_ACTIVE_EFFECT) {
 
 	char text[512], text2[512], tDraft[512], AbilityType[64], TheMaximumMultiplier[64];
 	float TheAbilityMultiplier = 0.0;
@@ -3376,7 +3376,7 @@ stock GetAbilityText(client, char TheString[], TheSize, Handle Keys, Handle Valu
 	else Format(TheString, TheSize, "%s", tDraft);
 }
 
-stock GetTalentLevel(client, char TalentName[], bool IsExperience = false) {
+stock int GetTalentLevel(int client, char[] TalentName, bool IsExperience = false) {
 
 	int pos = GetTalentPosition(client, TalentName);
 	int value = 0;
@@ -3633,7 +3633,7 @@ public TalentInfoScreen_Special_Init (Handle topmenu, MenuAction action, client,
 	}
 }
 
-bool SwapActions(client, char TalentName[], slot) {
+bool SwapActions(int client, char[] TalentName, int slot) {
 
 	char text[64], text2[64];
 
@@ -3675,7 +3675,7 @@ stock TryToTellPeopleYouUpgraded(int client) {
 	}
 }
 
-stock FindTalentPoints(client, char Name[]) {
+stock int FindTalentPoints(int client, char[] Name) {
 
 	char text[64];
 
@@ -3696,7 +3696,7 @@ stock FindTalentPoints(client, char Name[]) {
 	return 0;	// this will be removed. only for testing.
 }
 
-stock AddTalentPoints(client, char Name[], TalentPoints) {
+stock void AddTalentPoints(int client, char[] Name, int TalentPoints) {
 
 	if (!IsLegitimateClient(client)) return;
 	
@@ -3715,7 +3715,7 @@ stock AddTalentPoints(client, char Name[], TalentPoints) {
 	}
 }
 
-stock UnlockTalent(client, char Name[], bool bIsEndOfMapRoll = false, bool bIsLegacy = false) {
+stock void UnlockTalent(client, char[] Name, bool bIsEndOfMapRoll = false, bool bIsLegacy = false) {
 
 	char text[64];
 	char PlayerName[64];
@@ -3747,7 +3747,7 @@ stock UnlockTalent(client, char Name[], bool bIsEndOfMapRoll = false, bool bIsLe
 	}
 }
 
-stock bool IsTalentExists(char Name[]) {
+stock bool IsTalentExists(char[] Name) {
 
 	char text[64];
 	int size			= a_Database_Talents.Length;
@@ -3759,7 +3759,7 @@ stock bool IsTalentExists(char Name[]) {
 	return false;
 }
 
-stock bool IsTalentLocked(client, char Name[]) {
+stock bool IsTalentLocked(int client, char[] Name) {
 
 	int value = 0;
 	char text[64];
