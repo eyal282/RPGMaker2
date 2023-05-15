@@ -50,7 +50,7 @@ stock void SetSurvivorsAliveHostname() {
 	ServerCommand("hostname %s", Newhost);
 }
 
-public void ReadyUp_GroupMemberStatus(int client, int groupStatus) {
+public int ReadyUp_GroupMemberStatus(int client, int groupStatus) {
 
 	if (IsLegitimateClient(client)) {
 		if (HasCommandAccess(client, "donator package flag?") || groupStatus == 1) IsGroupMember[client] = true;
@@ -60,15 +60,15 @@ public void ReadyUp_GroupMemberStatus(int client, int groupStatus) {
 	}
 }
 
-public void DBConnect(Handle owner, Handle hndl, const char[] error, any data)
+public void DBConnect(Database db, const char[] error, any data)
 {
-	if (hndl == INVALID_HANDLE)
+	if (db == INVALID_HANDLE)
 	{
 		LogMessage("Unable to connect to database: %s", error);
 		SetFailState("%s", error);
 	}
 
-	hDatabase = hndl;
+	hDatabase = db;
 
 	int GenerateDB = GetConfigValueInt("generate database?");
 	
@@ -314,7 +314,7 @@ public void DBConnect(Handle owner, Handle hndl, const char[] error, any data)
 	GetNodesInExistence();
 }
 
-public void QuerySaveNewPlayer(Handle owner, Handle hndl, const char[] error, any client) {
+public void QuerySaveNewPlayer(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -324,7 +324,7 @@ public void QuerySaveNewPlayer(Handle owner, Handle hndl, const char[] error, an
 	if (IsLegitimateClient(client)) SaveAndClear(client, _, true);
 }
 
-public void QueryResults(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -333,7 +333,7 @@ public void QueryResults(Handle owner, Handle hndl, const char[] error, any clie
 	}
 }
 
-public void QueryResults1(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults1(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -342,7 +342,7 @@ public void QueryResults1(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults2(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults2(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -351,7 +351,7 @@ public void QueryResults2(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults3(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults3(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -360,7 +360,7 @@ public void QueryResults3(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults4(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults4(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -369,7 +369,7 @@ public void QueryResults4(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults5(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults5(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -378,7 +378,7 @@ public void QueryResults5(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults6(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults6(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -387,7 +387,7 @@ public void QueryResults6(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults7(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults7(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -396,7 +396,7 @@ public void QueryResults7(Handle owner, Handle hndl, const char[] error, any cli
 	}
 }
 
-public void QueryResults8(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults8(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -425,7 +425,7 @@ stock void LoadLeaderboards(int client, int count) {
 	hDatabase.Query(LoadLeaderboardsQuery, tquery, client);
 }
 
-public void LoadLeaderboardsQuery(Handle owner, Handle hndl, const char[] error, any data)
+public void LoadLeaderboardsQuery(Database owner, DBResultSet hndl, const char[] error, any data)
 {
 	if (hndl == INVALID_HANDLE)
 	{
@@ -436,8 +436,8 @@ public void LoadLeaderboardsQuery(Handle owner, Handle hndl, const char[] error,
 	int count = 0;
 	int counter = 0;
 	int listpage = GetConfigValueInt("leaderboard players per page?");
-	Handle LeadName = new ArrayList(16);
-	Handle LeadRating = new ArrayList(16);
+	ArrayList LeadName = new ArrayList(16);
+	ArrayList LeadRating = new ArrayList(16);
 
 	if (!bIsMyRanking[data]) {
 
@@ -638,7 +638,7 @@ stock void ClearAndLoad(int client, bool IgnoreLoad = false) {
 	hDatabase.Query(QueryResults_Load, tquery, client);
 }
 
-public void Query_CheckIfProfileLimit(Handle owner, Handle hndl, const char[] error, any client) {
+public void Query_CheckIfProfileLimit(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -666,7 +666,7 @@ public void Query_CheckIfProfileLimit(Handle owner, Handle hndl, const char[] er
 	}
 }
 
-public void Query_CheckCompanionCount(Handle owner, Handle hndl, const char[] error, any client) {
+public void Query_CheckCompanionCount(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -691,7 +691,7 @@ public void Query_CheckCompanionCount(Handle owner, Handle hndl, const char[] er
 	}
 }
 
-public void Query_CheckIfCompanionExists(Handle owner, Handle hndl, const char[] error, any client) {
+public void Query_CheckIfCompanionExists(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -713,7 +713,7 @@ public void Query_CheckIfCompanionExists(Handle owner, Handle hndl, const char[]
 	}
 }
 
-public void Query_CheckIfProfileExists(Handle owner, Handle hndl, const char[] error, any client) {
+public void Query_CheckIfProfileExists(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -852,7 +852,7 @@ stock void CreateNewPlayerEx(int client) {
 	CreateTimer(1.0, Timer_LoggedUsers, client, TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public void Query_CheckIfDataExists(Handle owner, Handle hndl, const char[] error, any client) {
+public void Query_CheckIfDataExists(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl == INVALID_HANDLE) {
 
@@ -1255,7 +1255,7 @@ stock void LoadDirectorActions() {
 	hDatabase.Query(QueryResults_LoadDirector, tquery, -1);
 }
 
-public void QueryResults_LoadDirector(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadDirector(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1353,7 +1353,7 @@ stock void FirstUserDirectorPriority() {
 	}
 }
 
-stock void FindClientByIdNumber(int searchId) {
+stock int FindClientByIdNumber(int searchId) {
 	char AuthId[64];
 	for (int i = 1; i <= MaxClients; i++) {
 		if (!IsLegitimateClient(i)) continue;
@@ -1363,7 +1363,7 @@ stock void FindClientByIdNumber(int searchId) {
 	return -1;
 }
 
-stock void FindClientWithAuthString(char[] key, bool MustBeExact = false) {
+stock int FindClientWithAuthString(char[] key, bool MustBeExact = false) {
 
 	char AuthId[512];
 	char TheName[64];
@@ -1411,7 +1411,7 @@ stock bool HasCommandAccess(int client, char[] accessflags) {
 	return false;
 }
 
-public void LoadInventory_Generate(Handle owner, Handle hndl, const char[] error, any client) {
+public void LoadInventory_Generate(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1427,7 +1427,7 @@ public void LoadInventory_Generate(Handle owner, Handle hndl, const char[] error
 	}
 }
 
-public void ReadProfiles_Generate(Handle owner, Handle hndl, const char[] error, any client) {
+public void ReadProfiles_Generate(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1450,7 +1450,7 @@ public void ReadProfiles_Generate(Handle owner, Handle hndl, const char[] error,
 	}
 }
 
-public void ReadProfiles_GenerateAll(Handle owner, Handle hndl, const char[] error, any client) {
+public void ReadProfiles_GenerateAll(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1473,7 +1473,7 @@ public void ReadProfiles_GenerateAll(Handle owner, Handle hndl, const char[] err
 	}
 }
 
-public void QueryResults_Load(Handle owner, Handle hndl, const char[] error, any client)
+public void QueryResults_Load(Database owner, DBResultSet hndl, const char[] error, any client)
 {
 	if ( hndl != INVALID_HANDLE )
 	{
@@ -1683,7 +1683,7 @@ public void QueryResults_Load(Handle owner, Handle hndl, const char[] error, any
 	return false;
 }*/
 
-public void QueryResults_LoadTalentTrees(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadTalentTrees(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -1840,8 +1840,9 @@ stock void LoadTalentTrees(int client, char[] key, bool IsTalentTwo = false, cha
 
 	char text[64];
 	char tquery[1024];
-	//decl String:key[64];
-	GetClientAuthId(client, AuthId_Steam2, key, sizeof(key));
+
+	// Eyal282, ignore the impossible size.
+	GetClientAuthId(client, AuthId_Steam2, key, 64);
 
 	if (bIsTalentTwo[client]) {
 
@@ -1904,7 +1905,7 @@ stock void LoadTalentTrees(int client, char[] key, bool IsTalentTwo = false, cha
 }
 
 
-public void QueryResults_LoadActionBar(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadActionBar(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -2133,7 +2134,7 @@ public void OnClientDisconnect(int client)
 	}
 }
 
-public void ReadyUp_IsClientLoaded(int client) {
+public int ReadyUp_IsClientLoaded(int client) {
 
 	//ChangeHook(client, true);	// we re-hook new players to the server.
 	HealingContribution[client] = 0;

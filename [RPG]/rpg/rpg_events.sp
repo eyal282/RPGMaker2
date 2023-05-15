@@ -3,7 +3,7 @@
 
 // Every single event in the events.cfg is called by this function, and then sent off to a specific function.
 // This way a separate template isn't required for events that have different event names.
-public Action Event_Occurred(Handle event, char[] event_name, bool dontBroadcast) {
+public Action Event_Occurred(Event event, char[] event_name, bool dontBroadcast) {
 
 	//if (b_IsSurvivalIntermission) return Plugin_Handled;
 
@@ -85,7 +85,7 @@ stock void FindPlayerWeapon(int client, char[] weapon, int size) {
 	}
 }
 
-public void Call_Event(Handle event, char[] event_name, bool dontBroadcast, int pos) {
+public int Call_Event(Event event, char[] event_name, bool dontBroadcast, int pos) {
 	//CallKeys							= a_Events.Get(pos, 0);
 	CallValues							= a_Events.Get(pos, 1);
 	char ThePerp[64];

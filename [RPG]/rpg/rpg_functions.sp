@@ -8320,7 +8320,7 @@ stock int FindListPositionBySearchKey(char[] SearchKey, Handle h_SearchList, int
 	*/
 	char SearchId[64];
 
-	//new Handle Section = new ArrayList(8);
+	//new ArrayList Section = new ArrayList(8);
 
 	int size = h_SearchList.Length;
 	if (bDebug) {

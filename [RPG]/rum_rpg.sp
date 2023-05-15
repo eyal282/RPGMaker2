@@ -338,14 +338,36 @@ public Plugin myinfo = {
 #define EVENT_IS_BULLET_IMPACT				17
 #define EVENT_ENTERED_SAFEROOM				18
 
+
+// Eyal282 here, adding things that appear missing.
+char PathSetting[64];
+int OriginalHealth[MAXPLAYERS + 1];
+bool b_IsLoadingStore[MAXPLAYERS + 1];
+int FreeUpgrades[MAXPLAYERS + 1];
+bool b_IsLoadingTrees[MAXPLAYERS + 1];
+bool b_IsArraysCreated[MAXPLAYERS + 1];
+int PlayerUpgradesTotal[MAXPLAYERS + 1];
+float f_TankCooldown;
+float DeathLocation[MAXPLAYERS + 1][3];
+int TimePlayed[MAXPLAYERS + 1];
+bool b_IsLoading[MAXPLAYERS + 1];
+int LastLivingSurvivor;
+float f_OriginStart[MAXPLAYERS + 1][3];
+float f_OriginEnd[MAXPLAYERS + 1][3];
+int t_Distance[MAXPLAYERS + 1];
+int t_Healing[MAXPLAYERS + 1];
+bool b_IsActiveRound;
+bool b_IsFirstPluginLoad;
+char s_rup[32];
+// End of Eyal282
 char LastTargetClass[MAXPLAYERS + 1][10];
 int iHealingPlayerInCombatPutInCombat;
-Handle TimeOfEffectOverTime;
-Handle EffectOverTime;
-Handle currentEquippedWeapon[MAXPLAYERS + 1];	// bullets fired from current weapon; variable needs to be renamed.
-Handle GetCategoryStrengthKeys[MAXPLAYERS + 1];
-Handle GetCategoryStrengthValues[MAXPLAYERS + 1];
-Handle GetCategoryStrengthSection[MAXPLAYERS + 1];
+ArrayList TimeOfEffectOverTime;
+ArrayList EffectOverTime;
+StringMap currentEquippedWeapon[MAXPLAYERS + 1];	// bullets fired from current weapon; variable needs to be renamed.
+ArrayList GetCategoryStrengthKeys[MAXPLAYERS + 1];
+ArrayList GetCategoryStrengthValues[MAXPLAYERS + 1];
+ArrayList GetCategoryStrengthSection[MAXPLAYERS + 1];
 bool bIsDebugEnabled = false;
 int pistolXP[MAXPLAYERS + 1];
 int meleeXP[MAXPLAYERS + 1];
@@ -357,35 +379,35 @@ int medicXP[MAXPLAYERS + 1];
 int grenadeXP[MAXPLAYERS + 1];
 float fProficiencyExperienceMultiplier;
 float fProficiencyExperienceEarned;
-//new iProficiencyMaxLevel;
+//int iProficiencyMaxLevel;
 int iProficiencyStart;
 int iMaxIncap;
 Handle hExecuteConfig = INVALID_HANDLE;
 int iTanksPreset;
 int ProgressEntity[MAXPLAYERS + 1];
-//new Float:fScoutBonus;
-//new Float:fTotemRating;
+//float fScoutBonus;
+//float fTotemRating;
 int iSurvivorRespawnRestrict;
 bool bIsDefenderTank[MAXPLAYERS + 1];
 float fOnFireDebuffDelay;
 float fOnFireDebuff[MAXPLAYERS + 1];
-//new iOnFireDebuffLimit;
+//int iOnFireDebuffLimit;
 int iSkyLevelMax;
 int SkyLevel[MAXPLAYERS + 1];
 int iIsSpecialFire;
 int iIsRatingEnabled;
-Handle hThreatSort;
+ArrayList hThreatSort;
 bool bIsHideThreat[MAXPLAYERS + 1];
-//new Float:fTankThreatBonus;
+//float fTankThreatBonus;
 int iTopThreat;
 int iThreatLevel[MAXPLAYERS + 1];
 int iThreatLevel_temp[MAXPLAYERS + 1];
-Handle hThreatMeter;
+ArrayList hThreatMeter;
 int forceProfileOnNewPlayers;
 bool bEquipSpells[MAXPLAYERS + 1];
-Handle LoadoutConfigKeys[MAXPLAYERS + 1];
-Handle LoadoutConfigValues[MAXPLAYERS + 1];
-Handle LoadoutConfigSection[MAXPLAYERS + 1];
+ArrayList LoadoutConfigKeys[MAXPLAYERS + 1];
+ArrayList LoadoutConfigValues[MAXPLAYERS + 1];
+ArrayList LoadoutConfigSection[MAXPLAYERS + 1];
 bool bIsGiveProfileItems[MAXPLAYERS + 1];
 char sProfileLoadoutConfig[64];
 int iIsWeaponLoadout[MAXPLAYERS + 1];
@@ -400,39 +422,39 @@ char sDonatorFlags[10];
 float fDeathPenalty;
 int iHardcoreMode;
 int iDeathPenaltyPlayers;
-Handle RoundStatistics;
+ArrayList RoundStatistics;
 bool bRushingNotified[MAXPLAYERS + 1];
 bool bHasTeleported[MAXPLAYERS + 1];
 bool IsAirborne[MAXPLAYERS + 1];
-Handle RandomSurvivorClient;
+ArrayList RandomSurvivorClient;
 int eBackpack[MAXPLAYERS + 1];
 bool b_IsFinaleTanks;
 char RatingType[64];
 bool bJumpTime[MAXPLAYERS + 1];
 float JumpTime[MAXPLAYERS + 1];
-Handle AbilityConfigKeys[MAXPLAYERS + 1];
-Handle AbilityConfigValues[MAXPLAYERS + 1];
-Handle AbilityConfigSection[MAXPLAYERS + 1];
+ArrayList AbilityConfigKeys[MAXPLAYERS + 1];
+ArrayList AbilityConfigValues[MAXPLAYERS + 1];
+ArrayList AbilityConfigSection[MAXPLAYERS + 1];
 bool IsGroupMember[MAXPLAYERS + 1];
 int IsGroupMemberTime[MAXPLAYERS + 1];
-Handle GetAbilityKeys[MAXPLAYERS + 1];
-Handle GetAbilityValues[MAXPLAYERS + 1];
-Handle GetAbilitySection[MAXPLAYERS + 1];
-Handle IsAbilityKeys[MAXPLAYERS + 1];
-Handle IsAbilityValues[MAXPLAYERS + 1];
-Handle IsAbilitySection[MAXPLAYERS + 1];
+ArrayList GetAbilityKeys[MAXPLAYERS + 1];
+ArrayList GetAbilityValues[MAXPLAYERS + 1];
+ArrayList GetAbilitySection[MAXPLAYERS + 1];
+ArrayList IsAbilityKeys[MAXPLAYERS + 1];
+ArrayList IsAbilityValues[MAXPLAYERS + 1];
+ArrayList IsAbilitySection[MAXPLAYERS + 1];
 bool bIsSprinting[MAXPLAYERS + 1];
-Handle CheckAbilityKeys[MAXPLAYERS + 1];
-Handle CheckAbilityValues[MAXPLAYERS + 1];
-Handle CheckAbilitySection[MAXPLAYERS + 1];
+ArrayList CheckAbilityKeys[MAXPLAYERS + 1];
+ArrayList CheckAbilityValues[MAXPLAYERS + 1];
+ArrayList CheckAbilitySection[MAXPLAYERS + 1];
 int StrugglePower[MAXPLAYERS + 1];
-Handle GetTalentStrengthKeys[MAXPLAYERS + 1];
-Handle GetTalentStrengthValues[MAXPLAYERS + 1];
-Handle CastKeys[MAXPLAYERS + 1];
-Handle CastValues[MAXPLAYERS + 1];
-Handle CastSection[MAXPLAYERS + 1];
+ArrayList GetTalentStrengthKeys[MAXPLAYERS + 1];
+ArrayList GetTalentStrengthValues[MAXPLAYERS + 1];
+ArrayList CastKeys[MAXPLAYERS + 1];
+ArrayList CastValues[MAXPLAYERS + 1];
+ArrayList CastSection[MAXPLAYERS + 1];
 int ActionBarSlot[MAXPLAYERS + 1];
-Handle ActionBar[MAXPLAYERS + 1];
+ArrayList ActionBar[MAXPLAYERS + 1];
 bool DisplayActionBar[MAXPLAYERS + 1];
 int ConsecutiveHits[MAXPLAYERS + 1];
 int MyVomitChase[MAXPLAYERS + 1];
@@ -440,11 +462,11 @@ float JetpackRecoveryTime[MAXPLAYERS + 1];
 bool b_IsHooked[MAXPLAYERS + 1];
 int IsPvP[MAXPLAYERS + 1];
 bool bJetpack[MAXPLAYERS + 1];
-//new ServerLevelRequirement;
-Handle TalentsAssignedKeys[MAXPLAYERS + 1];
-Handle TalentsAssignedValues[MAXPLAYERS + 1];
-Handle CartelValueKeys[MAXPLAYERS + 1];
-Handle CartelValueValues[MAXPLAYERS + 1];
+//int ServerLevelRequirement;
+ArrayList TalentsAssignedKeys[MAXPLAYERS + 1];
+ArrayList TalentsAssignedValues[MAXPLAYERS + 1];
+ArrayList CartelValueKeys[MAXPLAYERS + 1];
+ArrayList CartelValueValues[MAXPLAYERS + 1];
 int ReadyUpGameMode;
 bool b_IsLoaded[MAXPLAYERS + 1];
 bool LoadDelay[MAXPLAYERS + 1];
@@ -455,7 +477,7 @@ char Hostname[64];
 char sHostname[64];
 char ProfileLoadQueue[MAXPLAYERS + 1][64];
 bool bIsSettingsCheck;
-Handle SuperCommonQueue;
+ArrayList SuperCommonQueue;
 bool bIsCrushCooldown[MAXPLAYERS + 1];
 bool bIsBurnCooldown[MAXPLAYERS + 1];
 bool ISBILED[MAXPLAYERS + 1];
@@ -468,15 +490,15 @@ int CleanseStack[MAXPLAYERS + 1];
 float CounterStack[MAXPLAYERS + 1];
 int MultiplierStack[MAXPLAYERS + 1];
 char BuildingStack[MAXPLAYERS + 1];
-Handle TempAttributes[MAXPLAYERS + 1];
-Handle TempTalents[MAXPLAYERS + 1];
-Handle PlayerProfiles[MAXPLAYERS + 1];
+ArrayList TempAttributes[MAXPLAYERS + 1];
+ArrayList TempTalents[MAXPLAYERS + 1];
+ArrayList PlayerProfiles[MAXPLAYERS + 1];
 char LoadoutName[MAXPLAYERS + 1][64];
 bool b_IsSurvivalIntermission;
 float ISDAZED[MAXPLAYERS + 1];
-//new Float:ExplodeTankTimer[MAXPLAYERS + 1];
+//float ExplodeTankTimer[MAXPLAYERS + 1];
 int TankState[MAXPLAYERS + 1];
-//new LastAttacker[MAXPLAYERS + 1];
+//int LastAttacker[MAXPLAYERS + 1];
 bool b_IsFloating[MAXPLAYERS + 1];
 float JumpPosition[MAXPLAYERS + 1][2][3];
 float LastDeathTime[MAXPLAYERS + 1];
@@ -490,37 +512,37 @@ int CleansingContribution[MAXPLAYERS + 1];
 float PointsContribution[MAXPLAYERS + 1];
 int DamageContribution[MAXPLAYERS + 1];
 float ExplosionCounter[MAXPLAYERS + 1][2];
-Handle CoveredInVomit;
+ArrayList CoveredInVomit;
 bool AmmoTriggerCooldown[MAXPLAYERS + 1];
-Handle SpecialAmmoEffectKeys[MAXPLAYERS + 1];
-Handle SpecialAmmoEffectValues[MAXPLAYERS + 1];
-Handle ActiveAmmoCooldownKeys[MAXPLAYERS +1];
-Handle ActiveAmmoCooldownValues[MAXPLAYERS + 1];
-Handle PlayActiveAbilities[MAXPLAYERS + 1];
-Handle PlayerActiveAmmo[MAXPLAYERS + 1];
-Handle SpecialAmmoKeys[MAXPLAYERS + 1];
-Handle SpecialAmmoValues[MAXPLAYERS + 1];
-Handle SpecialAmmoSection[MAXPLAYERS + 1];
-Handle DrawSpecialAmmoKeys[MAXPLAYERS + 1];
-Handle DrawSpecialAmmoValues[MAXPLAYERS + 1];
-Handle SpecialAmmoStrengthKeys[MAXPLAYERS + 1];
-Handle SpecialAmmoStrengthValues[MAXPLAYERS + 1];
-Handle WeaponLevel[MAXPLAYERS + 1];
-Handle ExperienceBank[MAXPLAYERS + 1];
-Handle MenuPosition[MAXPLAYERS + 1];
-Handle IsClientInRangeSAKeys[MAXPLAYERS + 1];
-Handle IsClientInRangeSAValues[MAXPLAYERS + 1];
-Handle SpecialAmmoData;
-Handle SpecialAmmoSave;
+ArrayList SpecialAmmoEffectKeys[MAXPLAYERS + 1];
+ArrayList SpecialAmmoEffectValues[MAXPLAYERS + 1];
+ArrayList ActiveAmmoCooldownKeys[MAXPLAYERS +1];
+ArrayList ActiveAmmoCooldownValues[MAXPLAYERS + 1];
+ArrayList PlayActiveAbilities[MAXPLAYERS + 1];
+ArrayList PlayerActiveAmmo[MAXPLAYERS + 1];
+ArrayList SpecialAmmoKeys[MAXPLAYERS + 1];
+ArrayList SpecialAmmoValues[MAXPLAYERS + 1];
+ArrayList SpecialAmmoSection[MAXPLAYERS + 1];
+ArrayList DrawSpecialAmmoKeys[MAXPLAYERS + 1];
+ArrayList DrawSpecialAmmoValues[MAXPLAYERS + 1];
+ArrayList SpecialAmmoStrengthKeys[MAXPLAYERS + 1];
+ArrayList SpecialAmmoStrengthValues[MAXPLAYERS + 1];
+ArrayList WeaponLevel[MAXPLAYERS + 1];
+ArrayList ExperienceBank[MAXPLAYERS + 1];
+ArrayList MenuPosition[MAXPLAYERS + 1];
+ArrayList IsClientInRangeSAKeys[MAXPLAYERS + 1];
+ArrayList IsClientInRangeSAValues[MAXPLAYERS + 1];
+ArrayList SpecialAmmoData;
+ArrayList SpecialAmmoSave;
 float MovementSpeed[MAXPLAYERS + 1];
 int IsPlayerDebugMode[MAXPLAYERS + 1];
 char ActiveSpecialAmmo[MAXPLAYERS + 1][64];
 float IsSpecialAmmoEnabled[MAXPLAYERS + 1][4];
 bool bIsInCombat[MAXPLAYERS + 1];
 float CombatTime[MAXPLAYERS + 1];
-Handle AKKeys[MAXPLAYERS + 1];
-Handle AKValues[MAXPLAYERS + 1];
-Handle AKSection[MAXPLAYERS + 1];
+ArrayList AKKeys[MAXPLAYERS + 1];
+ArrayList AKValues[MAXPLAYERS + 1];
+ArrayList AKSection[MAXPLAYERS + 1];
 bool bIsSurvivorFatigue[MAXPLAYERS + 1];
 int SurvivorStamina[MAXPLAYERS + 1];
 float SurvivorConsumptionTime[MAXPLAYERS + 1];
@@ -531,52 +553,52 @@ Handle ISFROZEN[MAXPLAYERS + 1];
 float ISEXPLODETIME[MAXPLAYERS + 1];
 Handle ISEXPLODE[MAXPLAYERS + 1];
 Handle ISBLIND[MAXPLAYERS + 1];
-Handle EntityOnFire;
-Handle EntityOnFireName;
-Handle CommonInfected;
-Handle RCAffixes[MAXPLAYERS + 1];
-Handle h_CommonKeys;
-Handle h_CommonValues;
-Handle SearchKey_Section;
-Handle h_CAKeys;
-Handle h_CAValues;
-Handle CommonList;
-Handle CommonAffixes;// the array holding the common entity id and the affix associated with the common infected. If multiple affixes, multiple keyvalues for the entity id will be created instead of multiple entries.
-Handle a_CommonAffixes;			// the array holding the config data
+ArrayList EntityOnFire;
+ArrayList EntityOnFireName;
+ArrayList CommonInfected;
+ArrayList RCAffixes[MAXPLAYERS + 1];
+ArrayList h_CommonKeys;
+ArrayList h_CommonValues;
+ArrayList SearchKey_Section;
+ArrayList h_CAKeys;
+ArrayList h_CAValues;
+ArrayList CommonList;
+ArrayList CommonAffixes;// the array holding the common entity id and the affix associated with the common infected. If multiple affixes, multiple keyvalues for the entity id will be created instead of multiple entries.
+ArrayList a_CommonAffixes;			// the array holding the config data
 int UpgradesAwarded[MAXPLAYERS + 1];
 int UpgradesAvailable[MAXPLAYERS + 1];
-Handle InfectedAuraKeys[MAXPLAYERS + 1];
-Handle InfectedAuraValues[MAXPLAYERS + 1];
-Handle InfectedAuraSection[MAXPLAYERS + 1];
+ArrayList InfectedAuraKeys[MAXPLAYERS + 1];
+ArrayList InfectedAuraValues[MAXPLAYERS + 1];
+ArrayList InfectedAuraSection[MAXPLAYERS + 1];
 bool b_IsDead[MAXPLAYERS + 1];
 int ExperienceDebt[MAXPLAYERS + 1];
-Handle TalentUpgradeKeys[MAXPLAYERS + 1];
-Handle TalentUpgradeValues[MAXPLAYERS + 1];
-Handle TalentUpgradeSection[MAXPLAYERS + 1];
-Handle InfectedHealth[MAXPLAYERS + 1];
-Handle SpecialCommon[MAXPLAYERS + 1];
-Handle WitchList;
-Handle WitchDamage[MAXPLAYERS + 1];
-Handle Give_Store_Keys;
-Handle Give_Store_Values;
-Handle Give_Store_Section;
+ArrayList TalentUpgradeKeys[MAXPLAYERS + 1];
+ArrayList TalentUpgradeValues[MAXPLAYERS + 1];
+ArrayList TalentUpgradeSection[MAXPLAYERS + 1];
+ArrayList InfectedHealth[MAXPLAYERS + 1];
+ArrayList SpecialCommon[MAXPLAYERS + 1];
+ArrayList WitchList;
+ArrayList WitchDamage[MAXPLAYERS + 1];
+ArrayList Give_Store_Keys;
+ArrayList Give_Store_Values;
+ArrayList Give_Store_Section;
 bool bIsMeleeCooldown[MAXPLAYERS + 1];
-Handle a_WeaponDamages;
-Handle MeleeKeys[MAXPLAYERS + 1];
-Handle MeleeValues[MAXPLAYERS + 1];
-Handle MeleeSection[MAXPLAYERS + 1];
+ArrayList a_WeaponDamages;
+ArrayList MeleeKeys[MAXPLAYERS + 1];
+ArrayList MeleeValues[MAXPLAYERS + 1];
+ArrayList MeleeSection[MAXPLAYERS + 1];
 char Public_LastChatUser[64];
 char Infected_LastChatUser[64];
 char Survivor_LastChatUser[64];
 char Spectator_LastChatUser[64];
 char currentCampaignName[64];
-Handle h_KilledPosition_X[MAXPLAYERS + 1];
-Handle h_KilledPosition_Y[MAXPLAYERS + 1];
-Handle h_KilledPosition_Z[MAXPLAYERS + 1];
+ArrayList h_KilledPosition_X[MAXPLAYERS + 1];
+ArrayList h_KilledPosition_Y[MAXPLAYERS + 1];
+ArrayList h_KilledPosition_Z[MAXPLAYERS + 1];
 bool bIsEligibleMapAward[MAXPLAYERS + 1];
 char ChatSettingsName[MAXPLAYERS + 1][64];
-Handle a_ChatSettings;
-Handle ChatSettings[MAXPLAYERS + 1];
+ArrayList a_ChatSettings;
+ArrayList ChatSettings[MAXPLAYERS + 1];
 bool b_ConfigsExecuted;
 bool b_FirstLoad;
 bool b_MapStart;
@@ -594,121 +616,121 @@ int LastPlayLength[MAXPLAYERS + 1];
 int RestedExperience[MAXPLAYERS + 1];
 int MapRoundsPlayed;
 char LastSpoken[MAXPLAYERS + 1][512];
-Handle RPGMenuPosition[MAXPLAYERS + 1];
+ArrayList RPGMenuPosition[MAXPLAYERS + 1];
 bool b_IsInSaferoom[MAXPLAYERS + 1];
-Handle hDatabase												=	INVALID_HANDLE;
+Database hDatabase												=	INVALID_HANDLE;
 char ConfigPathDirectory[64];
 char LogPathDirectory[64];
 char PurchaseTalentName[MAXPLAYERS + 1][64];
 int PurchaseTalentPoints[MAXPLAYERS + 1];
-Handle a_Trails;
-Handle TrailsKeys[MAXPLAYERS + 1];
-Handle TrailsValues[MAXPLAYERS + 1];
+ArrayList a_Trails;
+ArrayList TrailsKeys[MAXPLAYERS + 1];
+ArrayList TrailsValues[MAXPLAYERS + 1];
 bool b_IsFinaleActive;
 int RoundDamage[MAXPLAYERS + 1];
 int RoundDamageTotal;
 int SpecialsKilled;
-Handle LockedTalentKeys;
-Handle LockedTalentValues;
-Handle LockedTalentSection;
-Handle MOTKeys[MAXPLAYERS + 1];
-Handle MOTValues[MAXPLAYERS + 1];
-Handle MOTSection[MAXPLAYERS + 1];
-Handle DamageKeys[MAXPLAYERS + 1];
-Handle DamageValues[MAXPLAYERS + 1];
-Handle DamageSection[MAXPLAYERS + 1];
-Handle BoosterKeys[MAXPLAYERS + 1];
-Handle BoosterValues[MAXPLAYERS + 1];
-Handle StoreChanceKeys[MAXPLAYERS + 1];
-Handle StoreChanceValues[MAXPLAYERS + 1];
-Handle StoreItemNameSection[MAXPLAYERS + 1];
-Handle StoreItemSection[MAXPLAYERS + 1];
-char PathSetting[64];
-Handle SaveSection[MAXPLAYERS + 1];
-int OriginalHealth[MAXPLAYERS + 1];
-bool b_IsLoadingStore[MAXPLAYERS + 1];
-Handle LoadStoreSection[MAXPLAYERS + 1];
-int FreeUpgrades[MAXPLAYERS + 1];
-Handle StoreTimeKeys[MAXPLAYERS + 1];
-Handle StoreTimeValues[MAXPLAYERS + 1];
-Handle StoreKeys[MAXPLAYERS + 1];
-Handle StoreValues[MAXPLAYERS + 1];
-Handle StoreMultiplierKeys[MAXPLAYERS + 1];
-Handle StoreMultiplierValues[MAXPLAYERS + 1];
-Handle a_Store_Player[MAXPLAYERS + 1];
-bool b_IsLoadingTrees[MAXPLAYERS + 1];
-bool b_IsArraysCreated[MAXPLAYERS + 1];
-Handle a_Store;
-int PlayerUpgradesTotal[MAXPLAYERS + 1];
-float f_TankCooldown;
-float DeathLocation[MAXPLAYERS + 1][3];
-int TimePlayed[MAXPLAYERS + 1];
-bool b_IsLoading[MAXPLAYERS + 1];
-int LastLivingSurvivor;
-float f_OriginStart[MAXPLAYERS + 1][3];
-float f_OriginEnd[MAXPLAYERS + 1][3];
-int t_Distance[MAXPLAYERS + 1];
-int t_Healing[MAXPLAYERS + 1];
-bool b_IsActiveRound;
-bool b_IsFirstPluginLoad;
-char s_rup[32];
-Handle MainKeys;
-Handle MainValues;
-Handle a_Menu_Talents;
-Handle a_Menu_Main;
-Handle a_Events;
-Handle a_Points;
-Handle a_Pets;
-Handle a_Database_Talents;
-Handle a_Database_Talents_Defaults;
-Handle a_Database_Talents_Defaults_Name;
-Handle MenuKeys[MAXPLAYERS + 1];
-Handle MenuValues[MAXPLAYERS + 1];
-Handle MenuSection[MAXPLAYERS + 1];
-Handle TriggerKeys[MAXPLAYERS + 1];
-Handle TriggerValues[MAXPLAYERS + 1];
-Handle TriggerSection[MAXPLAYERS + 1];
-Handle AbilityKeys[MAXPLAYERS + 1];
-Handle AbilityValues[MAXPLAYERS + 1];
-Handle AbilitySection[MAXPLAYERS + 1];
-Handle ChanceKeys[MAXPLAYERS + 1];
-Handle ChanceValues[MAXPLAYERS + 1];
-Handle ChanceSection[MAXPLAYERS + 1];
-Handle PurchaseKeys[MAXPLAYERS + 1];
-Handle PurchaseValues[MAXPLAYERS + 1];
-Handle EventSection;
-Handle HookSection;
-Handle CallKeys;
-Handle CallValues;
-//new Handle:CallSection;
-Handle DirectorKeys;
-Handle DirectorValues;
-//new Handle:DirectorSection;
-Handle DatabaseKeys;
-Handle DatabaseValues;
-Handle DatabaseSection;
-Handle a_Database_PlayerTalents_Bots;
-Handle PlayerAbilitiesCooldown_Bots;
-Handle PlayerAbilitiesImmune_Bots;
-Handle BotSaveKeys;
-Handle BotSaveValues;
-Handle BotSaveSection;
-Handle LoadDirectorSection;
-Handle QueryDirectorKeys;
-Handle QueryDirectorValues;
-Handle QueryDirectorSection;
-Handle FirstDirectorKeys;
-Handle FirstDirectorValues;
-Handle FirstDirectorSection;
-Handle a_Database_PlayerTalents[MAXPLAYERS + 1];
-Handle a_Database_PlayerTalents_Experience[MAXPLAYERS + 1];
-Handle PlayerAbilitiesName;
-Handle PlayerAbilitiesCooldown[MAXPLAYERS + 1];
-//new Handle:PlayerAbilitiesImmune[MAXPLAYERS + 1][MAXPLAYERS + 1];
-Handle PlayerInventory[MAXPLAYERS + 1];
-Handle PlayerEquipped[MAXPLAYERS + 1];
-Handle a_DirectorActions;
-Handle a_DirectorActions_Cooldown;
+ArrayList LockedTalentKeys;
+ArrayList LockedTalentValues;
+ArrayList LockedTalentSection;
+ArrayList MOTKeys[MAXPLAYERS + 1];
+ArrayList MOTValues[MAXPLAYERS + 1];
+ArrayList MOTSection[MAXPLAYERS + 1];
+ArrayList DamageKeys[MAXPLAYERS + 1];
+ArrayList DamageValues[MAXPLAYERS + 1];
+ArrayList DamageSection[MAXPLAYERS + 1];
+ArrayList BoosterKeys[MAXPLAYERS + 1];
+ArrayList BoosterValues[MAXPLAYERS + 1];
+ArrayList StoreChanceKeys[MAXPLAYERS + 1];
+ArrayList StoreChanceValues[MAXPLAYERS + 1];
+ArrayList StoreItemNameSection[MAXPLAYERS + 1];
+ArrayList StoreItemSection[MAXPLAYERS + 1];
+ArrayList thSetting[64];
+ArrayList SaveSection[MAXPLAYERS + 1];
+ArrayList ginalHealth[MAXPLAYERS + 1];
+ArrayList IsLoadingStore[MAXPLAYERS + 1];
+ArrayList LoadStoreSection[MAXPLAYERS + 1];
+ArrayList eUpgrades[MAXPLAYERS + 1];
+ArrayList StoreTimeKeys[MAXPLAYERS + 1];
+ArrayList StoreTimeValues[MAXPLAYERS + 1];
+ArrayList StoreKeys[MAXPLAYERS + 1];
+ArrayList StoreValues[MAXPLAYERS + 1];
+ArrayList StoreMultiplierKeys[MAXPLAYERS + 1];
+ArrayList StoreMultiplierValues[MAXPLAYERS + 1];
+ArrayList a_Store_Player[MAXPLAYERS + 1];
+ArrayList IsLoadingTrees[MAXPLAYERS + 1];
+ArrayList IsArraysCreated[MAXPLAYERS + 1];
+ArrayList a_Store;
+ArrayList yerUpgradesTotal[MAXPLAYERS + 1];
+ArrayList _TankCooldown;
+ArrayList eathLocation[MAXPLAYERS + 1][3];
+ArrayList ePlayed[MAXPLAYERS + 1];
+ArrayList IsLoading[MAXPLAYERS + 1];
+ArrayList tLivingSurvivor;
+ArrayList _OriginStart[MAXPLAYERS + 1][3];
+ArrayList _OriginEnd[MAXPLAYERS + 1][3];
+ArrayList istance[MAXPLAYERS + 1];
+ArrayList ealing[MAXPLAYERS + 1];
+ArrayList IsActiveRound;
+ArrayList IsFirstPluginLoad;
+ArrayList rup[32];
+ArrayList MainKeys;
+ArrayList MainValues;
+ArrayList a_Menu_Talents;
+ArrayList a_Menu_Main;
+ArrayList a_Events;
+ArrayList a_Points;
+ArrayList a_Pets;
+ArrayList a_Database_Talents;
+ArrayList a_Database_Talents_Defaults;
+ArrayList a_Database_Talents_Defaults_Name;
+ArrayList MenuKeys[MAXPLAYERS + 1];
+ArrayList MenuValues[MAXPLAYERS + 1];
+ArrayList MenuSection[MAXPLAYERS + 1];
+ArrayList TriggerKeys[MAXPLAYERS + 1];
+ArrayList TriggerValues[MAXPLAYERS + 1];
+ArrayList TriggerSection[MAXPLAYERS + 1];
+ArrayList AbilityKeys[MAXPLAYERS + 1];
+ArrayList AbilityValues[MAXPLAYERS + 1];
+ArrayList AbilitySection[MAXPLAYERS + 1];
+ArrayList ChanceKeys[MAXPLAYERS + 1];
+ArrayList ChanceValues[MAXPLAYERS + 1];
+ArrayList ChanceSection[MAXPLAYERS + 1];
+ArrayList PurchaseKeys[MAXPLAYERS + 1];
+ArrayList PurchaseValues[MAXPLAYERS + 1];
+ArrayList EventSection;
+ArrayList HookSection;
+ArrayList CallKeys;
+ArrayList CallValues;
+//ArrayList CallSection;
+ArrayList DirectorKeys;
+ArrayList DirectorValues;
+//ArrayList DirectorSection;
+ArrayList DatabaseKeys;
+ArrayList DatabaseValues;
+ArrayList DatabaseSection;
+ArrayList a_Database_PlayerTalents_Bots;
+ArrayList PlayerAbilitiesCooldown_Bots;
+ArrayList PlayerAbilitiesImmune_Bots;
+ArrayList BotSaveKeys;
+ArrayList BotSaveValues;
+ArrayList BotSaveSection;
+ArrayList LoadDirectorSection;
+ArrayList QueryDirectorKeys;
+ArrayList QueryDirectorValues;
+ArrayList QueryDirectorSection;
+ArrayList FirstDirectorKeys;
+ArrayList FirstDirectorValues;
+ArrayList FirstDirectorSection;
+ArrayList a_Database_PlayerTalents[MAXPLAYERS + 1];
+ArrayList a_Database_PlayerTalents_Experience[MAXPLAYERS + 1];
+ArrayList PlayerAbilitiesName;
+ArrayList PlayerAbilitiesCooldown[MAXPLAYERS + 1];
+//ArrayList PlayerAbilitiesImmune[MAXPLAYERS + 1][MAXPLAYERS + 1];
+ArrayList PlayerInventory[MAXPLAYERS + 1];
+ArrayList PlayerEquipped[MAXPLAYERS + 1];
+ArrayList a_DirectorActions;
+ArrayList a_DirectorActions_Cooldown;
 int PlayerLevel[MAXPLAYERS + 1];
 int PlayerLevelUpgrades[MAXPLAYERS + 1];
 int TotalTalentPoints[MAXPLAYERS + 1];
@@ -729,10 +751,6 @@ bool b_IsImmune[MAXPLAYERS + 1];
 float SpeedMultiplier[MAXPLAYERS + 1];
 float SpeedMultiplierBase[MAXPLAYERS + 1];
 bool b_IsJumping[MAXPLAYERS + 1];
-Handle g_hEffectAdrenaline = INVALID_HANDLE;
-Handle g_hCallVomitOnPlayer = INVALID_HANDLE;
-Handle hRoundRespawn = INVALID_HANDLE;
-Handle g_hCreateAcid = INVALID_HANDLE;
 float GravityBase[MAXPLAYERS + 1];
 bool b_GroundRequired[MAXPLAYERS + 1];
 int CoveredInBile[MAXPLAYERS + 1][MAXPLAYERS + 1];
@@ -741,48 +759,55 @@ int CommonKillsHeadshot[MAXPLAYERS + 1];
 char OpenedMenu_p[MAXPLAYERS + 1][512];
 char OpenedMenu[MAXPLAYERS + 1][512];
 int ExperienceOverall[MAXPLAYERS + 1];
-//new String:CurrentTalentLoading_Bots[128];
-//new Handle:a_Database_PlayerTalents_Bots;
-//new Handle:PlayerAbilitiesCooldown_Bots;				// Because [designation] = ZombieclassID
+//char CurrentTalentLoading_Bots[128];
+//ArrayList a_Database_PlayerTalents_Bots;
+//ArrayList PlayerAbilitiesCooldown_Bots;				// Because [designation] = ZombieclassID
 int ExperienceLevel_Bots;
-//new ExperienceOverall_Bots;
-//new PlayerLevelUpgrades_Bots;
+//int ExperienceOverall_Bots;
+//int PlayerLevelUpgrades_Bots;
 int PlayerLevel_Bots;
-//new TotalTalentPoints_Bots;
+//int TotalTalentPoints_Bots;
 float Points_Director;
-Handle CommonInfectedQueue;
+ArrayList CommonInfectedQueue;
 int g_oAbility = 0;
+
+// Signatures:
 Handle g_hIsStaggering = INVALID_HANDLE;
 Handle g_hSetClass = INVALID_HANDLE;
 Handle g_hCreateAbility = INVALID_HANDLE;
 Handle gd = INVALID_HANDLE;
-//new Handle:DirectorPurchaseTimer = INVALID_HANDLE;
+Handle g_hEffectAdrenaline = INVALID_HANDLE;
+Handle g_hCallVomitOnPlayer = INVALID_HANDLE;
+Handle hRoundRespawn = INVALID_HANDLE;
+Handle g_hCreateAcid = INVALID_HANDLE;
+// End of signatures
+//ArrayList DirectorPurchaseHandle = INVALID_HANDLE;
 bool b_IsDirectorTalents[MAXPLAYERS + 1];
-//new LoadPos_Bots;
+//int LoadPos_Bots;
 int LoadPos[MAXPLAYERS + 1];
 int LoadPos_Director;
-Handle g_Steamgroup;
-Handle g_Tags;
-Handle g_Gamemode;
+ConVar g_Steamgroup;
+ConVar g_Tags;
+ConVar g_Gamemode;
 int RoundTime;
 int g_iSprite = 0;
 int g_BeaconSprite = 0;
 int iNoSpecials;
-//new bool:b_FirstClientLoaded;
+//bool b_FirstClientLoaded;
 bool b_HasDeathLocation[MAXPLAYERS + 1];
 bool b_IsMissionFailed;
-Handle CCASection;
-Handle CCAKeys;
-Handle CCAValues;
+ArrayList CCASection;
+ArrayList CCAKeys;
+ArrayList CCAValues;
 int LastWeaponDamage[MAXPLAYERS + 1];
 float UseItemTime[MAXPLAYERS + 1];
-Handle NewUsersRound;
+ArrayList NewUsersRound;
 bool bIsSoloHandicap;
-Handle MenuStructure[MAXPLAYERS + 1];
-Handle TankState_Array[MAXPLAYERS + 1];
+ArrayList MenuStructure[MAXPLAYERS + 1];
+ArrayList TankState_Array[MAXPLAYERS + 1];
 bool bIsGiveIncapHealth[MAXPLAYERS + 1];
-Handle TheLeaderboards[MAXPLAYERS + 1];
-Handle TheLeaderboardsData[MAXPLAYERS + 1];
+ArrayList TheLeaderboards[MAXPLAYERS + 1];
+ArrayList TheLeaderboardsData[MAXPLAYERS + 1];
 int TheLeaderboardsPage[MAXPLAYERS + 1];// 10 entries at a time, until the end of time.
 bool bIsMyRanking[MAXPLAYERS + 1];
 int TheLeaderboardsPageSize[MAXPLAYERS + 1];
@@ -793,28 +818,28 @@ int MyRespawnTarget[MAXPLAYERS + 1];
 bool RespawnImmunity[MAXPLAYERS + 1];
 char TheDBPrefix[64];
 int LastAttackedUser[MAXPLAYERS + 1];
-Handle LoggedUsers;
-Handle TalentTreeKeys[MAXPLAYERS + 1];
-Handle TalentTreeValues[MAXPLAYERS + 1];
-Handle TalentExperienceKeys[MAXPLAYERS + 1];
-Handle TalentExperienceValues[MAXPLAYERS + 1];
-Handle TalentActionKeys[MAXPLAYERS + 1];
-Handle TalentActionValues[MAXPLAYERS + 1];
-Handle TalentActionSection[MAXPLAYERS + 1];
+ArrayList LoggedUsers;
+ArrayList TalentTreeKeys[MAXPLAYERS + 1];
+ArrayList TalentTreeValues[MAXPLAYERS + 1];
+ArrayList TalentExperienceKeys[MAXPLAYERS + 1];
+ArrayList TalentExperienceValues[MAXPLAYERS + 1];
+ArrayList TalentActionKeys[MAXPLAYERS + 1];
+ArrayList TalentActionValues[MAXPLAYERS + 1];
+ArrayList TalentActionSection[MAXPLAYERS + 1];
 bool bIsTalentTwo[MAXPLAYERS + 1];
-Handle CommonDrawKeys;
-Handle CommonDrawValues;
+ArrayList CommonDrawKeys;
+ArrayList CommonDrawValues;
 bool bAutoRevive[MAXPLAYERS + 1];
 bool bIsClassAbilities[MAXPLAYERS + 1];
 bool bIsDisconnecting[MAXPLAYERS + 1];
-Handle LegitClassSection[MAXPLAYERS + 1];
+ArrayList LegitClassSection[MAXPLAYERS + 1];
 int LoadProfileRequestName[MAXPLAYERS + 1];
-//new String:LoadProfileRequest[MAXPLAYERS + 1];
+//char LoadProfileRequest[MAXPLAYERS + 1];
 char TheCurrentMap[64];
 bool IsEnrageNotified;
-//new bool:bIsNewClass[MAXPLAYERS + 1];
+//bool bIsNewClass[MAXPLAYERS + 1];
 int ClientActiveStance[MAXPLAYERS + 1];
-Handle SurvivorsIgnored[MAXPLAYERS + 1];
+ArrayList SurvivorsIgnored[MAXPLAYERS + 1];
 bool HasSeenCombat[MAXPLAYERS + 1];
 int MyBirthday[MAXPLAYERS + 1];
 //======================================
@@ -916,7 +941,7 @@ float FinSurvBon;
 int RaidLevMult;
 int iIgnoredRating;
 int iIgnoredRatingMax;
-//new iTrailsEnabled;
+//int iTrailsEnabled;
 int iInfectedLimit;
 float SurvivorExperienceMult;
 float SurvivorExperienceMultTank;
@@ -936,20 +961,20 @@ int iRatingTanksRequired;
 char sDbLeaderboards[64];
 int iIsLifelink;
 int RatingPerHandicap;
-Handle ItemDropArray;
+ArrayList ItemDropArray;
 char sItemModel[512];
 int iSurvivorGroupMinimum;
-/*new Float:fDropChanceSpecial;
-new Float:fDropChanceCommon;
-new Float:fDropChanceWitch;
-new Float:fDropChanceTank;
-new Float:fDropChanceInfected;*/
-Handle PreloadKeys;
-Handle PreloadValues;
-Handle ItemDropKeys;
-Handle ItemDropValues;
-Handle ItemDropSection;
-Handle persistentCirculation;
+/*float fDropChanceSpecial;
+float fDropChanceCommon;
+float fDropChanceWitch;
+float fDropChanceTank;
+float fDropChanceInfected;*/
+ArrayList PreloadKeys;
+ArrayList PreloadValues;
+ArrayList ItemDropKeys;
+ArrayList ItemDropValues;
+ArrayList ItemDropSection;
+ArrayList persistentCirculation;
 int iRarityMax;
 int iEnrageAdvertisement;
 int iJoinGroupAdvertisement;
@@ -957,7 +982,7 @@ int iNotifyEnrage;
 char sBackpackModel[64];
 char ItemDropArraySize[64];
 bool bIsNewPlayer[MAXPLAYERS + 1];
-Handle MyGroup[MAXPLAYERS + 1];
+ArrayList MyGroup[MAXPLAYERS + 1];
 int iCommonsLimitUpper;
 bool bIsInCheckpoint[MAXPLAYERS + 1];
 float fCoopSurvBon;
@@ -972,83 +997,83 @@ int OverHealth[MAXPLAYERS + 1];
 bool bHealthIsSet[MAXPLAYERS + 1];
 int iIsLevelingPaused[MAXPLAYERS + 1];
 int iIsBulletTrails[MAXPLAYERS + 1];
-Handle ActiveStatuses[MAXPLAYERS + 1];
+ArrayList ActiveStatuses[MAXPLAYERS + 1];
 int InfectedTalentLevel;
 float fEnrageModifier;
 float LastAttackTime[MAXPLAYERS + 1];
-Handle hWeaponList[MAXPLAYERS + 1];
-Handle GCVKeys[MAXPLAYERS + 1];
-Handle GCVValues[MAXPLAYERS + 1];
-Handle GCVSection[MAXPLAYERS + 1];
+ArrayList hWeaponList[MAXPLAYERS + 1];
+ArrayList GCVKeys[MAXPLAYERS + 1];
+ArrayList GCVValues[MAXPLAYERS + 1];
+ArrayList GCVSection[MAXPLAYERS + 1];
 int MyStatusEffects[MAXPLAYERS + 1];
 int iShowLockedTalents;
-//new Handle:GCMKeys[MAXPLAYERS + 1];
-//new Handle:GCMValues[MAXPLAYERS + 1];
-Handle PassiveStrengthKeys[MAXPLAYERS + 1];
-Handle PassiveStrengthValues[MAXPLAYERS + 1];
-Handle PassiveTalentName[MAXPLAYERS + 1];
-Handle UpgradeCategoryKeys[MAXPLAYERS + 1];
-Handle UpgradeCategoryValues[MAXPLAYERS + 1];
-Handle UpgradeCategoryName[MAXPLAYERS + 1];
+//ArrayList GCMKeys[MAXPLAYERS + 1];
+//ArrayList GCMValues[MAXPLAYERS + 1];
+ArrayList PassiveStrengthKeys[MAXPLAYERS + 1];
+ArrayList PassiveStrengthValues[MAXPLAYERS + 1];
+ArrayList PassiveTalentName[MAXPLAYERS + 1];
+ArrayList UpgradeCategoryKeys[MAXPLAYERS + 1];
+ArrayList UpgradeCategoryValues[MAXPLAYERS + 1];
+ArrayList UpgradeCategoryName[MAXPLAYERS + 1];
 int iChaseEnt[MAXPLAYERS + 1];
 int iTeamRatingRequired;
 float fTeamRatingBonus;
 float fRatingPercentLostOnDeath;
 int PlayerCurrentMenuLayer[MAXPLAYERS + 1];
 int iMaxLayers;
-Handle TranslationOTNKeys[MAXPLAYERS + 1];
-Handle TranslationOTNValues[MAXPLAYERS + 1];
-Handle TranslationOTNSection[MAXPLAYERS + 1];
-Handle acdrKeys[MAXPLAYERS + 1];
-Handle acdrValues[MAXPLAYERS + 1];
-Handle acdrSection[MAXPLAYERS + 1];
-Handle GetLayerStrengthKeys[MAXPLAYERS + 1];
-Handle GetLayerStrengthValues[MAXPLAYERS + 1];
-Handle GetLayerStrengthSection[MAXPLAYERS + 1];
+ArrayList TranslationOTNKeys[MAXPLAYERS + 1];
+ArrayList TranslationOTNValues[MAXPLAYERS + 1];
+ArrayList TranslationOTNSection[MAXPLAYERS + 1];
+ArrayList acdrKeys[MAXPLAYERS + 1];
+ArrayList acdrValues[MAXPLAYERS + 1];
+ArrayList acdrSection[MAXPLAYERS + 1];
+ArrayList GetLayerStrengthKeys[MAXPLAYERS + 1];
+ArrayList GetLayerStrengthValues[MAXPLAYERS + 1];
+ArrayList GetLayerStrengthSection[MAXPLAYERS + 1];
 int iCommonInfectedBaseDamage;
 int playerPageOfCharacterSheet[MAXPLAYERS + 1];
 int nodesInExistence;
 int iShowTotalNodesOnTalentTree;
-Handle PlayerEffectOverTime[MAXPLAYERS + 1];
-Handle PlayerEffectOverTimeEffects[MAXPLAYERS + 1];
-Handle CheckEffectOverTimeKeys[MAXPLAYERS + 1];
-Handle CheckEffectOverTimeValues[MAXPLAYERS + 1];
+ArrayList PlayerEffectOverTime[MAXPLAYERS + 1];
+ArrayList PlayerEffectOverTimeEffects[MAXPLAYERS + 1];
+ArrayList CheckEffectOverTimeKeys[MAXPLAYERS + 1];
+ArrayList CheckEffectOverTimeValues[MAXPLAYERS + 1];
 float fSpecialAmmoInterval;
 float fEffectOverTimeInterval;
-Handle FormatEffectOverTimeKeys[MAXPLAYERS + 1];
-Handle FormatEffectOverTimeValues[MAXPLAYERS + 1];
-Handle FormatEffectOverTimeSection[MAXPLAYERS + 1];
-Handle CooldownEffectTriggerKeys[MAXPLAYERS + 1];
-Handle CooldownEffectTriggerValues[MAXPLAYERS + 1];
-Handle IsSpellAnAuraKeys[MAXPLAYERS + 1];
-Handle IsSpellAnAuraValues[MAXPLAYERS + 1];
+ArrayList FormatEffectOverTimeKeys[MAXPLAYERS + 1];
+ArrayList FormatEffectOverTimeValues[MAXPLAYERS + 1];
+ArrayList FormatEffectOverTimeSection[MAXPLAYERS + 1];
+ArrayList CooldownEffectTriggerKeys[MAXPLAYERS + 1];
+ArrayList CooldownEffectTriggerValues[MAXPLAYERS + 1];
+ArrayList IsSpellAnAuraKeys[MAXPLAYERS + 1];
+ArrayList IsSpellAnAuraValues[MAXPLAYERS + 1];
 float fStaggerTickrate;
-Handle StaggeredTargets;
-Handle staggerBuffer;
+ArrayList StaggeredTargets;
+ConVar staggerBuffer;
 bool staggerCooldownOnTriggers[MAXPLAYERS + 1];
-Handle CallAbilityCooldownTriggerKeys[MAXPLAYERS + 1];
-Handle CallAbilityCooldownTriggerValues[MAXPLAYERS + 1];
-Handle CallAbilityCooldownTriggerSection[MAXPLAYERS + 1];
-Handle GetIfTriggerRequirementsMetKeys[MAXPLAYERS + 1];
-Handle GetIfTriggerRequirementsMetValues[MAXPLAYERS + 1];
-Handle GetIfTriggerRequirementsMetSection[MAXPLAYERS + 1];
+ArrayList CallAbilityCooldownTriggerKeys[MAXPLAYERS + 1];
+ArrayList CallAbilityCooldownTriggerValues[MAXPLAYERS + 1];
+ArrayList CallAbilityCooldownTriggerSection[MAXPLAYERS + 1];
+ArrayList GetIfTriggerRequirementsMetKeys[MAXPLAYERS + 1];
+ArrayList GetIfTriggerRequirementsMetValues[MAXPLAYERS + 1];
+ArrayList GetIfTriggerRequirementsMetSection[MAXPLAYERS + 1];
 bool ShowPlayerLayerInformation[MAXPLAYERS + 1];
-Handle GAMKeys[MAXPLAYERS + 1];
-Handle GAMValues[MAXPLAYERS + 1];
-Handle GAMSection[MAXPLAYERS + 1];
+ArrayList GAMKeys[MAXPLAYERS + 1];
+ArrayList GAMValues[MAXPLAYERS + 1];
+ArrayList GAMSection[MAXPLAYERS + 1];
 char RPGMenuCommand[64];
 int RPGMenuCommandExplode;
 //new PrestigeLevel[MAXPLAYERS + 1];
 char DefaultProfileName[64];
 char DefaultBotProfileName[64];
 char DefaultInfectedProfileName[64];
-Handle GetGoverningAttributeKeys[MAXPLAYERS + 1];
-Handle GetGoverningAttributeValues[MAXPLAYERS + 1];
-Handle GetGoverningAttributeSection[MAXPLAYERS + 1];
+ArrayList GetGoverningAttributeKeys[MAXPLAYERS + 1];
+ArrayList GetGoverningAttributeValues[MAXPLAYERS + 1];
+ArrayList GetGoverningAttributeSection[MAXPLAYERS + 1];
 int iTanksAlwaysEnforceCooldown;
-Handle WeaponResultKeys[MAXPLAYERS + 1];
-Handle WeaponResultValues[MAXPLAYERS + 1];
-Handle WeaponResultSection[MAXPLAYERS + 1];
+ArrayList WeaponResultKeys[MAXPLAYERS + 1];
+ArrayList WeaponResultValues[MAXPLAYERS + 1];
+ArrayList WeaponResultSection[MAXPLAYERS + 1];
 bool shotgunCooldown[MAXPLAYERS + 1];
 float fRatingFloor;
 char clientStatusEffectDisplay[MAXPLAYERS + 1][64];
@@ -1060,29 +1085,29 @@ int iExperienceDebtEnabled;
 float fExperienceDebtPenalty;
 int iShowDamageOnActionBar;
 int iDefaultIncapHealth;
-Handle GetAbilityCooldownKeys[MAXPLAYERS + 1];
-Handle GetAbilityCooldownValues[MAXPLAYERS + 1];
-Handle GetAbilityCooldownSection[MAXPLAYERS + 1];
-Handle GetTalentValueSearchKeys[MAXPLAYERS + 1];
-Handle GetTalentValueSearchValues[MAXPLAYERS + 1];
-Handle GetTalentValueSearchSection[MAXPLAYERS + 1];
+ArrayList GetAbilityCooldownKeys[MAXPLAYERS + 1];
+ArrayList GetAbilityCooldownValues[MAXPLAYERS + 1];
+ArrayList GetAbilityCooldownSection[MAXPLAYERS + 1];
+ArrayList GetTalentValueSearchKeys[MAXPLAYERS + 1];
+ArrayList GetTalentValueSearchValues[MAXPLAYERS + 1];
+ArrayList GetTalentValueSearchSection[MAXPLAYERS + 1];
 int iSkyLevelNodeUnlocks;
-Handle GetTalentKeyValueKeys[MAXPLAYERS + 1];
-Handle GetTalentKeyValueValues[MAXPLAYERS + 1];
-Handle GetTalentKeyValueSection[MAXPLAYERS + 1];
-Handle ApplyDebuffCooldowns[MAXPLAYERS + 1];
+ArrayList GetTalentKeyValueKeys[MAXPLAYERS + 1];
+ArrayList GetTalentKeyValueValues[MAXPLAYERS + 1];
+ArrayList GetTalentKeyValueSection[MAXPLAYERS + 1];
+ArrayList ApplyDebuffCooldowns[MAXPLAYERS + 1];
 int iCanSurvivorBotsBurn;
 char defaultLoadoutWeaponPrimary[64];
 char defaultLoadoutWeaponSecondary[64];
 int iDeleteCommonsFromExistenceOnDeath;
 int iShowDetailedDisplayAlways;
 int iCanJetpackWhenInCombat;
-Handle ZoomcheckDelayer[MAXPLAYERS + 1];
-Handle zoomCheckList;
+ArrayList ZoomcheckDelayer[MAXPLAYERS + 1];
+ArrayList zoomCheckList;
 float fquickScopeTime;
-Handle holdingFireList;
+ArrayList holdingFireList;
 int iEnsnareLevelMultiplier;
-Handle CommonInfectedHealth;
+ArrayList CommonInfectedHealth;
 int lastBaseDamage[MAXPLAYERS + 1];
 int lastTarget[MAXPLAYERS + 1];
 char lastWeapon[MAXPLAYERS + 1][64];
@@ -1091,10 +1116,10 @@ float fSurvivorBotsNoneBonus;
 bool bTimersRunning[MAXPLAYERS + 1];
 int iShowAdvertToNonSteamgroupMembers;
 int displayBuffOrDebuff[MAXPLAYERS + 1];
-Handle TalentAtMenuPositionSection[MAXPLAYERS + 1];
+ArrayList TalentAtMenuPositionSection[MAXPLAYERS + 1];
 int iStrengthOnSpawnIsStrength;
-Handle SetNodesKeys;
-Handle SetNodesValues;
+ArrayList SetNodesKeys;
+ArrayList SetNodesValues;
 float fDrawHudInterval;
 bool ImmuneToAllDamage[MAXPLAYERS + 1];
 int iPlayersLeaveCombatDuringFinales;
@@ -1291,7 +1316,7 @@ public int ReadyUp_SetSurvivorMinimum(int minSurvs) {
 	iMinSurvivors = minSurvs;
 }
 
-public void ReadyUp_GetMaxSurvivorCount(int count) {
+public int ReadyUp_GetMaxSurvivorCount(int count) {
 	if (count <= 1) bIsSoloHandicap = true;
 	else bIsSoloHandicap = false;
 }
@@ -1367,7 +1392,7 @@ stock void OnMapStartFunc() {
 		CreateTimer(1.0, Timer_CheckDifficulty, _, TIMER_REPEAT);
 		//LoadConfigValues();
 		LogMessage("=====\t\tLOADING RPG\t\t=====");
-		//new String:fubar[64];
+		//char fubar[64];
 		if (holdingFireList == INVALID_HANDLE || !b_FirstLoad) holdingFireList = new ArrayList(32);
 		if (zoomCheckList == INVALID_HANDLE || !b_FirstLoad) zoomCheckList = new ArrayList(32);
 		if (hThreatSort == INVALID_HANDLE || !b_FirstLoad) hThreatSort = new ArrayList(32);
@@ -1666,7 +1691,7 @@ stock void OnMapStartFunc() {
 	ReadyUp_NtvIsCampaignFinale();
 }
 
-public void ReadyUp_GetCampaignStatus(int mapposition) {
+public int ReadyUp_GetCampaignStatus(int mapposition) {
 	CurrentMapPosition = mapposition;
 }
 
@@ -1805,7 +1830,7 @@ stock bool AnyHumans() {
 	return false;
 }
 
-public void ReadyUp_ReadyUpStart() {
+public int ReadyUp_ReadyUpStart() {
 	CheckDifficulty();
 	CheckGamemode();
 	RoundTime = 0;
@@ -1865,7 +1890,7 @@ public void ReadyUp_ReadyUpStart() {
 	RefreshSurvivorBots();
 }
 
-public void ReadyUp_ReadyUpEnd() {
+public int ReadyUp_ReadyUpEnd() {
 	ReadyUpEnd_Complete();
 }
 
@@ -1875,7 +1900,7 @@ public Action Timer_Defibrillator(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-public void ReadyUpEnd_Complete() {
+public int ReadyUpEnd_Complete() {
 	/*PrintToChatAll("DOor opened");
 	b_IsCheckpointDoorStartOpened = true;
 	b_IsActiveRound = true;*/
@@ -1978,6 +2003,7 @@ stock bool IsEnrageActive() {
 	return true;
 }
 
+
 stock bool PlayerHasWeakness(int client) {
 	if (!IsLegitimateClientAlive(client)) return false;
 	if (IsSpecialCommonInRange(client, 'w')) return true;
@@ -1988,7 +2014,7 @@ stock bool PlayerHasWeakness(int client) {
 	return false;
 }
 
-public void ReadyUp_CheckpointDoorStartOpened() {
+public int ReadyUp_CheckpointDoorStartOpened() {
 	if (!b_IsCheckpointDoorStartOpened) {
 		b_IsCheckpointDoorStartOpened		= true;
 		b_IsActiveRound = true;
@@ -2177,7 +2203,7 @@ stock void ResetCoveredInBile(int client) {
 	}
 }
 
-stock void FindTargetClient(int client, char[] arg) {
+stock int FindTargetClient(int client, char[] arg) {
 	bool tn_is_ml;
 	char target_name[MAX_TARGET_LENGTH];
 	int target_list[MAXPLAYERS], target_count;
@@ -2292,7 +2318,7 @@ public Action CMD_ChatTag(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock void MySurvivorCompanion(int client) {
+stock int MySurvivorCompanion(int client) {
 
 	char SteamId[64], CompanionSteamId[64];
 	GetClientAuthId(client, AuthId_Steam2, SteamId, sizeof(SteamId));
@@ -2409,7 +2435,7 @@ public Action CMD_GiveLevel(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock void GetPlayerLevel(int client) {
+stock int GetPlayerLevel(int client) {
 	int iExperienceOverall = ExperienceOverall[client];
 	int iLevel = 1;
 	int ExperienceRequirement = CheckExperienceRequirement(client, false, iLevel);
@@ -2458,7 +2484,7 @@ public Action CMD_ReloadConfigs(int client, int args) {
 	return Plugin_Handled;
 }
 
-public void ReadyUp_FirstClientLoaded() {
+public int ReadyUp_FirstClientLoaded() {
 
 	//CreateTimer(1.0, Timer_ShowHUD, _, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 	OnMapStartFunc();
@@ -2501,7 +2527,7 @@ public Action CMD_SharePoints(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock void GetMaxHandicap(int client) {
+stock int GetMaxHandicap(int client) {
 
 	int iMaxHandicap = RatingPerHandicap;
 	iMaxHandicap *= CartelLevel(client);
@@ -2549,7 +2575,7 @@ public Action CMD_Handicap(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock void SetBotHandicap(int client) {
+stock int SetBotHandicap(int client) {
 	if (IsSurvivorBot(client)) {
 		int iLowHandicap = RatingPerLevel;
 		for (int i = 1; i <= MaxClients; i++) {
@@ -2596,7 +2622,7 @@ public Action CMD_GiveStorePoints(int client, int args) {
 	return Plugin_Handled;
 }
 
-public void ReadyUp_CampaignComplete() {
+public int ReadyUp_CampaignComplete() {
 	if (!b_IsCampaignComplete) {
 		b_IsCampaignComplete			= true;
 		CallRoundIsOver();
@@ -2626,7 +2652,7 @@ public Action CMD_CollectBonusExperience(int client, int args) {
 	return Plugin_Handled;
 }
 
-public void ReadyUp_RoundIsOver(int gamemode) {
+public int ReadyUp_RoundIsOver(int gamemode) {
 	CallRoundIsOver();
 }
 
@@ -2774,12 +2800,12 @@ public Action Timer_ResetMap(Handle timer) {
 	return Plugin_Stop;
 }
 
-stock void ResetArray(Handle TheArray) {
+stock void ResetArray(ArrayList TheArray) {
 
 	TheArray.Clear();
 }
 
-public void ReadyUp_ParseConfigFailed(char[] config, char[] error) {
+public int ReadyUp_ParseConfigFailed(char[] config, char[] error) {
 
 	if (StrEqual(config, CONFIG_MAIN) ||
 		StrEqual(config, CONFIG_EVENTS) ||
@@ -2797,8 +2823,13 @@ public void ReadyUp_ParseConfigFailed(char[] config, char[] error) {
 	}
 }
 
-public void ReadyUp_LoadFromConfigEx(Handle key, Handle value, Handle section, char[] configname, int keyCount) {
+public int ReadyUp_LoadFromConfigEx(Handle key1, Handle value1, Handle section1, char[] configname, int keyCount) {
 	//PrintToChatAll("Size: %d config: %s", Handle:key.Length, configname);
+
+	ArrayList key = view_as<ArrayList>(key1);
+	ArrayList value = view_as<ArrayList>(value1);
+	ArrayList section = view_as<ArrayList>(section1);
+
 	if (!StrEqual(configname, CONFIG_MAIN) &&
 		!StrEqual(configname, CONFIG_EVENTS) &&
 		!StrEqual(configname, CONFIG_MENUTALENTS) &&
@@ -2813,9 +2844,9 @@ public void ReadyUp_LoadFromConfigEx(Handle key, Handle value, Handle section, c
 	char s_key[512];
 	char s_value[512];
 	char s_section[512];
-	Handle TalentKeys		=					new ArrayList(32);
-	Handle TalentValues		=					new ArrayList(32);
-	Handle TalentSection	=					new ArrayList(32);
+	ArrayList TalentKeys = new ArrayList(32);
+	ArrayList TalentValues = new ArrayList(32);
+	ArrayList TalentSection = new ArrayList(32);
 	int lastPosition = 0;
 	int counter = 0;
 	if (keyCount > 0) {
@@ -2879,9 +2910,9 @@ public void ReadyUp_LoadFromConfigEx(Handle key, Handle value, Handle section, c
 		a_DirectorActions_Cooldown	=	new ArrayList(32);
 
 		int size						=	a_Points.Length;
-		Handle Keys					=	new ArrayList(32);
-		Handle Values				=	new ArrayList(32);
-		Handle Section				=	new ArrayList(32);
+		ArrayList Keys = new ArrayList(32);
+		ArrayList Values = new ArrayList(32);
+		ArrayList Section = new ArrayList(32);
 		
 		int sizer						=	0;
 
@@ -3308,14 +3339,14 @@ public Action CMD_DirectorTalentToggle(int client, int args) {
 	return Plugin_Handled;
 }
 
-stock void SetConfigArrays(char[] Config, Handle Main, Handle Keys, Handle Values, Handle Section, int size, int last) {
+stock void SetConfigArrays(char[] Config, ArrayList Main, ArrayList Keys, ArrayList Values, ArrayList Section, int size, int last) {
 
 	char text[64];
 	//Section.GetString(0, text, sizeof(text));
 
-	Handle TalentKey = new ArrayList(32);
-	Handle TalentValue = new ArrayList(32);
-	Handle TalentSection = new ArrayList(32);
+	ArrayList TalentKey = new ArrayList(32);
+	ArrayList TalentValue = new ArrayList(32);
+	ArrayList TalentSection = new ArrayList(32);
 
 	char key[64];
 	char value[64];
@@ -4509,15 +4540,15 @@ stock void SetConfigArrays(char[] Config, Handle Main, Handle Keys, Handle Value
 	Main.Set(size, TalentSection, 2);
 }
 
-public void ReadyUp_FwdGetHeader(const char[] header) {
+public int ReadyUp_FwdGetHeader(const char[] header) {
 	strcopy(s_rup, sizeof(s_rup), header);
 }
 
-public void ReadyUp_FwdGetCampaignName(const char[] mapname) {
+public int ReadyUp_FwdGetCampaignName(const char[] mapname) {
 	strcopy(currentCampaignName, sizeof(currentCampaignName), mapname);
 }
 
-public void ReadyUp_CoopMapFailed(int iGamemode) {
+public int ReadyUp_CoopMapFailed(int iGamemode) {
 	if (!b_IsMissionFailed) {
 		b_IsMissionFailed	= true;
 		Points_Director = 0.0;
