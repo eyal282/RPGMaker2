@@ -3,7 +3,7 @@
 
 stock void BuildPointsMenu(int client, char[] MenuName, char[] ConfigName = "none") {
 
-	Handle menu					=	new Menu(BuildPointsMenuHandle);
+	Menu menu					=	new Menu(BuildPointsMenuHandle);
 	char OpenedMenu_t[64];
 	Format(OpenedMenu_t, sizeof(OpenedMenu_t), "%s", MenuName);
 	OpenedMenu[client]				=	OpenedMenu_t;
@@ -212,7 +212,7 @@ public int BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int
 			hWeaponList[client].SetString(iWeaponCat, Name);
 			iIsWeaponLoadout[client] = 0;
 			SpawnLoadoutEditor(client);
-			return;
+			return 0;
 		}
 		//else if (!TalentListingFound(client, MenuKeys[client], MenuValues[client], MenuName)) continue;
 		menuPos++;
@@ -283,13 +283,13 @@ public int BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int
 
 						PrintToChat(client, "%T", "Tank Limit Reached", client, orange, green, iTankLimitVersus, white);
 						BuildPointsMenu(client, MenuName, ConfigName);
-						return;
+						return 0;
 					}
 					else if (StringToInt(Parameter) == 8 && f_TankCooldown != -1.0) {
 
 						PrintToChat(client, "%T", "Tank On Cooldown", client, orange, white);
 						BuildPointsMenu(client, MenuName, ConfigName);
-						return;
+						return 0;
 					}
 				}
 				if (ExperienceCost > 0) ExperienceCost *= (fExperienceMultiplier * (PlayerLevel[client] - 1));
@@ -466,4 +466,6 @@ public int BuildPointsMenuHandle(Handle menu, MenuAction action, int client, int
 
 		delete menu;
 	}
+
+	return 0;
 }

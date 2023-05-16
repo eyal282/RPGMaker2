@@ -288,7 +288,7 @@ stock int DataScreenTargetName(int client, char[] stringRef, int size) {
 	}
 }
 
-stock void DataScreenWeaponDamage(int client) {
+stock int DataScreenWeaponDamage(int client) {
 	float TargetPos[3];
 	int target = GetAimTargetPosition(client, TargetPos);
 	//decl String:text[64];
@@ -334,7 +334,7 @@ stock int GetWeaponResult(int client, int result = 0, int amountToAdd = 0) {
 	int wOffset = 0;
 	if (result == 3 || result == 4) {
 		if (!IsValidEdict(targetgun)) return -1;
-		targetgun = FindDataMapOffs(client, "m_iAmmo");
+		targetgun = FindDataMapInfo(client, "m_iAmmo");
 		wOffset = GetWeaponResult(client, 1);
 	}
 
@@ -644,7 +644,7 @@ stock bool SurvivorsWithinRange(int client, float Distance) {
 	return false;
 }
 
-stock void DoesClientHaveTheHighGround(float cpos[3], int target) {
+stock int DoesClientHaveTheHighGround(float cpos[3], int target) {
 	float tpos[3];
 	GetEntPropVector(target, Prop_Send, "m_vecOrigin", tpos);
 	if (cpos[2] > tpos[2]) return 1;	// client is above target
@@ -1827,7 +1827,7 @@ stock void AwardExperience(int client, int type = 0, int AMOUNT = 0, bool TheRou
 	}
 	if (TheRoundHasEnded || !b_IsFinaleActive && !IsEnrageActive() && AMOUNT == 0 && !bIsInCombat[client]) {
 
-		float PointsMultiplier = fPointsMultiplier;
+		//float PointsMultiplier = fPointsMultiplier;
 		float HealingMultiplier = fHealingMultiplier;
 		float BuffingMultiplier = fBuffingMultiplier;
 		float HexingMultiplier = fHexingMultiplier;
@@ -1837,17 +1837,17 @@ stock void AwardExperience(int client, int type = 0, int AMOUNT = 0, bool TheRou
 			int h_Contribution = 0;
 			if (HealingContribution[client] > 0) h_Contribution = RoundToCeil(HealingContribution[client] * HealingMultiplier);
 
-			float SurvivorPoints = 0.0;
-			if (h_Contribution > 0) SurvivorPoints = (h_Contribution * (PointsMultiplier * HealingMultiplier));
+			//float SurvivorPoints = 0.0;
+			//if (h_Contribution > 0) SurvivorPoints = (h_Contribution * (PointsMultiplier * HealingMultiplier));
 
 			int Bu_Contribution = 0;
 			if (BuffingContribution[client] > 0) Bu_Contribution = RoundToCeil(BuffingContribution[client] * BuffingMultiplier);
 
-			if (Bu_Contribution > 0) SurvivorPoints += (Bu_Contribution * (PointsMultiplier * BuffingMultiplier));
+			//if (Bu_Contribution > 0) SurvivorPoints += (Bu_Contribution * (PointsMultiplier * BuffingMultiplier));
 
 			int He_Contribution = 0;
 			if (HexingContribution[client] > 0) He_Contribution = RoundToCeil(HexingContribution[client] * HexingMultiplier);
-			if (He_Contribution > 0) SurvivorPoints += (He_Contribution * (PointsMultiplier * HexingMultiplier));
+			//if (He_Contribution > 0) SurvivorPoints += (He_Contribution * (PointsMultiplier * HexingMultiplier));
 
 			//ReceiveInfectedDamageAward(client, 0, DamageContribution[client], PointsContribution[client], TankingContribution[client], h_Contribution, Bu_Contribution, He_Contribution, TheRoundHasEnded);
 			ReceiveInfectedDamageAward(client, 0, DamageContribution[client], PointsContribution[client], TankingContribution[client], h_Contribution, Bu_Contribution, He_Contribution, TheRoundHasEnded);
@@ -1901,7 +1901,7 @@ stock int GetPassiveStrength(int client, char[] SearchKey, char[] TalentName, in
 	return 0;
 }
 
-stock float GetPassiveInfo(int client, int target, Handle Keys, Handle Values, char[] TalentName, bool bIsCreateCooldown = false) {
+stock float GetPassiveInfo(int client, int target, ArrayList Keys, ArrayList Values, char[] TalentName, bool bIsCreateCooldown = false) {
 	float f_EachPoint	= GetTalentInfo(client, Values, 1, _, TalentName, target);
 	float f_Cooldown	= GetTalentInfo(client, Values, 3, _, TalentName, target);
 	float f_Strength			=	f_EachPoint;
@@ -1924,7 +1924,7 @@ stock int GetDatabasePosition(int client, char[] TalentName) {
 	return -1;
 }
 
-stock int TalentRequirementsMet(int client, Handle Keys, Handle Values, char[] sTalentList = "none", int TheSize = 0, int requiredTalentsToUnlock = 0) {
+stock int TalentRequirementsMet(int client, ArrayList Keys, ArrayList Values, char[] sTalentList = "none", int TheSize = 0, int requiredTalentsToUnlock = 0) {
 	int pos = TALENT_FIRST_RANDOM_KEY_POSITION;
 	char TalentName[64];
 	char text[64];
@@ -1965,7 +1965,7 @@ stock int TalentRequirementsMet(int client, Handle Keys, Handle Values, char[] s
 	return false;
 }*/
 
-stock bool IsStatusEffectFound(int client, Handle Keys, Handle Values) {
+stock bool IsStatusEffectFound(int client, ArrayList Keys, ArrayList Values) {
 	char statusEffectToSearchFor[64];
 	int pos = TALENT_FIRST_RANDOM_KEY_POSITION;
 	while (pos >= 0) {
@@ -1987,7 +1987,7 @@ stock bool IsStatusEffectFound(int client, Handle Keys, Handle Values) {
 	return true;
 }
 
-stock bool IsAbilityFound(Handle Keys, Handle Values, char[] tSubstring) {
+stock bool IsAbilityFound(ArrayList Keys, ArrayList Values, char[] tSubstring) {
 	char searchString[64];
 	int pos = TALENT_FIRST_RANDOM_KEY_POSITION;
 	while (pos >= 0) {
@@ -2808,7 +2808,7 @@ stock float GetAttributeMultiplier(int client, char[] TalentName) {
 	return currStrength;
 }
 
-stock int GetKeyPos(Handle Keys, char[] SearchKey) {
+stock int GetKeyPos(ArrayList Keys, char[] SearchKey) {
 
 	char key[64];
 	int size = Keys.Length;
@@ -2835,7 +2835,7 @@ stock bool FoundCooldownReduction(char[] TalentName, char[] CooldownList) {
 	return false;
 }
 
-stock int FormatKeyValue(char[] TheValue, int TheSize, Handle Keys, Handle Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false, int pos = 0, bool incrementPos = true) {
+stock int FormatKeyValue(char[] TheValue, int TheSize, ArrayList Keys, ArrayList Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false, int pos = 0, bool incrementPos = true) {
 
 	char key[512];
 
@@ -2855,7 +2855,7 @@ stock int FormatKeyValue(char[] TheValue, int TheSize, Handle Keys, Handle Value
 	return -1;
 }
 
-stock float GetKeyValueFloat(Handle Keys, Handle Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false, int pos = 0) {
+stock float GetKeyValueFloat(ArrayList Keys, ArrayList Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false, int pos = 0) {
 
 	char key[64];
 	if (pos > 0) pos++;
@@ -2873,19 +2873,19 @@ stock float GetKeyValueFloat(Handle Keys, Handle Values, char[] SearchKey, char[
 	return StringToFloat(DefaultValue);
 }
 
-stock int GetKeyValueIntAtPos(Handle Values, int pos) {
+stock int GetKeyValueIntAtPos(ArrayList Values, int pos) {
 	char key[64];
 	Values.GetString(pos, key, sizeof(key));
 	return StringToInt(key);
 }
 
-stock float GetKeyValueFloatAtPos(Handle Values, int pos) {
+stock float GetKeyValueFloatAtPos(ArrayList Values, int pos) {
 	char key[64];
 	Values.GetString(pos, key, sizeof(key));
 	return StringToFloat(key);
 }
 
-stock int GetKeyValueInt(Handle Keys, Handle Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false) {
+stock int GetKeyValueInt(ArrayList Keys, ArrayList Values, char[] SearchKey, char[] DefaultValue = "none", bool bDebug = false) {
 
 	char key[64];
 
@@ -3138,7 +3138,7 @@ stock void ScreenShake(int client) {
 	}
 }
 
-stock void ZeroGravity(int client, int victim, float g_TalentStrength, int g_TalentTime) {
+stock void ZeroGravity(int client, int victim, float g_TalentStrength, float g_TalentTime) {
 
 	if (IsLegitimateClientAlive(client) && IsLegitimateClientAlive(victim)) {
 
@@ -3228,7 +3228,7 @@ stock void ZeroGravity(int client, int victim, float g_TalentStrength, int g_Tal
 	}
 }*/
 
-stock void SlowPlayer(int client, float g_TalentStrength, int g_TalentTime) {
+stock void SlowPlayer(int client, float g_TalentStrength, float g_TalentTime) {
 
 	if (IsLegitimateClientAlive(client) && ISSLOW[client] == INVALID_HANDLE) {
 
@@ -4120,7 +4120,7 @@ stock void CheckTeammateDamagesEx(int client, int target, int TotalDamage, bool 
 	}
 }*/
 
-stock void SendPanelToClientAndClose(Handle panel, int client, MenuHandler handler, int time) {
+stock void SendPanelToClientAndClose(Panel panel, int client, MenuHandler handler, int time) {
 
 	panel.Send(client, handler, time);
 	delete panel;
@@ -5381,7 +5381,7 @@ stock int GetSpecialCommonDamage(int damage, int client, int Effect, int victim)
 	return RoundToCeil(damage * f_Strength);
 }
 
-stock void GetEntitiesInRange(int client, int victim, int EntityType) {
+stock int GetEntitiesInRange(int client, int victim, int EntityType) {
 	float ClientPos[3];
 	GetEntPropVector(client, Prop_Send, "m_vecOrigin", ClientPos);
 
@@ -5806,7 +5806,7 @@ stock float GetCommonValueFloat(int entity, char[] Key, char[] Section_Name = "n
 	return -1.0;
 }
 
-stock bool IsInRange(float EntitLoc[3], float TargetLo[3], int AllowsMaxRange, float ModeSize = 1.0) {
+stock bool IsInRange(float EntitLoc[3], float TargetLo[3], float AllowsMaxRange, float ModeSize = 1.0) {
 
 	//new Float:ModelSize = 48.0 * ModeSize;
 	
@@ -6021,7 +6021,7 @@ stock int LivingEntitiesInRangeByType(int client, float effectRange, int targetT
 	return count;
 }
 
-stock int LivingEntitiesInRange(int entity, float SourceLoc[3], int EffectRange, int targetType = 0) {
+stock int LivingEntitiesInRange(int entity, float SourceLoc[3], float EffectRange, int targetType = 0) {
 
 	int count = 0;
 	float Pos[3];
@@ -6792,7 +6792,7 @@ public Action Timer_EffectOverTime(Handle timer, any client) {
 	return Plugin_Continue;
 }
 
-stock bool AllowEffectOverTimeToContinue(int client, Handle Values, char[] TalentName, int damage, char[] effects = "-1", int target = 0, float fTalentStrength = 0.0) {
+stock bool AllowEffectOverTimeToContinue(int client, ArrayList Values, char[] TalentName, int damage, char[] effects = "-1", int target = 0, float fTalentStrength = 0.0) {
 	if (GetKeyValueIntAtPos(Values, TALENT_IS_EFFECT_OVER_TIME) != 1) return true;
 	float effectGetActiveTime		= CheckEffectOverTimeCooldown(client, TalentName, EFFECTOVERTIME_GETACTIVETIME);
 	bool isEffectCoolingDownStill	= (effectGetActiveTime == 0.0 && CheckEffectOverTimeCooldown(client, TalentName, EFFECTOVERTIME_GETCOOLDOWN) != -1.0) ? true : false;
@@ -7051,8 +7051,8 @@ bool AbilityIsInactiveAndOnCooldown(int client, char[] TalentName, float fCooldo
 // by default this function does not handle instants, so we use an override to force it.
 stock float GetAbilityMultiplier(int client, char[] abilityT, int override = 0, char[] TalentName_t = "none") { // we need the option to force certain results in the menus (1) active (2) passive
 	//new Handle Keys		= GetAbilityKeys[client];
-	Handle Values	= GetAbilityValues[client];
-	Handle Section	= GetAbilitySection[client];
+	ArrayList Values	= GetAbilityValues[client];
+	ArrayList Section	= GetAbilitySection[client];
 	/*
 		For recursive calls for GetSpellCooldown, we need to use a different set of array lists
 		so that we don't override the active set.
@@ -7389,7 +7389,7 @@ stock float GetSpecialAmmoStrength(int client, char[] TalentName, int resulttype
 	return 0;
 }*/
 
-public Action Timer_RemoveCooldown(Handle timer, Handle packi) {
+public Action Timer_RemoveCooldown(Handle timer, DataPack packi) {
 
 	packi.Reset();
 	int client				=	packi.ReadCell();
@@ -7436,7 +7436,7 @@ stock void CreateCooldown(int client, int pos, float f_Cooldown, char[] StackTyp
 		//if (GetClientTeam(client) == TEAM_SURVIVOR || IsSurvivorBot(client))
 		PlayerAbilitiesCooldown[client].SetString(pos, "1");
 		//else PlayerAbilitiesCooldown_Bots.SetString(pos, "1");
-		Handle packi;
+		DataPack packi;
 		CreateDataTimer(f_Cooldown, Timer_RemoveCooldown, packi, TIMER_FLAG_NO_MAPCHANGE);
 		//if (IsFakeClient(client)) client = -1;
 		packi.WriteCell(client);
@@ -7696,7 +7696,7 @@ public Action Cmd_debugrpg(int client, int args) {
 public Action Cmd_ResetTPL(int client, int args) { PlayerLevelUpgrades[client] = 0; }
 //public Action Cmd_ResetTPL(int client, int args) { PlayerLevelUpgrades[client] = 0; }
 
-stock bool StringExistsArray(char[] Name, Handle array) {
+stock bool StringExistsArray(char[] Name, ArrayList array) {
 
 	char text[PLATFORM_MAX_PATH];
 
@@ -7715,7 +7715,9 @@ stock bool StringExistsArray(char[] Name, Handle array) {
 stock void AddCommasToString(int value, char[] theString, int theSize) 
 {
 	char buffer[64];
-	char separator[1];
+
+	// Eyal282 here, I think the seperator needs to be 2 characters long and not 1, because [0] = ",", [1] = EOS.
+	char separator[2];
 	separator = ",";
 	buffer[0] = '\0'; 
 	int divisor = 1000; 
@@ -7731,7 +7733,7 @@ stock void AddCommasToString(int value, char[] theString, int theSize)
 	Format(theString, theSize, "%d%s", value, buffer);
 }
 
-stock void HandicapDifference(int client, int target) {
+stock int HandicapDifference(int client, int target) {
 
 	if (IsLegitimateClientAlive(client) && IsLegitimateClientAlive(target)) {
 
@@ -8111,7 +8113,7 @@ stock void ClearSpecialCommon(int entity, bool IsCommonEntity = true, int player
 					if (ISEXPLODE[y] == INVALID_HANDLE) {
 
 						ISEXPLODETIME[y] = 0.0;
-						Handle packagey;
+						DataPack packagey;
 						ISEXPLODE[y] = CreateDataTimer(GetCommonValueFloatAtPos(entity, SUPER_COMMON_DEATH_INTERVAL), Timer_Explode, packagey, TIMER_REPEAT|TIMER_FLAG_NO_MAPCHANGE);
 						packagey.WriteCell(y);
 						packagey.WriteCell(GetCommonValueIntAtPos(entity, SUPER_COMMON_AURA_STRENGTH));
@@ -8312,7 +8314,7 @@ stock int GetDelimiterCount(char[] TextCase, char[] Delimiter) {
 	return count;
 }
 
-stock int FindListPositionBySearchKey(char[] SearchKey, Handle h_SearchList, int block = 0, bool bDebug = false) {
+stock int FindListPositionBySearchKey(char[] SearchKey, ArrayList h_SearchList, int block = 0, bool bDebug = false) {
 
 	/*
 
@@ -8625,7 +8627,8 @@ public Action Timer_DestroyRock(Handle timer, any ent) {
 		GetEntityClassname(ent, classname, sizeof(classname));
 		if (StrEqual(classname, "tank_rock", false)) {
 
-			float fTankPos[3], fRockPos[3], tank = -1;
+			float fTankPos[3], fRockPos[3];
+			int tank = -1;
 			GetEntPropVector(ent, Prop_Send, "m_vecOrigin", fRockPos);
 			for (int i = 1; i <= MaxClients; i++) {
 
@@ -9571,7 +9574,7 @@ public bool ChatTrigger(int client, int args, bool teamOnly) {
 	char authString[64];
 	GetClientAuthId(client, AuthId_Steam2, authString, sizeof(authString));
 	GetClientName(client, Name, sizeof(Name));
-	GetCmdArg(1, sBuffer, sizeof(sBuffer));
+	GetCmdArg(1, sBuffer, MAX_CHAT_LENGTH);
 	if (sBuffer[0] == '!' && IsOpenRPGMenu(sBuffer)) {
 		CMD_OpenRPGMenu(client);
 		return false;	// if we want to suppress the chat command
@@ -9596,39 +9599,39 @@ public bool ChatTrigger(int client, int args, bool teamOnly) {
 		ChatSettings[client].SetString(0, TagColour);
 	}
 	if (!StrEqual(TagName, "none", false)) {
-		Format(Message, sizeof(Message), "{%s}%s", TagColour, TagName);
+		Format(Message, MAX_CHAT_LENGTH, "{%s}%s", TagColour, TagName);
 	}
 	else {
-		GetClientName(client, Message, sizeof(Message));
-		Format(Message, sizeof(Message), "{%s}%s", TagColour, Message);
+		GetClientName(client, Message, MAX_CHAT_LENGTH);
+		Format(Message, MAX_CHAT_LENGTH, "{%s}%s", TagColour, Message);
 	}
 	if (StrEqual(ChatColour, "none", false)) {
 		Format(ChatColour, sizeof(ChatColour), "N");
 		ChatSettings[client].SetString(2, ChatColour);
 	}
 	if (iRPGMode > 0) {
-		if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, sizeof(Message), "{N}({B}Lv.%d{N}) %s", PlayerLevel[client], Message);
-		else if (GetClientTeam(client) == TEAM_INFECTED) Format(Message, sizeof(Message), "{N}({R}Lv.%d{N}) %s", PlayerLevel[client], Message);
-		else if (GetClientTeam(client) == TEAM_SPECTATOR) Format(Message, sizeof(Message), "{N}({GRA}Lv.%d{N}) %s", PlayerLevel[client], Message);
+		if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, MAX_CHAT_LENGTH, "{N}({B}Lv.%d{N}) %s", PlayerLevel[client], Message);
+		else if (GetClientTeam(client) == TEAM_INFECTED) Format(Message, MAX_CHAT_LENGTH, "{N}({R}Lv.%d{N}) %s", PlayerLevel[client], Message);
+		else if (GetClientTeam(client) == TEAM_SPECTATOR) Format(Message, MAX_CHAT_LENGTH, "{N}({GRA}Lv.%d{N}) %s", PlayerLevel[client], Message);
 
-		if (SkyLevel[client] >= 1) Format(Message, sizeof(Message), "{N}({B}PLv.%d{N})%s", SkyLevel[client], Message);
+		if (SkyLevel[client] >= 1) Format(Message, MAX_CHAT_LENGTH, "{N}({B}PLv.%d{N})%s", SkyLevel[client], Message);
 	}
-	Format(sBuffer, sizeof(sBuffer), "{N}-> {%s}%s", ChatColour, sBuffer);
+	Format(sBuffer, MAX_CHAT_LENGTH, "{N}-> {%s}%s", ChatColour, sBuffer);
 
-	if (GetClientTeam(client) == TEAM_SPECTATOR) Format(Message, sizeof(Message), "{N}[{GRA}SPEC{N}] %s", Message);
+	if (GetClientTeam(client) == TEAM_SPECTATOR) Format(Message, MAX_CHAT_LENGTH, "{N}[{GRA}SPEC{N}] %s", Message);
 	else {
-		if (IsGhost(client)) Format(Message, sizeof(Message), "{N}[{B}ghost{N}] %s", Message);
+		if (IsGhost(client)) Format(Message, MAX_CHAT_LENGTH, "{N}[{B}ghost{N}] %s", Message);
 		else if (!IsPlayerAlive(client)) {
 
-			if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, sizeof(Message), "{N}[{B}DEAD{N}] %s", Message);
-			else Format(Message, sizeof(Message), "{N}[{R}DEAD{N}] %s", Message);
+			if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, MAX_CHAT_LENGTH, "{N}[{B}DEAD{N}] %s", Message);
+			else Format(Message, MAX_CHAT_LENGTH, "{N}[{R}DEAD{N}] %s", Message);
 		}
-		else if (IsIncapacitated(client)) Format(Message, sizeof(Message), "{N}[{B}INCAP{N}] %s", Message);
+		else if (IsIncapacitated(client)) Format(Message, MAX_CHAT_LENGTH, "{N}[{B}INCAP{N}] %s", Message);
 	}
 	if (teamOnly) {
-		if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, sizeof(Message), "{N}[{B}TEAM{N}] %s", Message);
-		else if (GetClientTeam(client) == TEAM_INFECTED) Format(Message, sizeof(Message), "{N}[{R}TEAM{N}] %s", Message);
-		Format(Message, sizeof(Message), "%s %s", Message, sBuffer);
+		if (GetClientTeam(client) == TEAM_SURVIVOR) Format(Message, MAX_CHAT_LENGTH, "{N}[{B}TEAM{N}] %s", Message);
+		else if (GetClientTeam(client) == TEAM_INFECTED) Format(Message, MAX_CHAT_LENGTH, "{N}[{R}TEAM{N}] %s", Message);
+		Format(Message, MAX_CHAT_LENGTH, "%s %s", Message, sBuffer);
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsLegitimateClient(i) && GetClientTeam(i) == GetClientTeam(client)) Client_PrintToChat(i, true, Message);
 		}
@@ -9637,7 +9640,7 @@ public bool ChatTrigger(int client, int args, bool teamOnly) {
 		else if (GetClientTeam(client) == TEAM_INFECTED) Format(Infected_LastChatUser, sizeof(Infected_LastChatUser), "%s", authString);
 	}
 	else {
-		Format(Message, sizeof(Message), "%s %s", Message, sBuffer);
+		Format(Message, MAX_CHAT_LENGTH, "%s %s", Message, sBuffer);
 		for (int i = 1; i <= MaxClients; i++) {
 			if (IsLegitimateClient(i)) Client_PrintToChat(i, true, Message);
 		}
@@ -10622,7 +10625,7 @@ stock int GetHitgroupType(int hitgroup) {
 	if (hitgroup == 1) return 1;					// headshot
 	return 0;										// not a limb
 }
-stock bool CheckIfLimbDamage(int attacker, int victim, Handle event, float damage) {
+stock bool CheckIfLimbDamage(int attacker, int victim, Event event, int damage) {
 	if (IsLegitimateClientAlive(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR) {
 		if (!b_IsHooked[attacker]) ChangeHook(attacker, true);
 		int hitgroup = event.GetInt("hitgroup");
@@ -10640,7 +10643,7 @@ stock bool CheckIfLimbDamage(int attacker, int victim, Handle event, float damag
 										bool:bDontActuallyActivate = false, typeOfValuesToRetrieve = 1, hitgroup = -1)
 */
 
-stock bool CheckIfHeadshot(int attacker, int victim, Handle event, float damage) {
+stock bool CheckIfHeadshot(int attacker, int victim, Event event, int damage) {
 	if (IsLegitimateClientAlive(attacker) && GetClientTeam(attacker) == TEAM_SURVIVOR) {
 		if (!b_IsHooked[attacker]) ChangeHook(attacker, true);
 		int hitgroup = event.GetInt("hitgroup");
@@ -10800,7 +10803,7 @@ stock void GiveAdrenaline(int client, bool Remove=false) {
 stock bool HasAdrenaline(int client) {
 
 	if (IsClientInRangeSpecialAmmo(client, "a") == -2.0) return true;
-	return GetEntProp(client, Prop_Send, "m_bAdrenalineActive");
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_bAdrenalineActive"));
 }
 
 /*stock bool:IsDualWield(int client) {
@@ -10810,12 +10813,12 @@ stock bool HasAdrenaline(int client) {
 
 stock bool IsLedged(int client) {
 
-	return GetEntProp(client, Prop_Send, "m_isHangingFromLedge");
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isHangingFromLedge"));
 }
 
 stock bool FallingFromLedge(int client) {
 
-	return GetEntProp(client, Prop_Send, "m_isFallingFromLedge");
+	return view_as<bool>(GetEntProp(client, Prop_Send, "m_isFallingFromLedge"));
 }
 
 stock void SetAdrenalineState(int client, float time=10.0) {

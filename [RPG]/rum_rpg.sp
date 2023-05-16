@@ -618,7 +618,7 @@ int MapRoundsPlayed;
 char LastSpoken[MAXPLAYERS + 1][512];
 ArrayList RPGMenuPosition[MAXPLAYERS + 1];
 bool b_IsInSaferoom[MAXPLAYERS + 1];
-Database hDatabase												=	INVALID_HANDLE;
+Database hDatabase;
 char ConfigPathDirectory[64];
 char LogPathDirectory[64];
 char PurchaseTalentName[MAXPLAYERS + 1][64];
@@ -1102,7 +1102,7 @@ char defaultLoadoutWeaponSecondary[64];
 int iDeleteCommonsFromExistenceOnDeath;
 int iShowDetailedDisplayAlways;
 int iCanJetpackWhenInCombat;
-ArrayList ZoomcheckDelayer[MAXPLAYERS + 1];
+Handle ZoomcheckDelayer[MAXPLAYERS + 1];
 ArrayList zoomCheckList;
 float fquickScopeTime;
 ArrayList holdingFireList;
@@ -1170,7 +1170,7 @@ public Action CMD_IAmStuck(int client, int args) {
 stock void DoGunStuff(int client) {
 	int targetgun = GetPlayerWeaponSlot(client, 0); //get the players primary weapon
 	if (!IsValidEdict(targetgun)) return; //check for validity
-	int iAmmoOffset = FindDataMapOffs(client, "m_iAmmo"); //get the iAmmo Offset
+	int iAmmoOffset = FindDataMapInfo(client, "m_iAmmo"); //get the iAmmo Offset
 	iAmmoOffset = GetEntData(client, (iAmmoOffset + GetWeaponResult(client, 1)));
 	PrintToChat(client, "reserve remaining: %d | reserve cap: %d", iAmmoOffset, GetWeaponResult(client, 2));
 	return;

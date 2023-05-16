@@ -1,6 +1,7 @@
 
 #pragma newdecls required
 
+// Handle menu must be used because this can be both Menu or Panel
 stock void BuildMenuTitle(int client, Handle menu, int bot = 0, int type = 0, bool bIsPanel = false, bool ShowLayerEligibility = false) {	// 0 is legacy type that appeared on all menus. 0 - Main Menu | 1 - Upgrades | 2 - Points
 
 	char text[512];
@@ -68,8 +69,8 @@ stock void BuildMenuTitle(int client, Handle menu, int bot = 0, int type = 0, bo
 	}
 	ReplaceString(text, sizeof(text), "PCT", "%%", true);
 	Format(text, sizeof(text), "\n \n%s\n \n", text);
-	if (!bIsPanel) menu.SetTitle(text);
-	else menu.DrawText(text);
+	if (!bIsPanel) SetMenuTitle(menu, text);
+	else DrawPanelText(menu, text);
 }
 
 stock bool CheckKillPositions(int client, bool b_AddPosition) {
@@ -273,7 +274,7 @@ stock void LoadProfileEx_Confirm(int client, char[] key) {
 	return LoadTarget[client];
 }*/
 
-public void QueryResults_LoadEx(Handle howner, Handle hndl, const char[] error, any client)
+public void QueryResults_LoadEx(Database howner, DBResultSet hndl, const char[] error, any client)
 {
 	if ( hndl != INVALID_HANDLE )
 	{
@@ -324,7 +325,7 @@ public void QueryResults_LoadEx(Handle howner, Handle hndl, const char[] error, 
 	}
 }
 
-public void QueryResults_LoadTalentTreesEx(Handle owner, Handle hndl, const char[] error, any client) {
+public void QueryResults_LoadTalentTreesEx(Database owner, DBResultSet hndl, const char[] error, any client) {
 
 	if (hndl != INVALID_HANDLE) {
 
@@ -493,7 +494,7 @@ stock void LoadProfileEx_Request(int client, int target) {
 
 	LoadProfileRequestName[target] = client;
 
-	Handle menu = new Menu(LoadProfileRequestHandle);
+	Menu menu = new Menu(LoadProfileRequestHandle);
 	char text[512];
 	char ClientName[64];
 	GetClientName(client, ClientName, sizeof(ClientName));
@@ -553,7 +554,7 @@ public int LoadProfileRequestHandle(Handle menu, MenuAction action, int client, 
 
 stock void GetTeamComposition(int client) {
 
-	Handle menu = new Menu(TeamCompositionMenuHandle);
+	Menu menu = new Menu(TeamCompositionMenuHandle);
 	RPGMenuPosition[client].Clear();
 
 	char text[512];
@@ -596,7 +597,7 @@ public int TeamCompositionMenuHandle(Handle menu, MenuAction action, int client,
 
 stock void LoadProfileTargetSurvivorBot(int client) {
 
-	Handle menu = new Menu(TargetSurvivorBotMenuHandle);
+	Menu menu = new Menu(TargetSurvivorBotMenuHandle);
 	RPGMenuPosition[client].Clear();
 
 	char text[512];
@@ -621,7 +622,7 @@ stock void LoadProfileTargetSurvivorBot(int client) {
 	menu.Display(client, 0);
 }
 
-public void TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, int client, int slot) {
+public int TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 
@@ -665,7 +666,7 @@ stock void ReadProfilesEx(int client) {	// To view/load another users profile, w
 
 
 	//	ReadProfiles_Generate has been called and the PlayerProfiles[client] handle has been generated.
-	Handle menu = new Menu(ReadProfilesMenuHandle);
+	Menu menu = new Menu(ReadProfilesMenuHandle);
 	RPGMenuPosition[client].Clear();
 
 	char text[64];
@@ -776,7 +777,7 @@ stock void VerifyAllActionBars(int client) {
 
 stock void ShowActionBar(int client) {
 
-	Handle menu = new Menu(ActionBarHandle);
+	Menu menu = new Menu(ActionBarHandle);
 
 	char text[128], talentname[64];
 	Format(text, sizeof(text), "Stamina: %d/%d", SurvivorStamina[client], GetPlayerStamina(client));
@@ -924,13 +925,13 @@ stock bool IsAbilityTalent(int client, char[] TalentName, char[] SearchKey = "no
 	return false;
 }
 // Delay can be set to a default value because it is only used for overloading.
-stock void DrawAbilityEffect(int client, char[] sDrawEffect, float fDrawHeight, int fDrawDelay = 0.0, int fDrawSize, char[] sTalentName, int iEffectType = 0) {
+stock void DrawAbilityEffect(int client, char[] sDrawEffect, float fDrawHeight, float fDrawDelay = 0.0, float fDrawSize, char[] sTalentName, int iEffectType = 0) {
 
 	// no longer needed because we check for it before we get here.if (StrEqual(sDrawEffect, "-1")) return;							//size					color		pos		   pulse?  lifetime
 	//CreateRingEx(client, fDrawSize, sDrawEffect, fDrawHeight, false, 0.2);
 	if (iEffectType == 1 || iEffectType == 2) CreateRingEx(client, fDrawSize, sDrawEffect, fDrawHeight, false, 0.2);
 	else {
-		Handle drawpack;
+		DataPack drawpack;
 		CreateDataTimer(fDrawDelay, Timer_DrawInstantEffect, drawpack, TIMER_FLAG_NO_MAPCHANGE);
 		drawpack.WriteCell(client);
 		drawpack.WriteString(sDrawEffect);
@@ -939,7 +940,7 @@ stock void DrawAbilityEffect(int client, char[] sDrawEffect, float fDrawHeight, 
 	}
 }
 
-public Action Timer_DrawInstantEffect(Handle timer, Handle drawpack) {
+public Action Timer_DrawInstantEffect(Handle timer, DataPack drawpack) {
 
 	drawpack.Reset();
 	int client				=	drawpack.ReadCell();
@@ -1153,7 +1154,7 @@ stock void BuildMenu(int client, char[] TheMenuName = "none") {
 	RPGMenuPosition[client].Clear();
 
 	// Build the base menu
-	Handle menu		= new Menu(BuildMenuHandle);
+	Menu menu		= new Menu(BuildMenuHandle);
 	// Keep track of the position selected.
 	char pos[64];
 
@@ -1662,7 +1663,7 @@ stock void LoadInventory(int client) {
 }
 
 stock void LoadProficiencyData(int client) {
-	Handle menu = new Menu(LoadProficiencyMenuHandle);
+	Menu menu = new Menu(LoadProficiencyMenuHandle);
 	RPGMenuPosition[client].Clear();
 
 	char text[64];
@@ -1698,7 +1699,7 @@ stock void LoadProficiencyData(int client) {
 	menu.Display(client, 0);
 }
 
-public void LoadProficiencyMenuHandle(Handle menu, MenuAction action, int client, int slot) {
+public int LoadProficiencyMenuHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) { }
 	else if (action == MenuAction_Cancel) {
@@ -1709,7 +1710,7 @@ public void LoadProficiencyMenuHandle(Handle menu, MenuAction action, int client
 
 stock void LoadInventoryEx(int client) {
 
-	Handle menu = new Menu(LoadInventoryMenuHandle);
+	Menu menu = new Menu(LoadInventoryMenuHandle);
 	RPGMenuPosition[client].Clear();
 
 	char text[64];
@@ -1759,9 +1760,9 @@ public int LoadInventoryMenuHandle(Handle menu, MenuAction action, int client, i
 	}
 }
 
-public Handle DisplayTheLeaderboards(int client) {
+public Panel DisplayTheLeaderboards(int client) {
 
-	Handle menu = new Panel();
+	Panel menu = new Panel();
 
 	char tquery[64];
 	char text[512];
@@ -1856,13 +1857,13 @@ public int DisplayTheLeaderboards_Init (Handle topmenu, MenuAction action, int c
 	}
 	if (topmenu != INVALID_HANDLE)
 	{
-		delete topmenu;
+		CloseHandle(topmenu);
 	}
 }
 
 public Handle SpawnLoadoutEditor(int client) {
 
-	Handle menu		= new Menu(SpawnLoadoutEditorHandle);
+	Menu menu		= new Menu(SpawnLoadoutEditorHandle);
 
 	char text[512];
 	Format(text, sizeof(text), "%T", "profile editor title", client, LoadoutName[client]);
@@ -1945,7 +1946,7 @@ stock int GetTotalThreat() {
 
 public Handle ShowThreatMenu(int client) {
 
-	Handle menu = new Panel();
+	Panel menu = new Panel();
 
 	char text[512];
 	//Handle:hThreatMeter.GetString(0, text, sizeof(text));
@@ -2086,7 +2087,7 @@ public int CharacterSheetMenuHandle(Handle menu, MenuAction action, int client, 
 }
 
 public Handle CharacterSheetMenu(int client) {
-	Handle menu		= new Menu(CharacterSheetMenuHandle);
+	Menu menu		= new Menu(CharacterSheetMenuHandle);
 
 	char text[512];
 	// we create a string called data to use as reference in GetCharacterSheetData()
@@ -2339,7 +2340,7 @@ stock int GetCharacterSheetData(int client, char[] stringRef, int theSize, int r
 
 public Handle ProfileEditorMenu(int client) {
 
-	Handle menu		= new Menu(ProfileEditorMenuHandle);
+	Menu menu		= new Menu(ProfileEditorMenuHandle);
 
 	char text[512];
 	Format(text, sizeof(text), "%T", "profile editor title", client, LoadoutName[client]);
@@ -2605,9 +2606,8 @@ stock void ReadProfiles(int client, char[] target = "none") {
 
 	if (hDatabase == INVALID_HANDLE) return;
 	char key[64];
-	GetClientAuthId(StrEqual(target, AuthId_Steam2, "none", false));
 	if (StrEqual(target, "none", false)) 
-		GetClientAuthString(client, key, sizeof(key));
+		GetClientAuthId(client, AuthId_Steam2, key, sizeof(key));
 	else
 		Format(key, sizeof(key), "%s", target);
 
@@ -2634,7 +2634,7 @@ stock void ReadProfiles(int client, char[] target = "none") {
 stock void BuildSubMenu(int client, char[] MenuName, char[] ConfigName, char[] ReturnMenu = "none") {
 	bIsClassAbilities[client] = false;
 	// Each talent has a defined "menu name" ("part of menu named?") and will list under that menu. Genius, right?
-	Handle menu					=	new Menu(BuildSubMenuHandle);
+	Menu menu					=	new Menu(BuildSubMenuHandle);
 	// So that back buttons work properly we need to know the previous menu; Store the current menu.
 	if (!StrEqual(ReturnMenu, "none", false)) Format(OpenedMenu[client], sizeof(OpenedMenu[]), "%s", ReturnMenu);
 	Format(OpenedMenu_p[client], sizeof(OpenedMenu_p[]), "%s", OpenedMenu[client]);
@@ -2781,7 +2781,7 @@ stock void BuildSubMenu(int client, char[] MenuName, char[] ConfigName, char[] R
 	menu.Display(client, 0);
 }
 
-stock bool TalentListingFound(int client, Handle Keys, Handle Values, char[] MenuName, bool IsAllowItems = false) {
+stock bool TalentListingFound(int client, ArrayList Keys, ArrayList Values, char[] MenuName, bool IsAllowItems = false) {
 
 	int size = Keys.Length;
 
@@ -2931,7 +2931,7 @@ public int BuildSubMenuHandle(Handle menu, MenuAction action, int client, int sl
 	}
 }
 // need to code in abilities as showing if bIsEquipSpells and requiring an upgrade point to enable.
-stock void ShowTalentInfoScreen(int client, char[] TalentName, Handle Keys, Handle Values, bool bIsEquipSpells = false) {
+stock void ShowTalentInfoScreen(int client, char[] TalentName, ArrayList Keys, ArrayList Values, bool bIsEquipSpells = false) {
 
 	PurchaseKeys[client] = Keys;
 	PurchaseValues[client] = Values;
@@ -2947,7 +2947,7 @@ stock void ShowTalentInfoScreen(int client, char[] TalentName, Handle Keys, Hand
 	//else if (IsSpecialAmmo == 1 || IsAbilityType == 1) SendPanelToClientAndClose(TalentInfoScreen_Special(client), client, TalentInfoScreen_Special_Init, MENU_TIME_FOREVER);
 }
 
-stock float GetTalentInfo(int client, Handle Values, int infotype = 0, bool bIsNext = false, char[] pTalentNameOverride = "none", int target = 0, int iStrengthOverride = 0) {
+stock float GetTalentInfo(int client, ArrayList Values, int infotype = 0, bool bIsNext = false, char[] pTalentNameOverride = "none", int target = 0, int iStrengthOverride = 0) {
 	float f_Strength	= 0.0;
 	char TalentNameOverride[64];
 	if (iStrengthOverride > 0) f_Strength = iStrengthOverride * 1.0;
@@ -3007,11 +3007,11 @@ stock float GetTalentInfo(int client, Handle Values, int infotype = 0, bool bIsN
 	return f_StrengthPoint;
 }
 
-public Handle TalentInfoScreen(int client) {
+public Panel TalentInfoScreen(int client) {
 	int AbilityTalent			= GetKeyValueInt(PurchaseKeys[client], PurchaseValues[client], "is ability?");
 	int IsSpecialAmmo = GetKeyValueInt(PurchaseKeys[client], PurchaseValues[client], "special ammo?");
 
-	Handle menu = new Panel();
+	Panel menu = new Panel();
 	BuildMenuTitle(client, menu, _, 0, true, true);
 
 	char TalentName[64];
@@ -3283,7 +3283,7 @@ public Handle TalentInfoScreen(int client) {
 	return menu;
 }
 
-stock void GetAbilityText(int client, char[] TheString, int TheSize, Handle Keys, Handle Values, int pos = ABILITY_ACTIVE_EFFECT) {
+stock void GetAbilityText(int client, char[] TheString, int TheSize, ArrayList Keys, ArrayList Values, int pos = ABILITY_ACTIVE_EFFECT) {
 
 	char text[512], text2[512], tDraft[512], AbilityType[64], TheMaximumMultiplier[64];
 	float TheAbilityMultiplier = 0.0;
@@ -3402,12 +3402,12 @@ stock int GetTalentLevel(int client, char[] TalentName, bool IsExperience = fals
 	return value;
 }
 
-public Handle TalentInfoScreen_Special (int client) {
+public Panel TalentInfoScreen_Special (int client) {
 
 	char TalentName[64];
 	Format(TalentName, sizeof(TalentName), "%s", PurchaseTalentName[client]);
 
-	Handle menu = new Panel();
+	Panel menu = new Panel();
 
 	int AbilityTalent			= GetKeyValueInt(PurchaseKeys[client], PurchaseValues[client], "is ability?");
 	int TalentPointAmount		= GetTalentStrength(client, TalentName);

@@ -3,7 +3,7 @@
 
 stock void BuildDirectorPriorityMenu(int client) {
 
-	Handle menu						=	new Menu(BuildDirectorPriorityMenuHandle);
+	Menu menu						=	new Menu(BuildDirectorPriorityMenuHandle);
 
 	int size							=	a_DirectorActions.Length;
 	char Name[64];

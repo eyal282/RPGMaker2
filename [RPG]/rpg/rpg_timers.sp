@@ -549,7 +549,7 @@ public Action Timer_Freezer(Handle timer, any client) {
 	return Plugin_Continue;
 }
 
-public void ReadyUp_FwdChangeTeam(int client, int team) {
+public int ReadyUp_FwdChangeTeam(int client, int team) {
 
 	if (IsLegitimateClient(client)) {
 
@@ -753,7 +753,7 @@ public Action Timer_Slow(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-public Action Timer_Explode(Handle timer, Handle packagey) {
+public Action Timer_Explode(Handle timer, DataPack packagey) {
 
 	packagey.Reset();
 
@@ -1489,7 +1489,7 @@ stock void CheckDirectorActionPriority(int pos, int size) {
 	}
 }
 
-stock bool DirectorPurchase_Valid(Handle Keys, Handle Values, int pos) {
+stock bool DirectorPurchase_Valid(ArrayList Keys, ArrayList Values, int pos) {
 
 	float PointCost		=	0.0;
 	float PointCostMin	=	0.0;
@@ -1542,7 +1542,7 @@ stock int GetWitchCount() {
 	return count;
 }
 
-stock void DirectorPurchase(Handle Keys, Handle Values, int pos) {
+stock void DirectorPurchase(ArrayList Keys, ArrayList Values, int pos) {
 
 	char Command[64];
 	char Parameter[64];

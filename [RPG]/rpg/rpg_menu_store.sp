@@ -4,7 +4,7 @@
 
 void BuildStoreMenu(int client) {
 
-	Handle menu					=	new Menu(BuildStoreHandle);
+	Menu menu					=	new Menu(BuildStoreHandle);
 	
 	char text[512];
 	Format(text, sizeof(text), "%T", "Store Header", client, SkyPoints[client]);
@@ -174,7 +174,7 @@ stock void ChallengeEverything(int client) {
 	WipeTalentPoints(client);
 }
 
-public void BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
+public int BuildStoreHandle(Handle menu, MenuAction action, int client, int slot) {
 
 	if (action == MenuAction_Select) {
 

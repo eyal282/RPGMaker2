@@ -1,10 +1,10 @@
 
 #pragma newdecls required
 
-stock bool StrExistsInArrayValue(char[] text, Handle Array) {
+stock bool StrExistsInArrayValue(char[] text, ArrayList Array) {
 
 	int size						=	Array.Length;
-	Handle Values;
+	ArrayList Values;
 
 	char target[64];
 
@@ -31,7 +31,7 @@ stock bool StrExistsInArrayValue(char[] text, Handle Array) {
 
 void BuildChatSettingsMenu(int client) {
 
-	Handle menu					=	new Menu(BuildChatSettingsHandle);
+	Menu menu					=	new Menu(BuildChatSettingsHandle);
 
 	char text[512];
 	Format(text, sizeof(text), "%T", "Chat Settings (Reserve)", client);

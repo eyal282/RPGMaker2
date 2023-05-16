@@ -536,7 +536,7 @@ stock bool AddOTEffect(int client, int target, char[] clientSteamID, float fStre
 	float fIntervalTime = 0.0;
 	//new Float:fCurrentEffectStrength = 0.0;
 	int iNewEffectStrength = 0;
-	char SearchKey[64], SearchValue[64];
+	char SearchKey[64];
 	GetClientAuthId(target, AuthId_Steam2, SearchKey, sizeof(SearchKey));
 	Format(SearchKey, sizeof(SearchKey), "%s:%s:%d", clientSteamID, SearchKey, OTtype);
 	if (OTtype == 0) {
@@ -602,7 +602,7 @@ public Action Timer_ChargerJumpCheck(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-stock bool PlayerCastSpell(int client) {
+stock Action PlayerCastSpell(int client) {
 
 	int CurrentEntity			=	GetEntPropEnt(client, Prop_Data, "m_hActiveWeapon");
 
@@ -847,7 +847,7 @@ stock float GetSpellCooldown(int client, char[] TalentName) {
 	return SpellCooldown;
 }
 
-stock bool UseAbility(int client, int target = -1, char[] TalentName, Handle Keys, Handle Values, float TargetPos[3]) {
+stock bool UseAbility(int client, int target = -1, char[] TalentName, ArrayList Keys, ArrayList Values, float TargetPos[3]) {
 
 	if (!b_IsActiveRound || GetAmmoCooldownTime(client, TalentName, true) != -1.0 || IsAbilityActive(client, TalentName)) return false;
 	if (IsLegitimateClientAlive(target)) GetClientAbsOrigin(target, TargetPos);
@@ -958,7 +958,7 @@ stock bool UseAbility(int client, int target = -1, char[] TalentName, Handle Key
 			else if (reactiveType == 2) {
 				float fActiveTime = GetKeyValueFloatAtPos(Values, ABILITY_ACTIVE_TIME);
 				CreateProgressBar(client, fActiveTime);
-				Handle datapack;
+				DataPack datapack;
 				CreateDataTimer(fActiveTime, Timer_ReactiveCast, datapack, TIMER_FLAG_NO_MAPCHANGE);
 				datapack.WriteCell(client);
 				datapack.WriteCell(RoundToCeil(GetMaximumHealth(client) * GetKeyValueFloatAtPos(Values, ABILITY_ACTIVE_STRENGTH)));
@@ -975,7 +975,7 @@ stock bool UseAbility(int client, int target = -1, char[] TalentName, Handle Key
 	return true;
 }
 
-public Action Timer_ReactiveCast(Handle timer, Handle datapack) {
+public Action Timer_ReactiveCast(Handle timer, DataPack datapack) {
 	datapack.Reset();
 	int client = datapack.ReadCell();
 	if (IsLegitimateClient(client)) {
@@ -1113,7 +1113,7 @@ stock bool CastSpell(int client, int target = -1, char[] TalentName, float Targe
 	return true;
 }
 
-stock void DoBurn(int attacker, int victim, float baseWeaponDamage) {
+stock void DoBurn(int attacker, int victim, int baseWeaponDamage) {
 	//if (iTankRush == 1 && FindZombieClass(victim) == ZOMBIECLASS_TANK) return;
 	bool IsLegitimateClientVictim = IsLegitimateClientAlive(victim);
 	if (IsLegitimateClientVictim) {
@@ -1921,7 +1921,7 @@ stock void CreateDamageStatusEffect(int client, int type = 0, int target = 0, in
 	//ClearSpecialCommon(client);
 }
 
-stock int FindEntityInArrayBinarySearch(Handle hArray, int target) {
+stock int FindEntityInArrayBinarySearch(ArrayList hArray, int target) {
 	int left = 0, right = hArray.Length;
 	int middle;
 	int ent;
@@ -1977,7 +1977,7 @@ stock InsertIntoArrayAscending(Handle hArray, entity) {
 	return -1;	// should be unreachable.
 }
 */
-stock int FindListPositionByEntity(int entity, Handle h_SearchList, int block = 0) {
+stock int FindListPositionByEntity(int entity, ArrayList h_SearchList, int block = 0) {
 
 	int size = h_SearchList.Length;
 	if (size < 1) return -1;
@@ -1988,7 +1988,7 @@ stock int FindListPositionByEntity(int entity, Handle h_SearchList, int block = 
 	return -1;	// returns false
 }
 
-stock int FindCommonInfectedTargetInArray(Handle hArray, int target) {
+stock int FindCommonInfectedTargetInArray(ArrayList hArray, int target) {
 	int size = hArray.Length;
 	for (int i = 0; i < size; i++) {
 		if (i >= size - 1 - i) break;
@@ -1998,7 +1998,7 @@ stock int FindCommonInfectedTargetInArray(Handle hArray, int target) {
 	return -1;
 }
 
-stock void ExplosiveAmmo(int client, float damage, int TalentClient) {
+stock void ExplosiveAmmo(int client, int damage, int TalentClient) {
 	if (IsWitch(client)) AddWitchDamage(TalentClient, client, damage);
 	else if (IsSpecialCommon(client)) AddSpecialCommonDamage(TalentClient, client, damage);
 	else if (IsLegitimateClientAlive(client)) {
@@ -2025,7 +2025,7 @@ stock void LeechAmmo(int client, int damage, int TalentClient) {
 	}
 }
 
-stock float CreateBomberExplosion(int client, int target, char[] Effects, int basedamage = 0) {
+stock void CreateBomberExplosion(int client, int target, char[] Effects, int basedamage = 0) {
 
 	//if (IsLegitimateClient(target) && !IsPlayerAlive(target)) return;
 	if (!IsLegitimateClientAlive(target)) return;
