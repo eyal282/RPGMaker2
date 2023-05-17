@@ -1198,10 +1198,10 @@ public void OnPluginStart() {
 	if (!DirExists(LogPathDirectory)) CreateDirectory(LogPathDirectory, 777);
 	BuildPath(Path_SM, LogPathDirectory, sizeof(LogPathDirectory), "logs/readyup/rpg/%s", LOGFILE);
 	if (!FileExists(LogPathDirectory)) SetFailState("[SKYRPG LOGGING] please create file at %s", LogPathDirectory);
-	RegAdminCmd("debugrpg", Cmd_debugrpg, ADMFLAG_KICK);
-	RegAdminCmd("resettpl", Cmd_ResetTPL, ADMFLAG_KICK);
-	RegAdminCmd("origin", Cmd_GetOrigin, ADMFLAG_KICK);
-	RegAdminCmd("deleteprofiles", CMD_DeleteProfiles, ADMFLAG_ROOT);
+	RegAdminCmd("sm_debugrpg", Cmd_debugrpg, ADMFLAG_KICK);
+	RegAdminCmd("sm_resettpl", Cmd_ResetTPL, ADMFLAG_KICK);
+	RegAdminCmd("sm_origin", Cmd_GetOrigin, ADMFLAG_KICK);
+	RegAdminCmd("sm_deleteprofiles", CMD_DeleteProfiles, ADMFLAG_ROOT);
 	// These are mandatory because of quick commands, so I hardcode the entries.
 	RegConsoleCmd("say", CMD_ChatCommand);
 	RegConsoleCmd("say_team", CMD_TeamChatCommand);
@@ -1209,15 +1209,15 @@ public void OnPluginStart() {
 	RegConsoleCmd("votemap", CMD_BlockIfReadyUpIsActive);
 	RegConsoleCmd("vote", CMD_BlockVotes);
 	//RegConsoleCmd("talentupgrade", CMD_TalentUpgrade);
-	RegConsoleCmd("loadoutname", CMD_LoadoutName);
-	RegConsoleCmd("stuck", CMD_IAmStuck);
-	RegConsoleCmd("ff", CMD_TogglePvP);
-	RegConsoleCmd("revive", CMD_RespawnYumYum);
+	RegConsoleCmd("sm_loadoutname", CMD_LoadoutName);
+	RegConsoleCmd("sm_stuck", CMD_IAmStuck);
+	RegConsoleCmd("sm_ff", CMD_TogglePvP);
+	RegConsoleCmd("sm_revive", CMD_RespawnYumYum);
 	//RegConsoleCmd("abar", CMD_ActionBar);
-	RegConsoleCmd("handicap", CMD_Handicap);
-	RegAdminCmd("firesword", CMD_FireSword, ADMFLAG_KICK);
-	RegAdminCmd("fbegin", CMD_FBEGIN, ADMFLAG_KICK);
-	RegAdminCmd("witches", CMD_WITCHESCOUNT, ADMFLAG_KICK);
+	RegConsoleCmd("sm_handicap", CMD_Handicap);
+	RegAdminCmd("sm_firesword", CMD_FireSword, ADMFLAG_KICK);
+	RegAdminCmd("sm_fbegin", CMD_FBEGIN, ADMFLAG_KICK);
+	RegAdminCmd("sm_witches", CMD_WITCHESCOUNT, ADMFLAG_KICK);
 	//RegAdminCmd("staggertest", CMD_STAGGERTEST, ADMFLAG_KICK);
 	Format(white, sizeof(white), "\x01");
 	Format(orange, sizeof(orange), "\x04");

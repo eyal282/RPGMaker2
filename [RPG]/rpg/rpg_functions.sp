@@ -14,8 +14,13 @@ stock void GetConfigValue(char[] TheString, int TheSize, char[] KeyName) {
 		MainKeys.GetString(i, text, sizeof(text));
 
 		if (StrEqual(text, KeyName)) {
-
+			
 			MainValues.GetString(i, TheString, TheSize);
+
+			if(StrContains(KeyName, "command?", false) != -1 && strncmp(TheString, "sm_", 3) != 0)
+			{
+				Format(TheString, TheSize, "sm_%s", TheString);
+			}	
 			return;
 		}
 	}
