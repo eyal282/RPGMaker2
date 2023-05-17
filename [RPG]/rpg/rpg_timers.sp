@@ -43,7 +43,7 @@ public Action Timer_ResetShotgunCooldown(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-bool VerifyMinimumRating(int client, bool setMinimumRating = false) {
+void VerifyMinimumRating(int client, bool setMinimumRating = false) {
 	int minimumRating = RoundToCeil(BestRating[client] * fRatingFloor);
 	if (setMinimumRating || Rating[client] < minimumRating) Rating[client] = minimumRating;
 }

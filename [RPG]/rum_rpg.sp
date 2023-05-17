@@ -628,7 +628,8 @@ ArrayList TrailsKeys[MAXPLAYERS + 1];
 ArrayList TrailsValues[MAXPLAYERS + 1];
 bool b_IsFinaleActive;
 int RoundDamage[MAXPLAYERS + 1];
-int RoundDamageTotal;
+// Eyal282 here. Warnings are evil.
+//int RoundDamageTotal;
 int SpecialsKilled;
 ArrayList LockedTalentKeys;
 ArrayList LockedTalentValues;
@@ -645,12 +646,8 @@ ArrayList StoreChanceKeys[MAXPLAYERS + 1];
 ArrayList StoreChanceValues[MAXPLAYERS + 1];
 ArrayList StoreItemNameSection[MAXPLAYERS + 1];
 ArrayList StoreItemSection[MAXPLAYERS + 1];
-ArrayList thSetting[64];
 ArrayList SaveSection[MAXPLAYERS + 1];
-ArrayList ginalHealth[MAXPLAYERS + 1];
-ArrayList IsLoadingStore[MAXPLAYERS + 1];
 ArrayList LoadStoreSection[MAXPLAYERS + 1];
-ArrayList eUpgrades[MAXPLAYERS + 1];
 ArrayList StoreTimeKeys[MAXPLAYERS + 1];
 ArrayList StoreTimeValues[MAXPLAYERS + 1];
 ArrayList StoreKeys[MAXPLAYERS + 1];
@@ -658,22 +655,7 @@ ArrayList StoreValues[MAXPLAYERS + 1];
 ArrayList StoreMultiplierKeys[MAXPLAYERS + 1];
 ArrayList StoreMultiplierValues[MAXPLAYERS + 1];
 ArrayList a_Store_Player[MAXPLAYERS + 1];
-ArrayList IsLoadingTrees[MAXPLAYERS + 1];
-ArrayList IsArraysCreated[MAXPLAYERS + 1];
 ArrayList a_Store;
-ArrayList yerUpgradesTotal[MAXPLAYERS + 1];
-ArrayList _TankCooldown;
-ArrayList eathLocation[MAXPLAYERS + 1][3];
-ArrayList ePlayed[MAXPLAYERS + 1];
-ArrayList IsLoading[MAXPLAYERS + 1];
-ArrayList tLivingSurvivor;
-ArrayList _OriginStart[MAXPLAYERS + 1][3];
-ArrayList _OriginEnd[MAXPLAYERS + 1][3];
-ArrayList istance[MAXPLAYERS + 1];
-ArrayList ealing[MAXPLAYERS + 1];
-ArrayList IsActiveRound;
-ArrayList IsFirstPluginLoad;
-ArrayList rup[32];
 ArrayList MainKeys;
 ArrayList MainValues;
 ArrayList a_Menu_Talents;
@@ -1288,6 +1270,7 @@ public Action CMD_WITCHESCOUNT(int client, int args) {
 
 public Action CMD_FBEGIN(int client, int args) {
 	ReadyUpEnd_Complete();
+	return Plugin_Handled;
 }
 
 public Action Cmd_GetOrigin(int client, int args) {
@@ -1314,11 +1297,15 @@ public Action CMD_BlockIfReadyUpIsActive(int client, int args) {
 
 public int ReadyUp_SetSurvivorMinimum(int minSurvs) {
 	iMinSurvivors = minSurvs;
+
+	return 0;
 }
 
 public int ReadyUp_GetMaxSurvivorCount(int count) {
 	if (count <= 1) bIsSoloHandicap = true;
 	else bIsSoloHandicap = false;
+
+	return 0;
 }
 
 stock void UnhookAll() {
@@ -1900,7 +1887,7 @@ public Action Timer_Defibrillator(Handle timer, any client) {
 	return Plugin_Stop;
 }
 
-public int ReadyUpEnd_Complete() {
+public void ReadyUpEnd_Complete() {
 	/*PrintToChatAll("DOor opened");
 	b_IsCheckpointDoorStartOpened = true;
 	b_IsActiveRound = true;*/
@@ -2099,7 +2086,9 @@ public int ReadyUp_CheckpointDoorStartOpened() {
 		if (ReadyUpGameMode != 3) b_IsRoundIsOver						= false;
 		if (ReadyUpGameMode == 2) MapRoundsPlayed = 0;	// Difficulty leniency does not occur in versus.
 		SpecialsKilled				=	0;
-		RoundDamageTotal			=	0;
+
+		// Eyal282 here. Warnings are evil.
+		//RoundDamageTotal			=	0;
 		//MVPDamage					=	0;
 		b_IsFinaleActive			=	false;
 		if (GetConfigValueInt("director save priority?") == 1) PrintToChatAll("%t", "Director Priority Save Enabled", white, green);

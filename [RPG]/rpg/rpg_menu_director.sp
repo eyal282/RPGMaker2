@@ -77,4 +77,5 @@ public int BuildDirectorPriorityMenuHandle(Handle menu, MenuAction action, int c
 
 		delete menu;
 	}
+	return 0;
 }

@@ -2411,6 +2411,7 @@ public Action CMD_RespawnYumYum(int client, int args) {
 			}
 		}
 	}
+	return Plugin_Handled;
 }
 
 stock void FindARespawnTarget(int client, int sacrifice = -1) {

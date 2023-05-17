@@ -550,6 +550,7 @@ public int LoadProfileRequestHandle(Handle menu, MenuAction action, int client, 
 
 		delete menu;
 	}
+	return 0;
 }
 
 stock void GetTeamComposition(int client) {
@@ -593,6 +594,7 @@ public int TeamCompositionMenuHandle(Handle menu, MenuAction action, int client,
 		//LoadTarget[client] = -1;
 		delete menu;
 	}
+	return 0;
 }
 
 stock void LoadProfileTargetSurvivorBot(int client) {
@@ -660,6 +662,7 @@ public int TargetSurvivorBotMenuHandle(Handle menu, MenuAction action, int clien
 		//LoadTarget[client] = -1;
 		delete menu;
 	}
+	return 0;
 }
 
 stock void ReadProfilesEx(int client) {	// To view/load another users profile, we need to know who to target.
@@ -723,6 +726,7 @@ public int ReadProfilesMenuHandle(Handle menu, MenuAction action, int client, in
 
 		delete menu;
 	}
+	return 0;
 }
 // Eyal282 here, LastOpenedMenu does not exist and throws errors.
 /*
@@ -1126,6 +1130,7 @@ public int ActionBarHandle(Handle menu, MenuAction action, int client, int slot)
 		//DisplayActionBar[client] = false;
 		delete menu;
 	}
+	return 0;
 }
 
 stock void BuildMenu(int client, char[] TheMenuName = "none") {
@@ -1580,6 +1585,7 @@ public int BuildMenuHandle(Handle menu, MenuAction action, int client, int slot)
 
 		delete menu;
 	}
+	return 0;
 }
 
 stock int GetNodesInExistence() {
@@ -1706,6 +1712,7 @@ public int LoadProficiencyMenuHandle(Handle menu, MenuAction action, int client,
 		if (slot == MenuCancel_ExitBack) BuildMenu(client);
 	}
 	if (action == MenuAction_End) delete menu;
+	return 0;
 }
 
 stock void LoadInventoryEx(int client) {
@@ -1758,6 +1765,7 @@ public int LoadInventoryMenuHandle(Handle menu, MenuAction action, int client, i
 
 		delete menu;
 	}
+	return 0;
 }
 
 public Panel DisplayTheLeaderboards(int client) {
@@ -1855,13 +1863,14 @@ public int DisplayTheLeaderboards_Init (Handle topmenu, MenuAction action, int c
 			}
 		}
 	}
-	if (topmenu != INVALID_HANDLE)
+	if (action == MenuAction_End)
 	{
-		CloseHandle(topmenu);
+		delete topmenu;
 	}
+	return 0;
 }
 
-public Handle SpawnLoadoutEditor(int client) {
+public void SpawnLoadoutEditor(int client) {
 
 	Menu menu		= new Menu(SpawnLoadoutEditorHandle);
 
@@ -1909,6 +1918,7 @@ public int SpawnLoadoutEditorHandle(Handle menu, MenuAction action, int client, 
 
 		delete menu;
 	}
+	return 0;
 }
 
 stock int GetTotalThreat() {
@@ -1944,7 +1954,7 @@ stock int GetTotalThreat() {
 	return -1;
 }*/
 
-public Handle ShowThreatMenu(int client) {
+public Panel ShowThreatMenu(int client) {
 
 	Panel menu = new Panel();
 
@@ -2063,6 +2073,7 @@ public int ShowThreatMenu_Init(Handle topmenu, MenuAction action, int client, in
 		//bIsHideThreat[client] = true;
 		delete topmenu;
 	}*/
+	return 0;
 }
 
 public int CharacterSheetMenuHandle(Handle menu, MenuAction action, int client, int slot) {
@@ -2084,9 +2095,10 @@ public int CharacterSheetMenuHandle(Handle menu, MenuAction action, int client, 
 
 		delete menu;
 	}
+	return 0;
 }
 
-public Handle CharacterSheetMenu(int client) {
+public void CharacterSheetMenu(int client) {
 	Menu menu		= new Menu(CharacterSheetMenuHandle);
 
 	char text[512];
@@ -2338,7 +2350,7 @@ stock int GetCharacterSheetData(int client, char[] stringRef, int theSize, int r
 	return 0;
 }
 
-public Handle ProfileEditorMenu(int client) {
+public void ProfileEditorMenu(int client) {
 
 	Menu menu		= new Menu(ProfileEditorMenuHandle);
 
@@ -2492,6 +2504,7 @@ public int ProfileEditorMenuHandle(Handle menu, MenuAction action, int client, i
 
 		delete menu;
 	}
+	return 0;
 }
 
 stock void SaveProfile(int client, int SaveType = 0) {	// 1 insert a new save, 2 overwrite an existing save.
@@ -2929,6 +2942,7 @@ public int BuildSubMenuHandle(Handle menu, MenuAction action, int client, int sl
 	{
 		delete menu;
 	}
+	return 0;
 }
 // need to code in abilities as showing if bIsEquipSpells and requiring an upgrade point to enable.
 stock void ShowTalentInfoScreen(int client, char[] TalentName, ArrayList Keys, ArrayList Values, bool bIsEquipSpells = false) {
@@ -3608,6 +3622,7 @@ public int TalentInfoScreen_Init (Handle topmenu, MenuAction action, int client,
 	{
 		delete topmenu;
 	}*/
+	return 0;
 }
 
 public int TalentInfoScreen_Special_Init (Handle topmenu, MenuAction action, int client, int param2)
@@ -3631,6 +3646,7 @@ public int TalentInfoScreen_Special_Init (Handle topmenu, MenuAction action, int
 
 		delete topmenu;
 	}
+	return 0;
 }
 
 bool SwapActions(int client, char[] TalentName, int slot) {

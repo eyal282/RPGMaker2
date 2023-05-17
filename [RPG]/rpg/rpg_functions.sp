@@ -1700,7 +1700,9 @@ stock int AddSpecialInfectedDamage(int client, int target, int TotalDamage, bool
 			GetProficiencyData(client, GetWeaponProficiencyType(client), RoundToCeil(i_DamageBonus * fProficiencyExperienceEarned));
 
 			InfectedHealth[client].Set(isEntityPos, i_InfectedCurrent + i_DamageBonus, 2);
-			RoundDamageTotal += (i_DamageBonus);
+
+			// Eyal282 here. Warnings are evil.
+			//RoundDamageTotal += (i_DamageBonus);
 			RoundDamage[client] += (i_DamageBonus);
 
 			/*if (damagevariant == 1) AddTalentExperience(client, "endurance", i_DamageBonus);
@@ -1861,10 +1863,11 @@ stock void AwardExperience(int client, int type = 0, int AMOUNT = 0, bool TheRou
 			//ReceiveInfectedDamageAward(i, client, SurvivorExperience, SurvivorPoints, t_Contribution, h_Contribution);
 	}
 }
-
+// Eyal282 here. Warnings are evil.
+/*
 stock bool IsClassType(int client, char[] SearchString) {
 }
-
+*/
 stock int GetPassiveStrength(int client, char[] SearchKey, char[] TalentName, int TheSize = 64) {
 
 	if (IsLegitimateClient(client)) {
@@ -2482,13 +2485,11 @@ stock float GetAbilityStrengthByTrigger(int activator, int target = 0, char[] Ab
 	return t_Strength;
 }
 
-stock bool EnemiesWithinExplosionRange(int client, float TheRange, int TheStrength) {
+stock bool EnemiesWithinExplosionRange(int client, float TheRange, float TheStrength) {
 
 	if (!IsLegitimateClientAlive(client)) return false;
 	float MyRange[3];
 	GetClientAbsOrigin(client, MyRange);
-
-	int ent = -1;
 
 	bool IsInRangeTheRange = false;
 	int RealStrength = RoundToCeil(TheStrength * GetClientHealth(client));
@@ -2599,10 +2600,7 @@ stock bool AbilityChanceSuccess(int client, char[] s_TalentName = "none") {
 		char talentname[64];
 
 		float i_EachPoint	=	0.0;
-		int i_Strength		=	0;
 		int range			=	0;
-		int i_Strength_Temp	=	0;
-		float i_EachPoint_Temp = 0.0;
 
 		//AbilityKeys[client]			= a_Menu_Talents.Get(pos, 0);
 		AbilityValues[client]		= a_Menu_Talents.Get(pos, 1);
@@ -3394,9 +3392,6 @@ stock int CreateRingSoloEx(int client, float RingAreaSize, char[] DrawColour, ch
 	ClientPos[2] += 20.0;
 	ClientPos[2] += StringToFloat(DrawPos);
 
-	float t_ClientPos[3];
-	t_ClientPos = ClientPos;
-
 	if (StrEqual(DrawColour, "green", false)) TE_SetupBeamRingPoint(ClientPos, pulserange, RingAreaSize, g_iSprite, g_BeaconSprite, 0, 15, lifetime, 2.0, 0.5, {0, 255, 0, 200}, 50, 0);
 	else if (StrEqual(DrawColour, "red", false)) TE_SetupBeamRingPoint(ClientPos, pulserange, RingAreaSize, g_iSprite, g_BeaconSprite, 0, 15, lifetime, 2.0, 0.5, {255, 0, 0, 200}, 50, 0);
 	else if (StrEqual(DrawColour, "blue", false)) TE_SetupBeamRingPoint(ClientPos, pulserange, RingAreaSize, g_iSprite, g_BeaconSprite, 0, 15, lifetime, 2.0, 0.5, {0, 0, 255, 200}, 50, 0);
@@ -3412,7 +3407,7 @@ stock int CreateRingSoloEx(int client, float RingAreaSize, char[] DrawColour, ch
 	return 1;
 }
 
-stock int CreateRingEx(int client, float RingAreaSize, char[] DrawColour, int DrawPos, bool IsPulsing = true, float lifetime = 1.0, int targetClient = 0) {
+stock int CreateRingEx(int client, float RingAreaSize, char[] DrawColour, float DrawPos, bool IsPulsing = true, float lifetime = 1.0, int targetClient = 0) {
 
 	float ClientPos[3];
 	if (IsLegitimateClient(client)) GetClientAbsOrigin(client, ClientPos);
@@ -4167,7 +4162,7 @@ stock void ForceClientJump(int activator, float g_TalentStrength, int victim = 0
 	}
 }
 
-stock void ActivateAbilityEx(int activator, int target, float d_Damage, char[] Effects, float g_TalentStrength, int g_TalentTime, int victim = 0,
+stock void ActivateAbilityEx(int activator, int target, int d_Damage, char[] Effects, float g_TalentStrength, float g_TalentTime, int victim = 0,
 						char[] Trigger = "0", int isRaw = 0, float AoERange = 0.0, char[] secondaryEffects = "-1",
 						float secondaryAoERange = 0.0, int hitgroup = -1, char[] secondaryTrigger = "-1", char[] AbilityTriggerIgnore = "none", int damagetype = -1) {
 
@@ -4487,11 +4482,12 @@ stock void StaggerPlayer(int target, int activator) {
 	}
 }
 
-// ???
+// Eyal282 here. Warnings are evil.
+/*
 stock float GetMagazineRemaining(int client, bool bIsPercentage = false) {
 
 }
-
+*/
 
 /*new client = GetClientOfUserId(event.GetInt("userid"));
 	new weaponIndex = GetPlayerWeaponSlot(client, 0);
@@ -7693,8 +7689,11 @@ public Action Cmd_debugrpg(int client, int args) {
 	return Plugin_Handled;
 }
 
-public Action Cmd_ResetTPL(int client, int args) { PlayerLevelUpgrades[client] = 0; }
-//public Action Cmd_ResetTPL(int client, int args) { PlayerLevelUpgrades[client] = 0; }
+public Action Cmd_ResetTPL(int client, int args)
+{
+	PlayerLevelUpgrades[client] = 0;
+	return Plugin_Handled;
+}
 
 stock bool StringExistsArray(char[] Name, ArrayList array) {
 
@@ -8403,8 +8402,8 @@ stock void PenalizeGroupmates(int client) {
 	//ew size = Handle MyGroup[client].Length;
 	char text[64];
 	int jerk = 0;
-
-	float ThePenalty = 1.0 / MyGroup[client].Length;
+	// Eyal282 here. Warnings are evil.
+	//float ThePenalty = 1.0 / MyGroup[client].Length;
 
 	while (MyGroup[client].Length > 0) {
 
@@ -9714,6 +9713,7 @@ public Action CMD_FireSword(int client, int args) {
 		ExtinguishEntity(iWeapon);
 		IgniteEntity(iWeapon, 30.0);
 	}
+	return Plugin_Handled;
 }
 
 public Action CMD_LoadoutName(int client, int args) {
@@ -10938,7 +10938,7 @@ stock bool SetTempHealth(int client, int targetclient, float TemporaryHealth=30.
 	SetClientTempHealth(client, GetMaximumHealth(client) - 1);
 }*/
 
-stock void ModifyHealth(int client, float TalentStrength, int TalentTime, int isRawValue = 0) {
+stock void ModifyHealth(int client, float TalentStrength, float TalentTime, int isRawValue = 0) {
 
 	if (!IsLegitimateClientAlive(client)) return;
 	SetMaximumHealth(client);

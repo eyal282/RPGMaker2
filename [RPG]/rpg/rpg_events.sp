@@ -530,7 +530,7 @@ public int Call_Event(Event event, char[] event_name, bool dontBroadcast, int po
 	return 0;
 }
 
-stock bool AddOTEffect(int client, int target, char[] clientSteamID, float fStrength, int OTtype = 0) {
+stock void AddOTEffect(int client, int target, char[] clientSteamID, float fStrength, int OTtype = 0) {
 	float fClientStrength = 0.0;
 	float fTargetStrength = 0.0;
 	float fIntervalTime = 0.0;

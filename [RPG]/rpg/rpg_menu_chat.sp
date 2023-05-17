@@ -98,7 +98,7 @@ public int BuildChatSettingsHandle(Handle menu, MenuAction action, int client, i
 				// When ChatSettingsName is "none" there are only options equal to the number of sections.
 				Format(ChatSettingsName[client], sizeof(ChatSettingsName[]), "%s", Name);
 				BuildChatSettingsMenu(client);
-				return;
+				return 0;
 			}
 			if (!StrEqual(ChatSettingsName[client], "none", false)) {
 
@@ -114,7 +114,7 @@ public int BuildChatSettingsHandle(Handle menu, MenuAction action, int client, i
 
 						Format(ChatSettingsName[client], sizeof(ChatSettingsName[]), "none");
 						BuildChatSettingsMenu(client);
-						return;
+						return 0;
 					}
 				}
 			}
@@ -128,4 +128,5 @@ public int BuildChatSettingsHandle(Handle menu, MenuAction action, int client, i
 
 		delete menu;
 	}
+	return 0;
 }

@@ -103,7 +103,7 @@ void BuildStoreMenu(int client) {
 	menu.Display(client, 0);
 }
 
-stock bool GiveClientStoreItem(int client, int pos) {
+stock void GiveClientStoreItem(int client, int pos) {
 
 	char slotvalue[64];
 
@@ -239,6 +239,7 @@ public int BuildStoreHandle(Handle menu, MenuAction action, int client, int slot
 
 		delete menu;
 	}
+	return 0;
 }
 
 stock void RemoveStoreTime(int client) {
