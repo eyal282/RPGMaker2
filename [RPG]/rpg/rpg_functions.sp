@@ -230,7 +230,7 @@ stock bool IsPlayerUsingShotgun(int client) {
 	int CurrentEntity								= GetPlayerWeaponSlot(client, 0);
 
 	char EntityName[64];
-	if (IsValidEntity(CurrentEntity)) GetEntityClassname(CurrentEntity, EntityName, sizeof(EntityName));
+	if (IsValidEntity(CurrentEntity)) GetEdictClassname(CurrentEntity, EntityName, sizeof(EntityName));
 	if (StrContains(EntityName, "shotgun", false) != -1) return true;
 	return false;
 }
@@ -243,7 +243,7 @@ stock void GetMeleeWeapon(int client, char[] Weapon, int size) {
 	if (StrEqual(Weapon, "weapon_melee", false)) {
 		g_iActiveWeaponOffset = FindSendPropInfo("CTerrorPlayer", "m_hActiveWeapon");
 		iWeapon = GetEntDataEnt2(client, g_iActiveWeaponOffset);
-		GetEntityClassname(iWeapon, Weapon, size);
+		GetEdictClassname(iWeapon, Weapon, size);
 		GetEntPropString(iWeapon, Prop_Data, "m_strMapSetScriptName", Weapon, size);
 	}
 	else Format(Weapon, size, "null");
@@ -332,7 +332,7 @@ stock int GetWeaponResult(int client, int result = 0, int amountToAdd = 0) {
 	if (!IsValidEntity(iWeapon)) return -1;
 	char Weapon[64];
 	char WeaponName[64];
-	GetEntityClassname(iWeapon, Weapon, sizeof(Weapon));
+	GetEdictClassname(iWeapon, Weapon, sizeof(Weapon));
 	int size = a_WeaponDamages.Length;
 	float fValue = 0.0;
 	int targetgun = GetPlayerWeaponSlot(client, 0);
@@ -389,7 +389,7 @@ stock int GetBaseWeaponDamage(int client, int target, float impactX = 0.0, float
 		IsMelee = true;
 		g_iActiveWeaponOffset = FindSendPropInfo("CTerrorPlayer", "m_hActiveWeapon");
 		iWeapon = GetEntDataEnt2(client, g_iActiveWeaponOffset);
-		GetEntityClassname(iWeapon, Weapon, sizeof(Weapon));
+		GetEdictClassname(iWeapon, Weapon, sizeof(Weapon));
 		GetEntPropString(iWeapon, Prop_Data, "m_strMapSetScriptName", Weapon, sizeof(Weapon));
 	}
 	else if (StrContains(Weapon, "weapon_", false) != -1) {
@@ -400,7 +400,7 @@ stock int GetBaseWeaponDamage(int client, int target, float impactX = 0.0, float
 			WeaponId = GetPlayerWeaponSlot(client, 1);
 			if (StrContains(Weapon, "chainsaw", false) != -1) IsMelee = true;
 		}
-		if (IsValidEntity(WeaponId)) GetEntityClassname(WeaponId, Weapon, sizeof(Weapon));
+		if (IsValidEntity(WeaponId)) GetEdictClassname(WeaponId, Weapon, sizeof(Weapon));
 		else return -1;
 	}
 	// To help cut down on the cost of calculating damage on EVERY event...
@@ -975,7 +975,7 @@ public Action Hook_SetTransmit(int entity, int client) {
 
 public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &damage_ignore, int &damagetype) {
 	if (!b_IsActiveRound || b_IsSurvivalIntermission) {
-
+		PrintToChatAll("%i - %i", b_IsActiveRound, b_IsSurvivalIntermission);
 		damage_ignore = 0.0;
 		return Plugin_Handled;
 	}
@@ -1020,9 +1020,11 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	int victimType = -1;
 	int attackerType = -1;
 	if (IsLegitimateClientAttacker) {
+		
 		if (b_IsLoading[attacker]) {	// may cause issues if infected players are stuck in loading; they shouldn't be, guess we'll find out.
-			damage_ignore = 0.0;
-			return Plugin_Handled;
+			// Eyal282 here, this is broken and breaks gameplay a lot.
+			//damage_ignore = 0.0;
+			return Plugin_Continue;
 		}
 		else if (!IsFakeClient(attacker) && SkyLevel[attacker] < 1 && PlayerLevel[attacker] < iPlayerStartingLevel || (IsFakeClient(attacker) || IsSurvivorBotAttacker) && PlayerLevel[attacker] < iBotPlayerStartingLevel) {
 			loadtarget = attacker;
@@ -1060,8 +1062,9 @@ public Action OnTakeDamage(int victim, int &attacker, int &inflictor, float &dam
 	}
 	if (IsLegitimateClientVictim) {
 		if (b_IsLoading[victim]) {
-			damage_ignore = 0.0;
-			return Plugin_Handled;
+			// Eyal282 here, this is broken and breaks gameplay a lot.
+			// damage_ignore = 0.0;
+			return Plugin_Continue;
 		}
 		else if (!IsFakeClient(victim) && SkyLevel[victim] < 1 && PlayerLevel[victim] < iPlayerStartingLevel || (IsFakeClient(victim) || IsSurvivorBotVictim) && PlayerLevel[victim] < iBotPlayerStartingLevel) {
 			loadtarget = victim;
@@ -2960,7 +2963,7 @@ stock int GetWeaponSlot(int entity) {
 	if (IsValidEntity(entity)) {
 
 		char Classname[64];
-		GetEntityClassname(entity, Classname, sizeof(Classname));
+		GetEdictClassname(entity, Classname, sizeof(Classname));
 
 		if (StrContains(Classname, "pistol", false) != -1 || StrContains(Classname, "chainsaw", false) != -1) return 1;
 		if (StrContains(Classname, "molotov", false) != -1 || StrContains(Classname, "pipe_bomb", false) != -1 || StrContains(Classname, "vomitjar", false) != -1) return 2;
@@ -3751,6 +3754,7 @@ stock void EnrageBlind(int client, int amount=0) {
 		BfWriteByte(message, amount);
 		EndMessage();
 	}
+	
 }
 
 stock void BlindPlayer(int client, float effectTime = 3.0, int amount = 0) {
@@ -4229,7 +4233,7 @@ stock void ActivateAbilityEx(int activator, int target, int d_Damage, char[] Eff
 			int bulletsFired = 0;
 			int WeaponId =	GetEntPropEnt(activator, Prop_Data, "m_hActiveWeapon");
 			int bulletsRemaining = GetEntProp(WeaponId, Prop_Send, "m_iClip1");
-			GetEntityClassname(WeaponId, curEquippedWeapon, sizeof(curEquippedWeapon));
+			GetEdictClassname(WeaponId, curEquippedWeapon, sizeof(curEquippedWeapon));
 			currentEquippedWeapon[activator].GetValue(curEquippedWeapon, bulletsFired);
 			if (bulletsFired >= bulletsRemaining) {
 				// we only do something if the mag is half or more empty.
@@ -8628,7 +8632,7 @@ public Action Timer_DestroyRock(Handle timer, any ent) {
 	if (IsValidEntity(ent) && IsValidEdict(ent)) {
 
 		char classname[64];
-		GetEntityClassname(ent, classname, sizeof(classname));
+		GetEdictClassname(ent, classname, sizeof(classname));
 		if (StrEqual(classname, "tank_rock", false)) {
 
 			float fTankPos[3], fRockPos[3];
@@ -8691,7 +8695,7 @@ bool IsWitch(int entity) {
 	if (entity <= 0 || !IsValidEntity(entity)) return false;
 
 	char className[16];
-	GetEntityClassname(entity, className, sizeof(className));
+	GetEdictClassname(entity, className, sizeof(className));
 	return strcmp(className, "witch") == 0;
 }
 
@@ -8700,7 +8704,7 @@ bool IsCommonInfected(int entity) {
 	if (entity <= 0 || !IsValidEntity(entity)) return false;
 
 	char className[16];
-	GetEntityClassname(entity, className, sizeof(className));
+	GetEdictClassname(entity, className, sizeof(className));
 	return strcmp(className, "infected") == 0;
 }
 
@@ -9559,7 +9563,7 @@ stock int CartelLevel(int client) {
 	//return CartelStrength;
 	return PlayerLevel[client];
 }
-
+/*
 stock bool IsOpenRPGMenu(char[] searchString) {
 	char[][] RPGCommands = new char[RPGMenuCommandExplode][64];
 	ExplodeString(RPGMenuCommand, ",", RPGCommands, RPGMenuCommandExplode, 64);
@@ -9568,7 +9572,7 @@ stock bool IsOpenRPGMenu(char[] searchString) {
 	}
 	return false;
 }
-
+*/
 public bool ChatTrigger(int client, int args, bool teamOnly) {
 
 	if (!IsLegitimateClient(client)) return true;
@@ -9579,10 +9583,11 @@ public bool ChatTrigger(int client, int args, bool teamOnly) {
 	GetClientAuthId(client, AuthId_Steam2, authString, sizeof(authString));
 	GetClientName(client, Name, sizeof(Name));
 	GetCmdArg(1, sBuffer, MAX_CHAT_LENGTH);
+	/*
 	if (sBuffer[0] == '!' && IsOpenRPGMenu(sBuffer)) {
-		CMD_OpenRPGMenu(client);
+		CMD_OpenRPGMenu(client, 0);
 		return false;	// if we want to suppress the chat command
-	}
+	}*/
 	Format(LastSpoken[client], sizeof(LastSpoken[]), "%s", sBuffer);
 	char TagColour[64];
 	char TagName[64];
@@ -10846,7 +10851,6 @@ stock void SetClientTotalHealth(int client, int damage, bool IsSetHealthInstead 
 	float fHealthBuffer = 0.0;
 
 	if (IsSetHealthInstead) {
-
 		SetMaximumHealth(client);
 		SetEntityHealth(client, damage);
 		SetEntPropFloat(client, Prop_Send, "m_healthBuffer", damage * 1.0);
@@ -10872,7 +10876,7 @@ stock void SetClientTotalHealth(int client, int damage, bool IsSetHealthInstead 
 			}
 			else {
 
-				fHealthBuffer -= damage;
+				fHealthBuffer -= float(damage);
 				SetEntityHealth(client, RoundToCeil(fHealthBuffer));
 				SetEntPropFloat(client, Prop_Send, "m_healthBuffer", fHealthBuffer);
 				SetEntPropFloat(client, Prop_Send, "m_healthBufferTime", GetGameTime());

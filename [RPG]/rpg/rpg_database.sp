@@ -1147,7 +1147,7 @@ stock void SaveAndClear(int client, bool b_IsTrueDisconnect = false, bool IsNewP
 		hWeaponList[client].Resize(2);
 		int wepid = GetPlayerWeaponSlot(client, 0);
 		if (IsValidEntity(wepid)) {
-			GetEntityClassname(wepid, text, sizeof(text));
+			GetEdictClassname(wepid, text, sizeof(text));
 			hWeaponList[client].SetString(0, text);
 		}
 		else Format(text, sizeof(text), "%s", defaultLoadoutWeaponPrimary);
@@ -1156,7 +1156,7 @@ stock void SaveAndClear(int client, bool b_IsTrueDisconnect = false, bool IsNewP
 		GetMeleeWeapon(client, text, sizeof(text));
 		if (StrEqual(text, "null")) {	// if the secondary is not a melee weapon
 			wepid = GetPlayerWeaponSlot(client, 1);
-			if (IsValidEntity(wepid)) GetEntityClassname(wepid, text, sizeof(text));
+			if (IsValidEntity(wepid)) GetEdictClassname(wepid, text, sizeof(text));
 			else Format(text, sizeof(text), "%s", defaultLoadoutWeaponSecondary);
 		}
 		hWeaponList[client].SetString(1, text);

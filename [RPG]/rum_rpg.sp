@@ -1158,7 +1158,7 @@ stock void DoGunStuff(int client) {
 	return;
 }
 
-stock void CMD_OpenRPGMenu(int client) {
+stock Action CMD_OpenRPGMenu(int client, int args) {
 	MenuStructure[client].Clear();	// keeps track of the open menus.
 	//VerifyAllActionBars(client);	// Because.
 	if (LoadProfileRequestName[client] != -1) {
@@ -1181,6 +1181,8 @@ stock void CMD_OpenRPGMenu(int client) {
 		SetEntPropFloat(client, Prop_Send, "m_flNextShoveTime", 1.0);
 	}*/
 	//PrintToChat(client, "penalty soon: %d", count);
+
+	return Plugin_Handled;
 }
 
 public void OnPluginStart() {
@@ -1682,7 +1684,110 @@ public int ReadyUp_GetCampaignStatus(int mapposition) {
 	CurrentMapPosition = mapposition;
 }
 
+
+
+/**
+ * Adds an informational string to the server's public "tags".
+ * This string should be a short, unique identifier.
+ *
+ *
+ * @param tag            Tag string to append.
+ * @noreturn
+ */
+stock void AddServerTag2(const char[] tag)
+{
+	Handle hTags = INVALID_HANDLE;
+	hTags        = FindConVar("sv_tags");
+
+	if (hTags != INVALID_HANDLE)
+	{
+		int flags = GetConVarFlags(hTags);
+
+		SetConVarFlags(hTags, flags & ~FCVAR_NOTIFY);
+
+		char tags[50];    // max size of sv_tags cvar
+		GetConVarString(hTags, tags, sizeof(tags));
+		if (StrContains(tags, tag, true) > 0) return;
+		if (strlen(tags) == 0)
+		{
+			Format(tags, sizeof(tags), tag);
+		}
+		else
+		{
+			Format(tags, sizeof(tags), "%s,%s", tags, tag);
+		}
+		SetConVarString(hTags, tags, true);
+
+		SetConVarFlags(hTags, flags);
+	}
+}
+
+/**
+ * Removes a tag previously added by the calling plugin.
+ *
+ * @param tag            Tag string to remove.
+ * @noreturn
+ */
+stock void RemoveServerTag2(const char[] tag)
+{
+	Handle hTags = INVALID_HANDLE;
+	hTags        = FindConVar("sv_tags");
+
+	if (hTags != INVALID_HANDLE)
+	{
+		int flags = GetConVarFlags(hTags);
+
+		SetConVarFlags(hTags, flags & ~FCVAR_NOTIFY);
+
+		char tags[50];    // max size of sv_tags cvar
+		GetConVarString(hTags, tags, sizeof(tags));
+		if (StrEqual(tags, tag, true))
+		{
+			Format(tags, sizeof(tags), "");
+			SetConVarString(hTags, tags, true);
+			return;
+		}
+
+		int pos = StrContains(tags, tag, true);
+		int len = strlen(tags);
+		if (len > 0 && pos > -1)
+		{
+			bool found;
+			char taglist[50][50];
+			ExplodeString(tags, ",", taglist, sizeof(taglist[]), sizeof(taglist));
+			for (int i = 0; i < sizeof(taglist[]); i++)
+			{
+				if (StrEqual(taglist[i], tag, true))
+				{
+					Format(taglist[i], sizeof(taglist), "");
+					found = true;
+					break;
+				}
+			}
+			if (!found) return;
+			ImplodeStrings(taglist, sizeof(taglist[]), ",", tags, sizeof(tags));
+			if (pos == 0)
+			{
+				tags[0] = 0x20;
+			}
+			else if (pos == len - 1)
+			{
+				Format(tags[strlen(tags) - 1], sizeof(tags), "");
+			}
+			else
+			{
+				ReplaceString(tags, sizeof(tags), ",,", ",");
+			}
+
+			SetConVarString(hTags, tags, true);
+
+			SetConVarFlags(hTags, flags);
+		}
+	}
+}
 public void OnMapStart() {
+	AddServerTag2("RPG");
+	AddServerTag2("SkyRPG");
 	iTopThreat = 0;
 	// When the server restarts, for any reason, RPG will properly load.
 	//if (!b_FirstLoad) OnMapStartFunc();
@@ -1735,6 +1840,9 @@ stock void ResetValues(int client) {
 }
 
 public void OnMapEnd() {
+	RemoveServerTag2("RPG");
+	RemoveServerTag2("SkyRPG");
+
 	if (b_IsActiveRound) b_IsActiveRound = false;
 	for (int i = 1; i <= MaxClients; i++) {
 		if (ISEXPLODE[i] != INVALID_HANDLE) {
@@ -2663,6 +2771,10 @@ public Action Timer_SaveAndClear(Handle timer) {
 }
 
 stock void CallRoundIsOver() {
+	
+	if(FindConVar("director_no_death_check").BoolValue)
+		return;
+
 	if (!b_IsRoundIsOver) {
 		for (int i = 0; i < 5; i++) {
 			RoundStatistics.Set(i, RoundStatistics.Get(i) + RoundStatistics.Get(i, 1), 1);
@@ -2829,7 +2941,7 @@ public int ReadyUp_LoadFromConfigEx(Handle key1, Handle value1, Handle section1,
 		!StrEqual(configname, CONFIG_CHATSETTINGS) &&
 		!StrEqual(configname, CONFIG_WEAPONS) &&
 		!StrEqual(configname, CONFIG_PETS) &&
-		!StrEqual(configname, CONFIG_COMMONAFFIXES)) return;
+		!StrEqual(configname, CONFIG_COMMONAFFIXES)) return 0;
 	char s_key[512];
 	char s_value[512];
 	char s_section[512];
@@ -2951,7 +3063,14 @@ public int ReadyUp_LoadFromConfigEx(Handle key1, Handle value1, Handle section1,
 		}
 		LoadMainConfig();
 		GetConfigValue(RPGMenuCommand, sizeof(RPGMenuCommand), "rpg menu command?");
+		
 		RPGMenuCommandExplode = GetDelimiterCount(RPGMenuCommand, ",") + 1;
+		char[][] RPGCommands = new char[RPGMenuCommandExplode][64];
+		ExplodeString(RPGMenuCommand, ",", RPGCommands, RPGMenuCommandExplode, 64);
+		for (int i = 0; i < RPGMenuCommandExplode; i++) {
+			RegConsoleCmd(RPGCommands[i], CMD_OpenRPGMenu);
+		}
+		
 		GetConfigValue(thetext, sizeof(thetext), "drop weapon command?");
 		RegConsoleCmd(thetext, CMD_DropWeapon);
 		GetConfigValue(thetext, sizeof(thetext), "director talent command?");
@@ -3253,7 +3372,8 @@ stock void LoadMainConfig() {
 
 //public Action:CMD_Backpack(int client, int args) { EquipBackpack(client); return Plugin_Handled; }
 public Action CMD_BuyMenu(int client, int args) {
-	if (iRPGMode < 0 || iRPGMode == 1 && b_IsActiveRound) return Plugin_Handled;
+	// Eyal282 here, I cannot with 0% understanding figure out why active round blocks buy menu, RPGMode on 1 specifies no buy menu.
+	if (iRPGMode < 0 || iRPGMode == 1) return Plugin_Handled;
 	//if (StringToInt(GetConfigValue("rpg mode?")) != 1) 
 	BuildPointsMenu(client, "Buy Menu", "rpg/points.cfg");
 	return Plugin_Handled;

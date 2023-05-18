@@ -203,7 +203,7 @@ public int Call_Event(Event event, char[] event_name, bool dontBroadcast, int po
 	char curEquippedWeapon[64];
 	if (StrEqual(event_name, "weapon_reload") || StrEqual(event_name, "bullet_impact")) {
 		int WeaponId =	GetEntPropEnt(attacker, Prop_Data, "m_hActiveWeapon");
-		GetEntityClassname(WeaponId, curEquippedWeapon, sizeof(curEquippedWeapon));
+		GetEdictClassname(WeaponId, curEquippedWeapon, sizeof(curEquippedWeapon));
 	}
 	if (victimType == 2 && victimTeam == TEAM_SURVIVOR) {
 		if (StrEqual(event_name, "revive_success")) {
@@ -896,7 +896,7 @@ stock bool UseAbility(int client, int target = -1, char[] TalentName, ArrayList 
 	else if (StrEqual(Effects, "P", true)) {
 		// Toggles between pistol / magnum
 		if (IsValidEntity(MySecondary)) {
-			GetEntityClassname(MySecondary, MyWeapon, sizeof(MyWeapon));
+			GetEdictClassname(MySecondary, MyWeapon, sizeof(MyWeapon));
 			RemovePlayerItem(client, MySecondary);
 			AcceptEntityInput(MySecondary, "Kill");
 		}
@@ -1363,7 +1363,7 @@ stock void InventoryItem(int client, char[] EntityName = "none", bool bIsPickup 
 
 	if (bIsPickup) {	// Picking up the entity. We store it in the users inventory.
 
-		GetEntityClassname(entity, Classname[0], sizeof(Classname[]));
+		GetEdictClassname(entity, Classname[0], sizeof(Classname[]));
 		GetEntPropString(entity, Prop_Data, "m_iName", ItemName, sizeof(ItemName));
 	}
 	else {		// Creating the entity. Defaults to -1
@@ -1480,7 +1480,7 @@ public Action OnPlayerRunCmd(int client, int &buttons) {
 			char EName[64];
 			int entity = GetClientAimTarget(client, false);
 			if (entity != -1) {
-				GetEntityClassname(entity, EName, sizeof(EName));
+				GetEdictClassname(entity, EName, sizeof(EName));
 				if (StrContains(EName, "weapon", false) != -1 || StrContains(EName, "physics", false) != -1) return Plugin_Continue;
 			}
 			buttons &= ~IN_USE;
